@@ -6,4 +6,4 @@ Data source: National Health and Nutrition Examination Survey; August 2021-Augus
 Problem + importance: Refeeding syndromes can place patients at risk of serious complications. In the context of healthcare staff shortages and high clinical workloads, abnormal potassium, magnesium and phosphorus may be overlooked or not adequately repleeted. Thus, it is imporatnt to make sure systems are in place to support healthcare physicians in approprotly prescribe electrolyte repletion. 
 
 
-Task type: 
+Task type: Multilabel classification 
