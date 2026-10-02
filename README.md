@@ -3,7 +3,7 @@ Dataset: https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2021/DataFiles/BIOPRO_L.ht
 
 Data source: National Health and Nutrition Examination Survey; August 2021-August 2023 Data Documentation, Codebook, and Frequencies; Standard Biochemistry Profile (BIOPRO_L); Data File: BIOPRO_L.xpt; First Published: September 2025
 
-Problem: refeeding syndrome puts patients at multiples risks. considering shortstaffing and businnes of medical staff it is possible that a low potassium, magnesium and phosphorus may be missed or not properly repelated. this is why it is imporatnt to ensure systems exsit to guide physicsians in prescribing electrolytes repletion, and thiamine supplementation 
+Problem: Refeeding syndromes can place patients at risk of serious complications. In the context of healthcare staff shortages and high clinical workloads, abnormal potassium, magnesium and phosphorus may be overlooked or not adequately repleeted. Thus, it is imporatnt to make sure systems are in place to support healthcare physicians in approprotly prescribe electrolyte repletion. 
 
 Importance of issue: 
 
