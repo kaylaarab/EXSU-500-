@@ -1,0 +1,16 @@
+feature,mean_abs_shap
+num__number_inpatient,0.30431464
+num__discharge_disposition_id,0.21782236
+num__number_diagnoses,0.04757679
+cat__diabetesMed_No,0.046493366
+cat__age_[50-60),0.04406102
+num__number_emergency,0.03022886
+num__time_in_hospital,0.024254926
+cat__diag_1_428,0.019542094
+num__num_lab_procedures,0.018691983
+cat__insulin_Down,0.016546255
+cat__diag_1_786,0.013043278
+cat__metformin_No,0.0111043025
+cat__diag_3_250,0.010906183
+cat__insulin_No,0.010485461
+cat__diag_2_250,0.009102765
