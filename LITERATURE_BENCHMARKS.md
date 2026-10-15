@@ -72,21 +72,7 @@ definition, or preprocessing, so don't present these as apples-to-apples)
 
 ---
 
-## Team research log
-
-Add your entries below, one per source, using this format:
-
-```
-### [Author(s), Year]
-- Citation:
-- Dataset used:
-- Task/label definition:
-- Models + reported metrics:
-- How it relates to our project:
-```
-
-<!-- Kayla: add your findings below this line -->
-
-
-<!-- Magalie: add your findings below this line -->
+Kayla and Magalie's literature findings are tracked separately in
+`LITERATURE_BENCHMARKS_TEAM.md` — merge in before the midterm reference list
+is finalized.
 
