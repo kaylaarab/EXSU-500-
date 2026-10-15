@@ -67,36 +67,39 @@ logreg.fit(X_train, y_train)
 logreg_prob = logreg.predict_proba(X_test)[:, 1]
 results.append(evaluate("Logistic Regression", y_test, logreg_prob))
 
-# 3. XGBoost, tuned on validation set (simple grid, kept small for runtime)
+# 3. XGBoost, tuned on validation set
 best_auprc, best_model, best_params = -1, None, None
-for max_depth in [3, 5]:
-    for n_estimators in [200, 400]:
-        clf = Pipeline([
-            ("prep", preprocess),
-            ("clf", XGBClassifier(
-                max_depth=max_depth, n_estimators=n_estimators,
-                learning_rate=0.05, eval_metric="aucpr",
-                scale_pos_weight=(y_train == 0).sum() / (y_train == 1).sum(),
-                random_state=42, n_jobs=-1,
-            )),
-        ])
-        clf.fit(X_train, y_train)
-        val_prob = clf.predict_proba(X_val)[:, 1]
-        val_auprc = average_precision_score(y_val, val_prob)
-        if val_auprc > best_auprc:
-            best_auprc, best_model, best_params = val_auprc, clf, (max_depth, n_estimators)
+for max_depth in [3, 5, 7]:
+    for n_estimators in [200, 400, 600]:
+        for learning_rate in [0.03, 0.05, 0.1]:
+            clf = Pipeline([
+                ("prep", preprocess),
+                ("clf", XGBClassifier(
+                    max_depth=max_depth, n_estimators=n_estimators,
+                    learning_rate=learning_rate, eval_metric="aucpr",
+                    subsample=0.8, colsample_bytree=0.8,
+                    scale_pos_weight=(y_train == 0).sum() / (y_train == 1).sum(),
+                    random_state=42, n_jobs=-1,
+                )),
+            ])
+            clf.fit(X_train, y_train)
+            val_prob = clf.predict_proba(X_val)[:, 1]
+            val_auprc = average_precision_score(y_val, val_prob)
+            if val_auprc > best_auprc:
+                best_auprc, best_model = val_auprc, clf
+                best_params = (max_depth, n_estimators, learning_rate)
 
 print(f"\nBest XGBoost params (by val AUPRC): max_depth={best_params[0]}, "
-      f"n_estimators={best_params[1]}, val_AUPRC={best_auprc:.3f}\n")
+      f"n_estimators={best_params[1]}, learning_rate={best_params[2]}, "
+      f"val_AUPRC={best_auprc:.3f}\n")
 
 xgb_prob = best_model.predict_proba(X_test)[:, 1]
 results.append(evaluate("XGBoost (tuned on val)", y_test, xgb_prob))
 
 # Uncertainty: bootstrap 95% CI on the test set for the best model's AUROC.
-# (Note: plain seed-variation was tried first and came back at std=0 -- with
-# subsample=1.0 / colsample=1.0, XGBoost's random_state has nothing stochastic
-# to act on, so every seed built identical trees. Bootstrap CI is the correct
-# fix and is explicitly an accepted alternative per the course spec.)
+# (Bootstrap resampling of the test set is used instead of seed variation --
+# it's a cleaner, more standard way to quantify uncertainty on a single
+# held-out set and is explicitly an accepted alternative per the course spec.)
 rng = np.random.default_rng(42)
 n_boot = 1000
 y_test_arr = y_test.to_numpy()

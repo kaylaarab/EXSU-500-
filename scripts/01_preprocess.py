@@ -18,6 +18,43 @@ RANDOM_STATE = 42
 DROP_COLS = ["encounter_id", "weight", "payer_code", "medical_specialty"]
 
 
+def group_icd9(code):
+    """Map a raw ICD-9 diagnosis code to a broad clinical category.
+
+    Raw diag_1/2/3 codes have ~700-900 unique values combined, which makes
+    for a huge, sparse one-hot encoding the model can't learn much from.
+    Grouping into ~9 categories (same approach as the dataset's original
+    paper, Strack et al. 2014) gives the model denser, more learnable signal.
+    """
+    if pd.isna(code):
+        return "Missing"
+    code = str(code)
+    if code.startswith("V") or code.startswith("E"):
+        return "Other"
+    try:
+        c = float(code)
+    except ValueError:
+        return "Other"
+
+    if 390 <= c <= 459 or c == 785:
+        return "Circulatory"
+    if 460 <= c <= 519 or c == 786:
+        return "Respiratory"
+    if 520 <= c <= 579 or c == 787:
+        return "Digestive"
+    if int(c) == 250 or (250 <= c < 251):
+        return "Diabetes"
+    if 800 <= c <= 999:
+        return "Injury"
+    if 710 <= c <= 739:
+        return "Musculoskeletal"
+    if 580 <= c <= 629 or c == 788:
+        return "Genitourinary"
+    if 140 <= c <= 239:
+        return "Neoplasms"
+    return "Other"
+
+
 def load_and_clean(path: str) -> pd.DataFrame:
     df = pd.read_csv(path)
     df = df.replace("?", np.nan)
@@ -27,6 +64,11 @@ def load_and_clean(path: str) -> pd.DataFrame:
     df = df.drop(columns=["readmitted"])
 
     df = df.drop(columns=[c for c in DROP_COLS if c in df.columns])
+
+    # Group raw ICD-9 diagnosis codes into broad clinical categories
+    for col in ["diag_1", "diag_2", "diag_3"]:
+        df[col + "_group"] = df[col].apply(group_icd9)
+    df = df.drop(columns=["diag_1", "diag_2", "diag_3"])
 
     # Remaining missing categoricals -> explicit "Unknown" category
     cat_cols = df.select_dtypes(include="object").columns
