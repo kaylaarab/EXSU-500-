@@ -17,6 +17,16 @@ RANDOM_STATE = 42
 # administrative, not clinical, and ~40-50% missing)
 DROP_COLS = ["encounter_id", "weight", "payer_code", "medical_specialty"]
 
+# The 23 medication columns, each coded Up/Down/Steady/No
+MED_COLS = [
+    "metformin", "repaglinide", "nateglinide", "chlorpropamide", "glimepiride",
+    "acetohexamide", "glipizide", "glyburide", "tolbutamide", "pioglitazone",
+    "rosiglitazone", "acarbose", "miglitol", "troglitazone", "tolazamide",
+    "examide", "citoglipton", "insulin", "glyburide-metformin",
+    "glipizide-metformin", "glimepiride-pioglitazone",
+    "metformin-rosiglitazone", "metformin-pioglitazone",
+]
+
 
 def group_icd9(code):
     """Map a raw ICD-9 diagnosis code to a broad clinical category.
@@ -69,6 +79,35 @@ def load_and_clean(path: str) -> pd.DataFrame:
     for col in ["diag_1", "diag_2", "diag_3"]:
         df[col + "_group"] = df[col].apply(group_icd9)
     df = df.drop(columns=["diag_1", "diag_2", "diag_3"])
+
+    # Engineered features (added after first-pass results plateaued at ~0.68
+    # AUROC -- see LITERATURE_BENCHMARKS.md; these are standard derived
+    # features used in follow-on work on this dataset):
+
+    # 1. Combined prior-utilization signal. The three raw counts
+    # (outpatient/emergency/inpatient visits in the year before this
+    # encounter) are individually sparse (mostly 0); a single combined count
+    # is denser and captures "how much healthcare has this patient already
+    # been using" in one feature, on top of keeping the originals.
+    df["total_prior_visits"] = (
+        df["number_outpatient"] + df["number_emergency"] + df["number_inpatient"]
+    )
+
+    # 2. Medication-change intensity. 23 separate Up/Down/Steady/No columns
+    # are individually very sparse. Collapsing to "how many medications were
+    # adjusted this encounter" is a single denser signal for treatment
+    # instability, which is clinically linked to readmission risk.
+    df["num_med_changes"] = (df[MED_COLS] == "Up").sum(axis=1) + (
+        df[MED_COLS] == "Down"
+    ).sum(axis=1)
+
+    # 3. HbA1c measured-and-acted-on flag. The dataset's original paper
+    # (Strack et al. 2014) found that whether HbA1c was measured AND
+    # resulted in a treatment change mattered more than the raw medication
+    # list -- encode that interaction directly.
+    df["a1c_measured_and_changed"] = (
+        (df["A1Cresult"] != "None") & (df["change"] == "Ch")
+    ).astype(int)
 
     # Remaining missing categoricals -> explicit "Unknown" category
     cat_cols = df.select_dtypes(include="object").columns
