@@ -9,6 +9,9 @@ data/*.xpt
 *.pkl
 *.joblib
 
+# CatBoost auto-generated training logs
+catboost_info/
+
 # Python
 __pycache__/
 *.pyc
