@@ -20,8 +20,8 @@ from xgboost import XGBClassifier
 TARGET = "readmit_30d"
 ID_COLS = ["patient_nbr"]
 
-train = pd.read_csv("data/train.csv")
-test = pd.read_csv("data/test.csv")
+train = pd.read_csv("data/train.csv", keep_default_na=False)
+test = pd.read_csv("data/test.csv", keep_default_na=False)
 
 y_train = train[TARGET]
 X_train = train.drop(columns=[TARGET] + ID_COLS)
