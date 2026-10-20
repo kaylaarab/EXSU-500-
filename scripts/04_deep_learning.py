@@ -21,9 +21,9 @@ ID_COLS = ["patient_nbr"]
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 
-train = pd.read_csv("data/train.csv")
-val = pd.read_csv("data/val.csv")
-test = pd.read_csv("data/test.csv")
+train = pd.read_csv("data/train.csv", keep_default_na=False)
+val = pd.read_csv("data/val.csv", keep_default_na=False)
+test = pd.read_csv("data/test.csv", keep_default_na=False)
 
 y_train, y_val, y_test = train[TARGET], val[TARGET], test[TARGET]
 X_train = train.drop(columns=[TARGET] + ID_COLS)
