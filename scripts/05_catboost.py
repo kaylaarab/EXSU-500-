@@ -24,7 +24,7 @@ X_train = train.drop(columns=[TARGET] + ID_COLS)
 X_val = val.drop(columns=[TARGET] + ID_COLS)
 X_test = test.drop(columns=[TARGET] + ID_COLS)
 
-cat_cols = X_train.select_dtypes(include="object").columns.tolist()
+cat_cols = X_train.select_dtypes(exclude="number").columns.tolist()
 for df_ in (X_train, X_val, X_test):
     for c in cat_cols:
         df_[c] = df_[c].astype(str)

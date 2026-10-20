@@ -27,7 +27,7 @@ y_train = train[TARGET]
 X_train = train.drop(columns=[TARGET] + ID_COLS)
 X_test = test.drop(columns=[TARGET] + ID_COLS)
 
-cat_cols = X_train.select_dtypes(include="object").columns.tolist()
+cat_cols = X_train.select_dtypes(exclude="number").columns.tolist()
 num_cols = [c for c in X_train.columns if c not in cat_cols]
 
 preprocess = ColumnTransformer([
