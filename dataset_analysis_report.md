@@ -31,7 +31,7 @@
 | 6 | **Label is imperfect** | Readmission is only observed within the data; a readmission elsewhere, or a death after discharge, counts as 0. `<30` vs `>30` is a hard cut at day 30 | Some true readmissions are mislabelled negative (label noise) |
 | 7 | **High-cardinality / sparse features** | ~750 distinct ICD-9 codes per diagnosis slot; 15 of 23 drug columns are ≥99% "No"; age 0–10 has 161 rows | Sparse one-hot encoding; noisy rare categories |
 | 8 | **Code bugs in our own first pass** | Pandas read the text `"None"` (lab not ordered) as missing, so `a1c_measured_and_changed` was identical to `change == "Ch"` (46%, should be ~9.5%). Admission/discharge ID codes were treated as numbers | Feature did not mean what the report says; ID codes imply a false ordering |
-| 9 | **Weak signal** | Positive rate barely differs by race (9.6–11.3%), gender (11.1–11.3%) or age band beyond extremes | Ceiling on achievable accuracy; published work on this data sits at ~0.65–0.68 AUROC |
+| 9 | **Weak signal** | Positive rate barely differs by race (9.6–11.3%), gender (11.1–11.3%) or age band beyond extremes | Ceiling on achievable accuracy; published work on this data sits at ~0.64–0.68 AUROC |
 
 ---
 
@@ -65,8 +65,8 @@
 
 **Partly, but not enough for individual decisions.**
 
-- Current results (see Section 6) are about 0.66–0.68 AUROC. A coin flip is 0.50.
-- At the 0.5 threshold, sensitivity is about 0.56 and specificity about 0.67. With an 11% base rate that means **roughly 1 in 6 flagged patients is actually readmitted, and about 4 in 10 true readmissions are missed**.
+- Current results (see Section 6) are about 0.66–0.67 AUROC. A coin flip is 0.50.
+- At the 0.5 threshold, sensitivity is about 0.55 and specificity about 0.68. With an 11% base rate that means **roughly 1 in 6 flagged patients is actually readmitted (precision ≈ 18%), and about 45% of true readmissions are missed**.
 - What the data lacks: lab values and vitals at discharge, discharge plan and follow-up appointments, medication adherence, social determinants, clinical notes, and hospital identifiers.
 - The strongest signals are prior-year inpatient visits and discharge destination, which are plausible but are markers of past utilisation, not causes.
 
@@ -76,9 +76,18 @@
 
 ## 6. Model results after the mitigations
 
-_Final numbers are being regenerated on the cleaned splits; this table is filled in next commit._
+| Model | AUROC | AUPRC | Sensitivity | Specificity |
+|---|---|---|---|---|
+| Baseline (always "no readmission") | 0.500 | 0.111 | 0.000 | 1.000 |
+| Logistic regression | 0.663 | 0.212 | 0.528 | 0.689 |
+| XGBoost (tuned on validation) | 0.665 | 0.222 | 0.540 | 0.695 |
+| MLP (deep learning) | 0.659 | 0.219 | 0.539 | 0.686 |
+| CatBoost (engineered features) | 0.669 | 0.221 | 0.568 | 0.670 |
+| Ensemble (XGBoost 0.7 + CatBoost 0.3) | 0.669 | 0.224 | 0.550 | 0.683 |
 
-All values are on the held-out test split (patient-level, 99,343 cleaned encounters). Earlier numbers (e.g. 0.679 ensemble) used the uncleaned data that still contained death/hospice rows and the broken A1C feature.
+95% bootstrap CI (encounter-level, 1,000 resamples): XGBoost 0.651–0.679; CatBoost and ensemble 0.655–0.682. **The models are statistically indistinguishable**; differences of 0.004 are well inside the interval. Sensitivity/specificity are at a fixed 0.5 threshold.
+
+All values are on the held-out test split (patient-level, 99,343 cleaned encounters). These are **lower** than the first-pass numbers (e.g. ensemble 0.679) because those used uncleaned data that still contained the easy death/hospice rows and the broken A1C feature. The cleaned numbers are the honest ones.
 
 ---
 
