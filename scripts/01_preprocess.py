@@ -102,7 +102,7 @@ def load_and_clean(path: str, drop_cols=None) -> pd.DataFrame:
     df = df.drop(columns=["diag_1", "diag_2", "diag_3"])
 
     # Engineered features (added after first-pass results plateaued at ~0.68
-    # AUROC -- see LITERATURE_BENCHMARKS.md; these are standard derived
+    # AUROC -- see literature/LITERATURE_BENCHMARKS.md; these are standard derived
     # features used in follow-on work on this dataset):
 
     # 1. Combined prior-utilization signal. The three raw counts

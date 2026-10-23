@@ -88,7 +88,7 @@ This produces `data/diabetic_data.csv` (~19 MB) and `data/IDS_mapping.csv`.
 - **Imbalance handling:** class weights. SMOTE-NC was tested as an ablation and was
   clearly worse on real test data (`scripts/09_smote_ablation.py`). No synthetic
   data is used for training or evaluation.
-- Rationale for each decision and its trade-offs: `dataset_analysis_report.md`.
+- Rationale for each decision and its trade-offs: `docs/dataset_analysis_report.md`.
 
 ## Models and current results
 
@@ -129,10 +129,18 @@ scripts/
   07_sensitivity.py      specialty/payer, first-encounter, patient-level CIs
   08_trajectory_features.py  patient-history features
   09_smote_ablation.py   SMOTE-NC vs class weights
-results/                 all tables and figures
-dataset_analysis_report.md   dataset, decisions, trade-offs, bias, results
-PROJECT_STATUS.md        plain-language progress report for the team
-LITERATURE_BENCHMARKS*.md  literature log and comparison with other work
+results/                 all tables and figures (model_comparison.csv is the headline table)
+docs/
+  dataset_analysis_report.md   dataset, decisions, trade-offs, bias, results
+  PROJECT_STATUS.md      plain-language progress report for the team
+  CONTRIBUTING.md        git workflow for the team
+literature/
+  LITERATURE_BENCHMARKS.md       literature log and comparison with other work
+  LITERATURE_BENCHMARKS_TEAM.md  Kayla's and Magalie's literature log
+report/
+  midterm_report.docx    midterm report draft (due 9 Nov)
+course/                  course handouts (specification, dataset list, groups)
+requirements.txt         pinned packages
 ```
 
 Run order: `00` (optional) then `01` to `06`; `07` to `09` are analyses. Run all
