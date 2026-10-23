@@ -25,3 +25,12 @@ env/
 Thumbs.db
 .vscode/
 .idea/
+
+# Raw dataset and generated splits must never be committed (course rule), whatever folder they land in.
+# GitHub's web uploader silently skips ignored files, so upload anything else under a different name.
+diabetic_data.csv
+IDS_mapping.csv
+train.csv
+val.csv
+test.csv
+data/
