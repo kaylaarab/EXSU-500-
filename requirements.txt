@@ -1,9 +1,10 @@
-pandas
-numpy
-scikit-learn
-xgboost
-lightgbm
-shap
-matplotlib
-seaborn
-jupyter
+# Versions used to produce the reported results (Python 3.13)
+pandas==3.0.5
+numpy==2.5.3
+scikit-learn==1.9.1
+xgboost==3.4.1
+catboost==1.2.10
+torch==2.14.1
+shap==0.54.1
+matplotlib==3.11.2
+imbalanced-learn==0.14.2
