@@ -56,7 +56,7 @@ report must say so.
 - **Sensitivity checks** (Scripts 07-09):
   - Keeping `medical_specialty` and `payer_code` helps: **+0.008 AUROC** (reliable).
   - First-visit patients only: 0.652 (harder, no history).
-  - Patient-history features (stay number, previous outcome): about +0.006 (borderline).
+  - Patient-history features (stay number, previous outcome): about +0.007 AUROC (reliable, CI +0.003 to +0.011).
   - SMOTE (synthetic oversampling) is **clearly worse** than class weights.
 - **Wrote the decision log** (what we did, why, cost) in `dataset_analysis_report.md`.
 - **Pinned package versions** in `requirements.txt`; **removed the raw data and

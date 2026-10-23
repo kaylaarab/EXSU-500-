@@ -4,6 +4,9 @@ Newest first. One entry per significant piece of work, added when it is finished
 
 ## 2026-10-23
 
+- **Patient-history features re-tested on the current pipeline (Script 08):** 0.675 to 0.682 AUROC, paired gain +0.007 (CI +0.003 to +0.011), now reliably positive. Depends on `encounter_id` order being chronological (unverifiable).
+- **Accuracy always reported next to sensitivity** (team rule): scripts 02-06, 09, 12 and every results table updated; benchmarking now shows accuracy and sensitivity for each published source. Key finding: the Cureus 2025 benchmark's 0.89 accuracy equals the always-"no" baseline and it catches only 1.7% of readmissions with XGBoost.
+
 - **Repo reorganised into numbered topic folders** (`1_course_materials`, `2_midterm_report`, `3_dataset`, `4_benchmarking`, `5_results`, `6_project_progress`, plus `scripts/`). Both repos mirror the same branch.
 - **Benchmarking folder rebuilt.** New `benchmarking_report.md` with a 21-source table (links, how much we read, local copies), `sources.csv`, abstracts, and four open-licence papers downloaded. Reading the papers corrected three errors in our earlier notes: EmbPred30 *does* keep one encounter per patient and *does* exclude death/hospice; the 99,343-encounter cohort belongs to the 2026 ceiling audit; the SMOTE benchmark is Gupta and Choudhary 2026.
 - **EmbPred30 (0.974 AUROC) review added** (`4_benchmarking/embpred30_review.md`): Siham's assessment, our check against the PDF text, and our own experiment (Script 11).
