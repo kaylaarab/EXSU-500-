@@ -20,7 +20,7 @@ Here's how to get set up and contribute.
    ```bash
    pip install -r requirements.txt
    ```
-5. **Get the dataset** (not stored in the repo — see README.md for the
+5. **Get the dataset** (not stored in the repo — see ../README.md for the
    one-line download command).
 
 ## Every time you work on something

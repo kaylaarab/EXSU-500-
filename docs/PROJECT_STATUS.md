@@ -4,7 +4,7 @@ For the team, not for submission. Plain language, so everyone can follow the
 state of the project without reading code.
 **Last updated:** 2026-10-23. Details and reasoning behind every decision:
 [`dataset_analysis_report.md`](dataset_analysis_report.md). Literature and
-numbers to compare against: [`LITERATURE_BENCHMARKS.md`](LITERATURE_BENCHMARKS.md).
+numbers to compare against: [`literature/LITERATURE_BENCHMARKS.md`](../literature/LITERATURE_BENCHMARKS.md).
 
 ## Key dates
 
@@ -82,8 +82,8 @@ report must say so.
 - [ ] **15+ references**, mostly primary papers from the last 5 years. Each must
       be read by at least one team member (the instructors ask about specific
       citations). Currently only about 3 are logged; Kayla's and Magalie's
-      sections in `LITERATURE_BENCHMARKS_TEAM.md` are still empty.
-- [ ] The current draft (`midterm report.docx`) still contains IEEE template
+      sections in `literature/LITERATURE_BENCHMARKS_TEAM.md` are still empty.
+- [ ] The current draft (`report/midterm_report.docx`) still contains IEEE template
       boilerplate and placeholder text (e.g. "Hygftbhjgftgbh"); remove it, keep
       to **3 pages including references**, and replace inline URLs with numbered references.
 - [ ] Add: dataset description with numbers (use `dataset_analysis_report.md`),
@@ -99,14 +99,16 @@ report must say so.
 
 ## Where to find things
 ```
-README.md                      formal project description (for grading)
-PROJECT_STATUS.md              this file
-dataset_analysis_report.md     dataset, decisions, trade-offs, bias, results
-LITERATURE_BENCHMARKS.md       Siham's literature + comparison with other work
-LITERATURE_BENCHMARKS_TEAM.md  Kayla's and Magalie's literature log
-CONTRIBUTING.md               how to use git here
-scripts/00-09_*.py            profile, preprocess, models, SHAP, ablations
-results/                       all tables and figures (model_comparison.csv is the headline)
+README.md                         formal project description (for grading)
+docs/PROJECT_STATUS.md            this file
+docs/dataset_analysis_report.md   dataset, decisions, trade-offs, bias, results
+docs/CONTRIBUTING.md              how to use git here
+literature/LITERATURE_BENCHMARKS.md       Siham's literature + comparison with other work
+literature/LITERATURE_BENCHMARKS_TEAM.md  Kayla's and Magalie's literature log
+report/midterm_report.docx        midterm draft (due 9 Nov)
+course/                           specification, dataset list, group assignments (PDFs)
+scripts/00-09_*.py                profile, preprocess, models, SHAP, ablations
+results/                          all tables and figures (model_comparison.csv is the headline)
 ```
 Run order is in `dataset_analysis_report.md` section 10. The dataset itself is
 not in the repo; download it from UCI (instructions in README).

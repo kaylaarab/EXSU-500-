@@ -162,7 +162,7 @@ The models are statistically indistinguishable (95% CIs ≈ 0.653–0.686). In p
 - About **45% of true readmissions are missed**.
 - Strongest drivers: prior-year inpatient visits, then discharge destination (SHAP). These are plausible markers of past utilisation, not causes.
 
-Earlier numbers (ensemble 0.679) were from uncleaned data containing the easy death/hospice rows and the broken A1C feature; the figures above are the honest ones. They are in line with the literature (§8 of `LITERATURE_BENCHMARKS.md`).
+Earlier numbers (ensemble 0.679) were from uncleaned data containing the easy death/hospice rows and the broken A1C feature; the figures above are the honest ones. They are in line with the literature (`literature/LITERATURE_BENCHMARKS.md`).
 
 ---
 

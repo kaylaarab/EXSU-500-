@@ -15,7 +15,7 @@ worry about duplicates — better to over-collect now and dedupe later.
 
 *Updated 2026-10-23. Cleaned cohort (99,343 encounters; death/hospice discharges
 excluded), patient-level split, test set scored once. Details and rationale:
-`dataset_analysis_report.md`.*
+`docs/dataset_analysis_report.md`.*
 
 | Model | AUROC | AUPRC | Sensitivity | Specificity |
 |---|---|---|---|---|
@@ -39,7 +39,7 @@ Additional checks (Script 07-09; patient-level bootstrap CIs):
 | + `medical_specialty`, `payer_code` kept | 0.677 (0.661-0.692) | paired gain +0.008 (CI +0.005 to +0.011) |
 | First encounters only (trained and tested) | 0.652 (0.633-0.670) | the "no history" case; closest to published first-encounter studies |
 | + patient-history features | 0.676 vs 0.670 base | paired gain +0.001 to +0.010, borderline |
-| SMOTE-NC instead of class weights | LogReg 0.561, XGBoost 0.625 | clearly worse; see `dataset_analysis_report.md` s6 |
+| SMOTE-NC instead of class weights | LogReg 0.561, XGBoost 0.625 | clearly worse; see `docs/dataset_analysis_report.md` s6 |
 
 ---|---|---|---|---|
 | Baseline (majority-class) | 0.500 | 0.110 | 0.000 | 1.000 |
@@ -103,7 +103,7 @@ definition, or preprocessing, so don't present these as apples-to-apples)
 ---
 
 Kayla and Magalie's literature findings are tracked separately in
-`LITERATURE_BENCHMARKS_TEAM.md` — merge in before the midterm reference list
+`LITERATURE_BENCHMARKS_TEAM.md` (same folder) — merge in before the midterm reference list
 is finalized.
 
 ---
