@@ -26,6 +26,13 @@ import pandas as pd
 from imblearn.over_sampling import SMOTENC
 from sklearn.ensemble import HistGradientBoostingClassifier as HGB
 from sklearn.metrics import accuracy_score, average_precision_score, roc_auc_score
+
+
+def thr(yt, p):
+    """accuracy, sensitivity, specificity at threshold 0.5 (accuracy is always shown WITH sensitivity)"""
+    yp = p >= 0.5
+    return (np.mean(yp == yt), np.mean(yp[yt == 1]), np.mean(~yp[yt == 0]))
+
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import OrdinalEncoder
 
@@ -65,35 +72,37 @@ Xs, ys = smote(X, y)
 is_real = np.arange(len(ys)) < n                          # SMOTE appends synthetic rows after the originals
 print(f"SMOTE-NC on all data: {n:,} -> {len(ys):,} rows; {(~is_real).sum():,} synthetic "
       f"({(~is_real).sum() / (ys == 1).sum():.0%} of the positive class)\n")
-A, Aacc, B = [], [], []
+A, B, Am, Bm = [], [], [], []
 for tr, te in StratifiedKFold(6, shuffle=True, random_state=0).split(Xs, ys):
     p = model().fit(Xs[tr], ys[tr]).predict_proba(Xs[te])[:, 1]
     A.append(roc_auc_score(ys[te], p))
-    Aacc.append(accuracy_score(ys[te], p >= 0.5))
+    Am.append(thr(ys[te], p))
     r = is_real[te]
-    B.append(roc_auc_score(ys[te][r], p[r]))
+    B.append(roc_auc_score(ys[te][r], p[r])); Bm.append(thr(ys[te][r], p[r]))
 
 # C / D: correct protocols on the original folds (real held-out rows)
-C, Cp, D, Dp = [], [], [], []
+C, Cp, D, Dp, Cm, Dm = [], [], [], [], [], []
 for tr, te in folds:
     Xt, yt = smote(X[tr], y[tr])
     p = model().fit(Xt, yt).predict_proba(X[te])[:, 1]
-    C.append(roc_auc_score(y[te], p)); Cp.append(average_precision_score(y[te], p))
+    C.append(roc_auc_score(y[te], p)); Cp.append(average_precision_score(y[te], p)); Cm.append(thr(y[te], p))
     w = np.where(y[tr] == 1, (y[tr] == 0).sum() / (y[tr] == 1).sum(), 1.0)
     p = model().fit(X[tr], y[tr], sample_weight=w).predict_proba(X[te])[:, 1]
-    D.append(roc_auc_score(y[te], p)); Dp.append(average_precision_score(y[te], p))
+    D.append(roc_auc_score(y[te], p)); Dp.append(average_precision_score(y[te], p)); Dm.append(thr(y[te], p))
 
 rows = [
-    ("A SMOTE before CV, scored on all held-out rows (real + synthetic)", A, None, f"accuracy {np.mean(Aacc):.3f}"),
-    ("B SMOTE before CV, scored on real held-out rows only", B, None, ""),
-    ("C SMOTE inside training folds only, real held-out rows (correct)", C, Cp, ""),
-    ("D class weights, no SMOTE, real held-out rows (our method)", D, Dp, ""),
+    ("A SMOTE before CV, scored on all held-out rows (real + synthetic)", A, None, Am),
+    ("B SMOTE before CV, scored on real held-out rows only", B, None, Bm),
+    ("C SMOTE inside training folds only, real held-out rows (correct)", C, Cp, Cm),
+    ("D class weights, no SMOTE, real held-out rows (our method)", D, Dp, Dm),
 ]
 out = []
-for name, a, ap, note in rows:
-    print(f"{name:70s} AUROC={np.mean(a):.3f} ±{np.std(a):.3f}"
-          + (f"  AUPRC={np.mean(ap):.3f}" if ap else "") + (f"  {note}" if note else ""))
-    out.append(dict(protocol=name, auroc=np.mean(a), auroc_sd=np.std(a),
-                    auprc=np.mean(ap) if ap else None, note=note))
+for name, a, ap, m in rows:
+    acc, sens, spec = np.mean(m, 0)
+    print(f"{name:68s} AUROC={np.mean(a):.3f} ±{np.std(a):.3f}" + (f"  AUPRC={np.mean(ap):.3f}" if ap else "")
+          + f"  Acc={acc:.3f}  Sens={sens:.3f}  Spec={spec:.3f}")
+    out.append(dict(protocol=name, auroc=np.mean(a), auroc_sd=np.std(a), auprc=np.mean(ap) if ap else None,
+                    accuracy=acc, sensitivity=sens, specificity=spec))
+print(f"\nalways-'no' accuracy on the real cohort: {1 - y.mean():.3f}")
 pd.DataFrame(out).to_csv("results/smote_leakage_demo.csv", index=False)
 print("\nSaved results/smote_leakage_demo.csv")
