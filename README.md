@@ -111,7 +111,7 @@ This produces `data/diabetic_data.csv` (~19 MB) and `data/IDS_mapping.csv`.
 95% CI on the best models is roughly +/-0.015; the models are statistically close.
 `medical_specialty` and `payer_code` are kept (they add about +0.008 AUROC, paired 95% CI
 +0.005 to +0.011). Restricting to each patient's first
-encounter gives about 0.652, and patient-history features add about +0.006 (borderline).
+encounter gives about 0.652, and patient-history features add about +0.007 (paired 95% CI +0.003 to +0.011).
 These are first complete results on the cleaned data, not final manuscript numbers.
 
 ## Repository structure

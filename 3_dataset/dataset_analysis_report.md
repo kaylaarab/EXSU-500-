@@ -105,16 +105,14 @@ Yes, partly. Ordering a patient's stays by `encounter_id` (**assumed** chronolog
 
 **Unsafe features, never use:** total stays per patient, "is last stay", "has a later stay". 69% of readmitted stays have a later record by construction, so these leak the label.
 
-*Run with payer/specialty dropped (earlier pipeline); a rerun on the current pipeline is queued and will replace this table.*
-
 | Model (HistGradientBoosting, same splits) | AUROC | Paired gain vs base (95% CI) |
 |---|---|---|
-| Base, no history | 0.670 | n/a |
-| + stay number | 0.673 | −0.002 to +0.007 (not reliable) |
-| + stay number + previous label | 0.675 | 0.000 to +0.009 |
-| + all four history features | 0.676 | +0.001 to +0.010 |
+| Base, no history | 0.675 | n/a |
+| + stay number | 0.678 | 0.000 to +0.007 (not reliable) |
+| + stay number + previous label | 0.681 | +0.002 to +0.010 |
+| + all four history features | **0.682** | **+0.003 to +0.011** |
 
-**Reading:** a small gain of about 0.006 AUROC, borderline significant. It supports a descriptive claim ("patients who keep returning keep being readmitted") but **not causation**: the data is observational, sicker patients return more, and the order is an assumption. Not yet in the main pipeline.
+**Reading:** a small but now reliable gain of about 0.007 AUROC (the interval excludes zero). It supports a descriptive claim ("patients who keep returning keep being readmitted") but **not causation**: the data is observational, sicker patients return more, and the order is an assumption. Not yet in the main pipeline.
 
 ---
 
@@ -187,7 +185,7 @@ Earlier numbers (ensemble 0.679) came from uncleaned data and the broken A1C fea
 2. **Specialty-only vs payer-only:** if specialty carries the gain, drop payer and remove the socioeconomic-proxy concern.
 3. Subgroup performance by race, age and sex, with CIs and an explicit "too few to conclude" note.
 4. Calibration curve and a validation-chosen threshold (replace 0.5).
-5. Decide whether history features (§5) enter the headline model or stay a sensitivity result.
+5. Decide whether history features (§5, +0.007 AUROC) enter the headline model or stay a sensitivity result. Caveat: they rely on `encounter_id` being chronological, which we cannot verify.
 6. Patient-level bootstrap CIs for every model in `model_comparison.csv`.
 7. Ablations: engineered features, ICD grouping.
 8. Entity embeddings and extra tuning (Script 12, running): expected gain small.
