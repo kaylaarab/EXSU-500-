@@ -125,9 +125,10 @@ auroc = roc_auc_score(y_test, test_prob)
 auprc = average_precision_score(y_test, test_prob)
 tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 sens, spec = tp / (tp + fn), tn / (tn + fp)
+acc = (tp + tn) / (tp + tn + fp + fn)
 
 print(f"\nMLP (deep learning)                 AUROC={auroc:.3f}  AUPRC={auprc:.3f}  "
-      f"Sens={sens:.3f}  Spec={spec:.3f}  (thr=0.5)")
+      f"Acc={acc:.3f}  Sens={sens:.3f}  Spec={spec:.3f}  (thr=0.5)")
 
 # Bootstrap 95% CI, same protocol as the XGBoost evaluation
 rng = np.random.default_rng(42)
@@ -145,7 +146,7 @@ print(f"MLP test AUROC: {auroc:.3f} (95% bootstrap CI: [{ci_lo:.3f}, {ci_hi:.3f}
 results_df = pd.read_csv("results/model_comparison.csv")
 new_row = pd.DataFrame([{
     "model": "MLP (deep learning)", "auroc": auroc, "auprc": auprc,
-    "sensitivity": sens, "specificity": spec,
+    "accuracy": acc, "sensitivity": sens, "specificity": spec,
 }])
 results_df = results_df[results_df["model"] != "MLP (deep learning)"]
 results_df = pd.concat([results_df, new_row], ignore_index=True)

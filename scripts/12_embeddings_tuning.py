@@ -22,6 +22,13 @@ SMOKE = bool(os.environ.get("SMOKE"))               # SMOKE=1: tiny run to check
 RANDOM_CONFIGS, N_SEEDS, MAX_EPOCHS, PATIENCE = (1, 1, 1, 1) if SMOKE else (8, 3, 60, 8)
 rng = np.random.default_rng(0)
 
+
+def at_half(yt, p):
+    """accuracy / sensitivity / specificity at threshold 0.5 (always report accuracy WITH sensitivity)"""
+    yp = p >= 0.5
+    tp, tn = ((yp == 1) & (yt == 1)).sum(), ((yp == 0) & (yt == 0)).sum()
+    return dict(accuracy=(tp + tn) / len(yt), sensitivity=tp / (yt == 1).sum(), specificity=tn / (yt == 0).sum())
+
 tr, va, te = [pd.read_csv(f"data/{s}.csv", keep_default_na=False) for s in ("train", "val", "test")]
 y = {k: d[TARGET].to_numpy().astype(np.float32) for k, d in (("tr", tr), ("va", va), ("te", te))}
 groups = te["patient_nbr"].to_numpy()
@@ -140,7 +147,7 @@ for kind, name in (("onehot", "MLP one-hot (tuned)"), ("emb", "MLP entity embedd
     aucs = [roc_auc_score(y["te"], q) for q in ps]
     rows.append(dict(model=name, auroc_seed_mean=np.mean(aucs), auroc_seed_sd=np.std(aucs),
                      auroc_seed_ensemble=roc_auc_score(y["te"], p), auprc_seed_ensemble=average_precision_score(y["te"], p),
-                     best_config=str(bestcfg)))
+                     **at_half(y["te"], p), best_config=str(bestcfg)))
     print(f"{name:34s} AUROC per seed {np.round(aucs, 3)}  seed-ensemble={rows[-1]['auroc_seed_ensemble']:.3f}")
 
 lo, hi = pboot(preds["MLP entity embeddings (tuned)"], preds["MLP one-hot (tuned)"])
@@ -166,8 +173,8 @@ for _ in range(RANDOM_CONFIGS):
     if v > bestv: best, bestv, bestp = m, v, p_
 pb, pt = base.predict_proba(pool["te"])[:, 1], best.predict_proba(pool["te"])[:, 1]
 lo, hi = pboot(pt, pb)
-rows += [dict(model="CatBoost default (depth 4, lr 0.1)", auroc_seed_ensemble=roc_auc_score(y["te"], pb), auprc_seed_ensemble=average_precision_score(y["te"], pb)),
-         dict(model="CatBoost tuned", auroc_seed_ensemble=roc_auc_score(y["te"], pt), auprc_seed_ensemble=average_precision_score(y["te"], pt), best_config=str(bestp))]
+rows += [dict(model="CatBoost default (depth 4, lr 0.1)", auroc_seed_ensemble=roc_auc_score(y["te"], pb), auprc_seed_ensemble=average_precision_score(y["te"], pb), **at_half(y["te"], pb)),
+         dict(model="CatBoost tuned", auroc_seed_ensemble=roc_auc_score(y["te"], pt), auprc_seed_ensemble=average_precision_score(y["te"], pt), **at_half(y["te"], pt), best_config=str(bestp))]
 print(f"CatBoost default AUROC={rows[-2]['auroc_seed_ensemble']:.3f}; tuned {bestp} AUROC={rows[-1]['auroc_seed_ensemble']:.3f}; paired diff CI [{lo:+.4f}, {hi:+.4f}]")
 if not SMOKE:
     pd.DataFrame(rows).to_csv("results/embeddings_tuning.csv", index=False)

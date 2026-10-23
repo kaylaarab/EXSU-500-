@@ -58,9 +58,10 @@ auroc = roc_auc_score(y_test, test_prob)
 auprc = average_precision_score(y_test, test_prob)
 tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 sens, spec = tp / (tp + fn), tn / (tn + fp)
+acc = (tp + tn) / (tp + tn + fp + fn)
 
 print(f"CatBoost (engineered features)      AUROC={auroc:.3f}  AUPRC={auprc:.3f}  "
-      f"Sens={sens:.3f}  Spec={spec:.3f}  (thr=0.5)")
+      f"Acc={acc:.3f}  Sens={sens:.3f}  Spec={spec:.3f}  (thr=0.5)")
 
 rng = np.random.default_rng(42)
 y_test_arr = y_test.to_numpy()
@@ -84,7 +85,7 @@ print(importance_df.to_string(index=False))
 results_df = pd.read_csv("results/model_comparison.csv")
 new_row = pd.DataFrame([{
     "model": "CatBoost (engineered features)", "auroc": auroc, "auprc": auprc,
-    "sensitivity": sens, "specificity": spec,
+    "accuracy": acc, "sensitivity": sens, "specificity": spec,
 }])
 results_df = results_df[results_df["model"] != "CatBoost (engineered features)"]
 results_df = pd.concat([results_df, new_row], ignore_index=True)

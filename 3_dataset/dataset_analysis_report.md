@@ -129,18 +129,18 @@ Yes, partly. Ordering a patient's stays by `encounter_id` (**assumed** chronolog
 
 **Empirical check** (Script 09: SMOTE-NC fitted on the training split only, fixed hyperparameters, same test set; a control with plain random oversampling gave 0.663 for logistic regression, so the pipeline is sound):
 
-| Model | Arm | AUROC | AUPRC | Sensitivity | Specificity | AUROC vs class weights (95% CI) |
-|---|---|---|---|---|---|---|
-| LogReg | class weights | 0.663 | 0.212 | 0.529 | 0.689 | n/a |
-| LogReg | SMOTE-NC to 1:1 | 0.561 | 0.155 | 0.314 | 0.783 | −0.102 (−0.120 to −0.086) |
-| LogReg | SMOTE-NC to 1:2 | 0.572 | 0.162 | 0.164 | 0.913 | −0.091 (−0.107 to −0.074) |
-| XGBoost | class weights | 0.665 | 0.217 | 0.563 | 0.670 | n/a |
-| XGBoost | SMOTE-NC to 1:1 | 0.625 | 0.194 | 0.024 | 0.997 | −0.040 (−0.051 to −0.029) |
-| XGBoost | SMOTE-NC to 1:2 | 0.647 | 0.209 | 0.022 | 0.998 | −0.018 (−0.027 to −0.009) |
+| Model | Arm | AUROC | AUPRC | Accuracy | Sensitivity | Specificity | AUROC vs class weights (95% CI) |
+|---|---|---|---|---|---|---|---|
+| LogReg | class weights | 0.663 | 0.212 | 0.671 | 0.529 | 0.689 | n/a |
+| LogReg | SMOTE-NC to 1:1 | 0.561 | 0.155 | 0.731 | 0.314 | 0.783 | −0.102 (−0.120 to −0.086) |
+| LogReg | SMOTE-NC to 1:2 | 0.572 | 0.162 | 0.829 | 0.164 | 0.913 | −0.091 (−0.107 to −0.074) |
+| XGBoost | class weights | 0.665 | 0.217 | 0.658 | 0.563 | 0.670 | n/a |
+| XGBoost | SMOTE-NC to 1:1 | 0.625 | 0.194 | 0.889 | 0.024 | 0.997 | −0.040 (−0.051 to −0.029) |
+| XGBoost | SMOTE-NC to 1:2 | 0.647 | 0.209 | 0.889 | 0.022 | 0.998 | −0.018 (−0.027 to −0.009) |
 
 *(Ablation run with payer/specialty dropped; the conclusion is not expected to change.)*
 
-**Reading:** class weighting beats SMOTE-NC clearly for both models. An independent benchmark that applied SMOTE correctly (training data only) also reached only 0.608 ROC-AUC (Gupta and Choudhary 2026). Trees trained on SMOTE-NC rows learn the synthetic distribution and then flag almost nothing on real data (sensitivity ≈ 0.02). The decision to use class weights is supported by data, not only by argument.
+**Reading:** class weighting beats SMOTE-NC clearly for both models. An independent benchmark that applied SMOTE correctly (training data only) also reached only 0.608 ROC-AUC (Gupta and Choudhary 2026). Trees trained on SMOTE-NC rows learn the synthetic distribution and then flag almost nothing on real data (sensitivity ≈ 0.02). **This is why accuracy must never be read alone:** those XGBoost rows show 88.9% accuracy, identical to the always-"no" baseline, while catching 2% of readmissions. The decision to use class weights is supported by data, not only by argument.
 
 **Why high published scores should be doubted:** the 0.974 AUROC preprint (EmbPred30) applies SMOTE before cross-validation. Our own test of that mechanism is in [`../4_benchmarking/embpred30_review.md`](../4_benchmarking/embpred30_review.md).
 
@@ -154,14 +154,14 @@ Yes, partly. Ordering a patient's stays by `encounter_id` (**assumed** chronolog
 
 Main results on the held-out test set (cleaned cohort, class-weighted, threshold 0.5):
 
-| Model | AUROC | AUPRC | Sensitivity | Specificity |
-|---|---|---|---|---|
-| Baseline (always "no") | 0.500 | 0.111 | 0.000 | 1.000 |
-| Logistic regression | 0.668 | 0.214 | 0.547 | 0.685 |
-| XGBoost | 0.672 | 0.226 | 0.539 | 0.700 |
-| MLP | 0.660 | 0.219 | 0.630 | 0.598 |
-| CatBoost | **0.677** | 0.228 | 0.555 | 0.685 |
-| Ensemble (XGBoost + CatBoost + LogReg blend) | 0.676 | 0.228 | 0.560 | 0.688 |
+| Model | AUROC | AUPRC | Accuracy | Sensitivity | Specificity |
+|---|---|---|---|---|---|
+| Baseline (always "no") | 0.500 | 0.111 | 0.889 | 0.000 | 1.000 |
+| Logistic regression | 0.668 | 0.214 | 0.670 | 0.547 | 0.685 |
+| XGBoost | 0.672 | 0.226 | 0.682 | 0.539 | 0.700 |
+| MLP | 0.660 | 0.219 | 0.602 | 0.630 | 0.598 |
+| CatBoost | **0.677** | 0.228 | 0.671 | 0.555 | 0.685 |
+| Ensemble (XGBoost + CatBoost + LogReg blend) | 0.676 | 0.228 | 0.674 | 0.560 | 0.688 |
 
 The models are statistically close (95% CIs ≈ ±0.015). In plain terms, at the 0.5 threshold with an 11% base rate:
 - About **1 in 6 flagged patients is truly readmitted** (precision ≈ 18%).
