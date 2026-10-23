@@ -2,9 +2,9 @@
 
 For the team, not for submission. Plain language, so everyone can follow the
 state of the project without reading code.
-**Last updated:** 2026-10-23. Details and reasoning behind every decision:
-[`dataset_analysis_report.md`](dataset_analysis_report.md). Literature and
-numbers to compare against: [`literature/LITERATURE_BENCHMARKS.md`](../literature/LITERATURE_BENCHMARKS.md).
+**Last updated:** 2026-10-23 (see `progress_log.md` for the dated history). Details and reasoning behind every decision:
+[`3_dataset/dataset_analysis_report.md`](../3_dataset/dataset_analysis_report.md). Literature and
+numbers to compare against: [`4_benchmarking/benchmarking_report.md`](../4_benchmarking/benchmarking_report.md).
 
 ## Key dates
 
@@ -25,11 +25,11 @@ Hospitals, 99,343 usable hospital stays, 11.4% readmitted.)
 | Model | AUROC* | What it is |
 |---|---|---|
 | Baseline | 0.500 | Always says "not readmitted" |
-| Logistic regression | 0.663 | Simple classic model |
-| XGBoost | 0.665 | Boosted decision trees |
-| MLP (deep learning) | 0.659 | Small neural network |
-| CatBoost | **0.669** | Boosted trees, handles categories natively |
-| Ensemble | **0.669** | Blend of XGBoost + CatBoost |
+| Logistic regression | 0.668 | Simple classic model |
+| XGBoost | 0.672 | Boosted decision trees |
+| MLP (deep learning) | 0.660 | Small neural network |
+| CatBoost | **0.677** | Boosted trees, handles categories natively |
+| Ensemble | 0.676 | Blend of XGBoost + CatBoost |
 
 *AUROC: 0.5 = coin flip, 1.0 = perfect. All models are **statistically tied**
 (95% intervals roughly 0.65-0.69). Published studies on this dataset land in
@@ -71,7 +71,7 @@ report must say so.
 ## Still to do
 
 **Code / analysis (Siham, with Claude):**
-- [ ] Use specialty + payer in the main pipeline and rerun 02-06 (expected +0.008).
+- [x] Specialty + payer now in the main pipeline (done 23 Oct; CatBoost 0.677).
 - [ ] Subgroup performance (race, age, sex) with confidence intervals.
 - [ ] Calibration curve; pick a threshold on validation instead of 0.5.
 - [ ] Decide whether history features join the headline model.
@@ -82,8 +82,8 @@ report must say so.
 - [ ] **15+ references**, mostly primary papers from the last 5 years. Each must
       be read by at least one team member (the instructors ask about specific
       citations). Currently only about 3 are logged; Kayla's and Magalie's
-      sections in `literature/LITERATURE_BENCHMARKS_TEAM.md` are still empty.
-- [ ] The current draft (`report/midterm_report.docx`) still contains IEEE template
+      sections in `4_benchmarking/team_literature_log.md` are still empty.
+- [ ] The current draft (`2_midterm_report/midterm_report.docx`) still contains IEEE template
       boilerplate and placeholder text (e.g. "Hygftbhjgftgbh"); remove it, keep
       to **3 pages including references**, and replace inline URLs with numbered references.
 - [ ] Add: dataset description with numbers (use `dataset_analysis_report.md`),
@@ -99,16 +99,18 @@ report must say so.
 
 ## Where to find things
 ```
-README.md                         formal project description (for grading)
-docs/PROJECT_STATUS.md            this file
-docs/dataset_analysis_report.md   dataset, decisions, trade-offs, bias, results
-docs/CONTRIBUTING.md              how to use git here
-literature/LITERATURE_BENCHMARKS.md       Siham's literature + comparison with other work
-literature/LITERATURE_BENCHMARKS_TEAM.md  Kayla's and Magalie's literature log
-report/midterm_report.docx        midterm draft (due 9 Nov)
-course/                           specification, dataset list, group assignments (PDFs)
-scripts/00-09_*.py                profile, preprocess, models, SHAP, ablations
-results/                          all tables and figures (model_comparison.csv is the headline)
+README.md                                   formal project description (for grading)
+1_course_materials/                         specification, dataset list, group assignments
+2_midterm_report/midterm_report.docx        midterm draft (due 9 Nov)
+3_dataset/dataset_analysis_report.md        dataset, decisions, trade-offs, bias, results
+4_benchmarking/benchmarking_report.md       what others report + our comparison + 21-source table
+4_benchmarking/embpred30_review.md          why the 0.974 AUROC claim is not credible
+4_benchmarking/team_literature_log.md       Kayla's and Magalie's literature notes (empty so far)
+results/                                    all tables and figures (model_comparison.csv is the headline)
+6_project_progress/PROJECT_STATUS.md        this file
+6_project_progress/progress_log.md          dated log of finished work
+6_project_progress/CONTRIBUTING.md          how to use git here
+scripts/00-12_*.py                          profile, preprocess, models, SHAP, ablations
 ```
-Run order is in `dataset_analysis_report.md` section 10. The dataset itself is
+Run order is in `3_dataset/dataset_analysis_report.md` section 10. The dataset itself is
 not in the repo; download it from UCI (instructions in README).

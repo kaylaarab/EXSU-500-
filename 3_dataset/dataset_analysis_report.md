@@ -3,7 +3,7 @@
 **Project:** Predicting 30-day readmission in diabetic inpatients (EXSU 500, Team 8)
 **Dataset:** Diabetes 130-US Hospitals, 1999–2008 (UCI #296, CC BY 4.0)
 **Purpose of this file:** one place where the team can see *what the data is, what is wrong with it, what we decided and why, and what each decision costs*. Use it as the source for the Data, Methods and Limitations sections of the report.
-**Last updated:** 2026-10-23. All numbers come from scripts in `scripts/` and tables in `results/`; nothing here is hand-typed from memory.
+**Last updated:** 2026-10-23 (after keeping payer/specialty in the main pipeline and the death/hospice ablation). All numbers come from scripts in `scripts/` and tables in `results/`; nothing here is hand-typed from memory.
 
 ---
 
@@ -42,10 +42,10 @@
 
 | # | Decision | Rationale | Trade-off / new risk |
 |---|---|---|---|
-| D1 | **Exclude death/hospice discharges** (codes 11, 13, 14, 19, 20, 21) | They cannot be readmitted; kept, they inflate AUROC and dominate SHAP. The original authors and the cohort used by other papers (99,343 rows) do the same. | Removes the oldest, sickest patients disproportionately (7.3% of age 90+, 4.4% of 80–90, <1% of under-50s). Model is **not validated for end-of-life patients**; deployment must filter them by rule. Scores drop ~0.005 AUROC (honest number). |
+| D1 | **Exclude death/hospice discharges** (codes 11, 13, 14, 19, 20, 21) | Deaths cannot be readmitted (0 of 229 in our test set); hospice patients rarely are (9 of 118). Strack et al., the Cureus paper, EmbPred30 and the 2026 ceiling audit all exclude them, so it keeps our cohort comparable. **The ablation (Script 10) shows this is a validity and comparability choice, not a score lever:** on a common test set, a model trained *with* these rows scores the same (paired AUROC difference −0.0003, 95% CI −0.003 to +0.002). Scoring the easy rows only lifts the headline number by about 0.005 (0.684 vs 0.679). | Removes the oldest, sickest patients disproportionately (7.3% of age 90+, 4.4% of 80–90, <1% of under-50s). Model is **not validated for end-of-life patients**; deployment must filter them by rule. The hospice half is a judgment call (7.6% of hospice test rows were readmitted), but keeping it or not does not change the result. |
 | D2 | **Read `"None"` as a value, not missing** (`keep_default_na=False`) | Pandas turned lab "None" (not ordered) into NaN, silently breaking the A1C feature (it equalled `change=="Ch"`, 46% instead of 9.5%). | None; it was a bug. |
 | D3 | **Admission/discharge/source IDs as categories** | They are codes, not quantities (e.g. discharge 22 = rehab, 27.7% readmitted). Numeric treatment implies a false order. | More levels; some very rare (<10 rows). Gain: +0.004 AUROC in a quick test. |
-| D4 | **Drop `weight`; keep `payer_code` and `medical_specialty` as categories ("Unknown" for missing)** | Weight is 97% empty. Specialty and payer help: **+0.008 AUROC, paired 95% CI +0.005 to +0.011** (Script 07). | Payer is a socioeconomic proxy, so it may encode disparity; specialty missingness is itself informative. *Main pipeline (02–06) still drops them; see §9.* |
+| D4 | **Drop `weight`; keep `payer_code` and `medical_specialty` as categories ("Unknown" for missing). Adopted in the main pipeline on 2026-10-23.** | Weight is 97% empty. Specialty and payer help: **+0.008 AUROC, paired 95% CI +0.005 to +0.011** (Script 07). Strack et al. also kept specialty with a "missing" value, but dropped payer. | Payer is a socioeconomic proxy, so it may encode disparity; specialty missingness is itself informative. Open question: does the gain come from specialty alone? If so we can drop payer at no cost (§9). |
 | D5 | **Group ICD-9 into 9 categories** (same scheme as Strack et al. 2014) | Sparse high-cardinality codes learn poorly. | Loses detail (e.g. diabetes complications vs control). |
 | D6 | **Engineered features**: total prior visits, number of medication changes, A1C-measured-and-changed | Dense signals from sparse columns; used in follow-on work. | `total_prior_visits` is a utilisation measure and can disadvantage people with less access to care. |
 | D7 | **Handle the 11% positive rate with class weights, not SMOTE** | See §6. | Probabilities are no longer calibrated; the 0.5 threshold is arbitrary. |
@@ -77,7 +77,7 @@ Two different questions are easy to confuse:
 - The split is random, not chronological (there are no dates), so we cannot test "train on older, test on newer".
 - Not stratified by outcome; positive rates ended up close by chance.
 
-**Sensitivity check, first encounter per patient only** (Script 07, patient-level bootstrap CIs):
+**Sensitivity check, first encounter per patient only** (Script 07, patient-level bootstrap CIs; "reference" here is the earlier pipeline with payer/specialty dropped, so the main pipeline now corresponds to row B in Script 07, 0.677):
 
 | Evaluation | n (test) | Positive rate | AUROC (95% CI) |
 |---|---|---|---|
@@ -104,6 +104,8 @@ Yes, partly. Ordering a patient's stays by `encounter_id` (**assumed** chronolog
 **Safe features** (known at discharge of the current stay): stay number, previous stay's label, previous discharge destination, previous length of stay.
 
 **Unsafe features, never use:** total stays per patient, "is last stay", "has a later stay". 69% of readmitted stays have a later record by construction, so these leak the label.
+
+*Run with payer/specialty dropped (earlier pipeline); a rerun on the current pipeline is queued and will replace this table.*
 
 | Model (HistGradientBoosting, same splits) | AUROC | Paired gain vs base (95% CI) |
 |---|---|---|
@@ -136,7 +138,11 @@ Yes, partly. Ordering a patient's stays by `encounter_id` (**assumed** chronolog
 | XGBoost | SMOTE-NC to 1:1 | 0.625 | 0.194 | 0.024 | 0.997 | −0.040 (−0.051 to −0.029) |
 | XGBoost | SMOTE-NC to 1:2 | 0.647 | 0.209 | 0.022 | 0.998 | −0.018 (−0.027 to −0.009) |
 
-**Reading:** class weighting beats SMOTE-NC clearly for both models. Trees trained on SMOTE-NC rows learn the synthetic distribution and then flag almost nothing on real data (sensitivity ≈ 0.02). The decision to use class weights is supported by data, not only by argument.
+*(Ablation run with payer/specialty dropped; the conclusion is not expected to change.)*
+
+**Reading:** class weighting beats SMOTE-NC clearly for both models. An independent benchmark that applied SMOTE correctly (training data only) also reached only 0.608 ROC-AUC (Gupta and Choudhary 2026). Trees trained on SMOTE-NC rows learn the synthetic distribution and then flag almost nothing on real data (sensitivity ≈ 0.02). The decision to use class weights is supported by data, not only by argument.
+
+**Why high published scores should be doubted:** the 0.974 AUROC preprint (EmbPred30) applies SMOTE before cross-validation. Our own test of that mechanism is in [`../4_benchmarking/embpred30_review.md`](../4_benchmarking/embpred30_review.md).
 
 **Where synthetic data *is* acceptable:** demo inputs for the optional interface and pipeline stress tests. Not for training or evaluation.
 
@@ -151,18 +157,18 @@ Main results on the held-out test set (cleaned cohort, class-weighted, threshold
 | Model | AUROC | AUPRC | Sensitivity | Specificity |
 |---|---|---|---|---|
 | Baseline (always "no") | 0.500 | 0.111 | 0.000 | 1.000 |
-| Logistic regression | 0.663 | 0.212 | 0.528 | 0.689 |
-| XGBoost | 0.665 | 0.222 | 0.540 | 0.695 |
-| MLP | 0.659 | 0.219 | 0.539 | 0.686 |
-| CatBoost | 0.669 | 0.221 | 0.568 | 0.670 |
-| Ensemble (XGBoost 0.7 + CatBoost 0.3) | 0.669 | 0.224 | 0.550 | 0.683 |
+| Logistic regression | 0.668 | 0.214 | 0.547 | 0.685 |
+| XGBoost | 0.672 | 0.226 | 0.539 | 0.700 |
+| MLP | 0.660 | 0.219 | 0.630 | 0.598 |
+| CatBoost | **0.677** | 0.228 | 0.555 | 0.685 |
+| Ensemble (XGBoost + CatBoost + LogReg blend) | 0.676 | 0.228 | 0.560 | 0.688 |
 
-The models are statistically indistinguishable (95% CIs ≈ 0.653–0.686). In plain terms, at the 0.5 threshold with an 11% base rate:
+The models are statistically close (95% CIs ≈ ±0.015). In plain terms, at the 0.5 threshold with an 11% base rate:
 - About **1 in 6 flagged patients is truly readmitted** (precision ≈ 18%).
 - About **45% of true readmissions are missed**.
 - Strongest drivers: prior-year inpatient visits, then discharge destination (SHAP). These are plausible markers of past utilisation, not causes.
 
-Earlier numbers (ensemble 0.679) were from uncleaned data containing the easy death/hospice rows and the broken A1C feature; the figures above are the honest ones. They are in line with the literature (`literature/LITERATURE_BENCHMARKS.md`).
+Earlier numbers (ensemble 0.679) came from uncleaned data and the broken A1C feature. The figures above are in line with the literature: an independent 2026 audit on the identical cohort (99,343 encounters) reports 0.6692 for gradient boosting ([`../4_benchmarking/benchmarking_report.md`](../4_benchmarking/benchmarking_report.md)).
 
 ---
 
@@ -177,13 +183,16 @@ Earlier numbers (ensemble 0.679) were from uncleaned data containing the easy de
 
 ## 9. Open items (in priority order)
 
-1. **Adopt specialty + payer as categories in the main pipeline (D4)** and rerun 02–06: expected ≈ +0.008 AUROC.
-2. Subgroup performance by race, age and sex, with CIs and an explicit "too few to conclude" note.
-3. Calibration curve and a validation-chosen threshold (replace 0.5).
-4. Decide whether history features (§5) enter the headline model or stay a sensitivity result.
-5. Move to patient-level bootstrap CIs for every model in `model_comparison.csv`.
-6. Ablations: engineered features, ICD grouping, dropped columns.
-7. Midterm report (due **Mon 9 Nov**): ≥15 primary references, 3 IEEE pages, CRediT and Generative-AI statements.
+1. ~~Adopt specialty + payer in the main pipeline~~ **Done 2026-10-23** (CatBoost 0.677).
+2. **Specialty-only vs payer-only:** if specialty carries the gain, drop payer and remove the socioeconomic-proxy concern.
+3. Subgroup performance by race, age and sex, with CIs and an explicit "too few to conclude" note.
+4. Calibration curve and a validation-chosen threshold (replace 0.5).
+5. Decide whether history features (§5) enter the headline model or stay a sensitivity result.
+6. Patient-level bootstrap CIs for every model in `model_comparison.csv`.
+7. Ablations: engineered features, ICD grouping.
+8. Entity embeddings and extra tuning (Script 12, running): expected gain small.
+9. Learning curve to test the "ceiling is in the data" claim from the 2026 audit.
+10. Midterm report (due **Mon 9 Nov**): ≥15 primary references, 3 IEEE pages, CRediT and Generative-AI statements.
 
 ## 10. Reproduce
 
@@ -199,6 +208,9 @@ python scripts/05_catboost.py; python scripts/06_ensemble.py
 python scripts/07_sensitivity.py                       # specialty/payer, first-encounter, patient CIs
 python scripts/08_trajectory_features.py               # patient-history features
 python scripts/09_smote_ablation.py                    # SMOTE vs class weights
+python scripts/10_hospice_death_ablation.py            # does excluding death/hospice matter?
+python scripts/11_smote_leakage_demo.py                # SMOTE-before-CV inflation
+python scripts/12_embeddings_tuning.py                 # entity embeddings, extra tuning
 ```
 
 The raw data and splits are git-ignored on purpose (course rule: do not commit data).
