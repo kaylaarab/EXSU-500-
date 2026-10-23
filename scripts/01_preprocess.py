@@ -77,7 +77,8 @@ def group_icd9(code):
     return "Other"
 
 
-def load_and_clean(path: str) -> pd.DataFrame:
+def load_and_clean(path: str, drop_cols=None) -> pd.DataFrame:
+    drop_cols = DROP_COLS if drop_cols is None else drop_cols
     # keep_default_na=False: pandas would otherwise read the literal string
     # "None" (labs not ordered: A1Cresult, max_glu_serum) as missing, which
     # silently breaks the A1C feature below. Only "?" means missing.
@@ -93,7 +94,7 @@ def load_and_clean(path: str) -> pd.DataFrame:
     df["readmit_30d"] = (df["readmitted"] == "<30").astype(int)
     df = df.drop(columns=["readmitted"])
 
-    df = df.drop(columns=[c for c in DROP_COLS if c in df.columns])
+    df = df.drop(columns=[c for c in drop_cols if c in df.columns])
 
     # Group raw ICD-9 diagnosis codes into broad clinical categories
     for col in ["diag_1", "diag_2", "diag_3"]:
