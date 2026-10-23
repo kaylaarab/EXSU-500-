@@ -130,7 +130,8 @@ Ordered by value for the report. Items marked **(running)** or **(done)** are tr
 6. **Leak-free entity-embedding network.** EmbPred30's idea (learned embeddings for categorical columns) is sound; test it under a correct patient-level protocol to see whether it beats one-hot encoding.
 7. **Subgroup performance (race, age, sex) with the Fairlearn toolkit.** Not done by any source above; a distinct contribution.
 8. **Check what the near-constant drug columns add** (the CSoI report and a GitHub project dropped zero-variance columns such as `examide` and `citoglipton`).
-9. **Read the sources we could only see in search results** (rows 17-21) before citing them; each reference must be read by a team member.
+9. **Stronger deep-learning baselines (checked 2026-10-23, not yet run).** Candidates: RealMLP (Holzmüller et al., NeurIPS 2024, [arXiv 2407.04491](https://arxiv.org/abs/2407.04491), installable via `pytabkit`), TabM and FT-Transformer (Gorishniy et al.; TabM and FT-Transformer figures not verified by our searches), TabPFN-2.5 ([arXiv 2511.08667](https://arxiv.org/pdf/2511.08667v2); needs pretrained weights and has dataset-size limits). Background: tree models beat neural nets on medium-sized tabular data in [Grinsztajn et al. 2022](https://ar5iv.labs.arxiv.org/html/2207.08815), and [McElfresh et al.](https://arxiv.org/pdf/2305.02997v2) argue the gap depends on the dataset. Expect at most a small gain here because the 2026 audit puts the ceiling in the data.
+10. **Read the sources we could only see in search results** (rows 17-21) before citing them; each reference must be read by a team member.
 
 ## 7. Notes on rigour
 
