@@ -80,15 +80,16 @@ def group_icd9(code):
     return "Other"
 
 
-def load_and_clean(path: str, drop_cols=None) -> pd.DataFrame:
+def load_and_clean(path: str, drop_cols=None, dead_codes=None) -> pd.DataFrame:
     drop_cols = DROP_COLS if drop_cols is None else drop_cols
+    dead_codes = DEAD_HOSPICE_CODES if dead_codes is None else dead_codes
     # keep_default_na=False: pandas would otherwise read the literal string
     # "None" (labs not ordered: A1Cresult, max_glu_serum) as missing, which
     # silently breaks the A1C feature below. Only "?" means missing.
     df = pd.read_csv(path, keep_default_na=False, na_values=["?"], low_memory=False)
 
     # Drop encounters that end in death/hospice (cannot be readmitted)
-    dead = df["discharge_disposition_id"].isin(DEAD_HOSPICE_CODES)
+    dead = df["discharge_disposition_id"].isin(dead_codes)
     print(f"Excluding {dead.sum():,} death/hospice discharges "
           f"({dead.mean() * 100:.2f}%)")
     df = df[~dead].copy()
