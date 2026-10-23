@@ -103,10 +103,10 @@ for ratio_name, ratio, weighted in arms:
         tn, fp, fn, tp = confusion_matrix(yte, (p >= 0.5).astype(int)).ravel()
         rows.append(dict(model=kind, arm=ratio_name, auroc=roc_auc_score(yte, p),
                          auprc=average_precision_score(yte, p),
-                         sensitivity=tp / (tp + fn), specificity=tn / (tn + fp),
+                         accuracy=(tp + tn) / (tp + tn + fp + fn), sensitivity=tp / (tp + fn), specificity=tn / (tn + fp),
                          mean_pred=p.mean()))
         print(f"{kind:8s} {ratio_name:10s} AUROC={rows[-1]['auroc']:.3f} AUPRC={rows[-1]['auprc']:.3f} "
-              f"Sens={rows[-1]['sensitivity']:.3f} Spec={rows[-1]['specificity']:.3f} mean_pred={p.mean():.3f}")
+              f"Acc={rows[-1]['accuracy']:.3f} Sens={rows[-1]['sensitivity']:.3f} Spec={rows[-1]['specificity']:.3f} mean_pred={p.mean():.3f}")
 
 for r in rows:
     if r["arm"] == "weights":

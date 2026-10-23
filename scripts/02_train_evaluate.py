@@ -7,7 +7,8 @@ Models:
   3. Classical ML - gradient boosted trees (XGBoost)
 
 Protocol: fit/tune on train+val, evaluate once on held-out test.
-Reports AUROC, AUPRC, sensitivity/specificity at a stated threshold,
+Reports AUROC, AUPRC, accuracy, sensitivity/specificity at a stated threshold
+(accuracy is always shown WITH sensitivity: on an 11% positive rate, accuracy alone is misleading),
 and 5-seed variability for the best model.
 """
 import numpy as np
@@ -47,9 +48,10 @@ def evaluate(name, y_true, y_prob, threshold=0.5):
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
     sens = tp / (tp + fn)
     spec = tn / (tn + fp)
+    acc = (tp + tn) / (tp + tn + fp + fn)
     print(f"{name:35s} AUROC={auroc:.3f}  AUPRC={auprc:.3f}  "
-          f"Sens={sens:.3f}  Spec={spec:.3f}  (thr={threshold})")
-    return dict(model=name, auroc=auroc, auprc=auprc, sensitivity=sens, specificity=spec)
+          f"Acc={acc:.3f}  Sens={sens:.3f}  Spec={spec:.3f}  (thr={threshold})")
+    return dict(model=name, auroc=auroc, auprc=auprc, accuracy=acc, sensitivity=sens, specificity=spec)
 
 
 results = []

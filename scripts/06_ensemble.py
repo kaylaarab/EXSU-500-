@@ -101,9 +101,10 @@ auroc = roc_auc_score(y_test, blend_test)
 auprc = average_precision_score(y_test, blend_test)
 tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 sens, spec = tp / (tp + fn), tn / (tn + fp)
+acc = (tp + tn) / (tp + tn + fp + fn)
 
 print(f"Ensemble (weighted blend)           AUROC={auroc:.3f}  AUPRC={auprc:.3f}  "
-      f"Sens={sens:.3f}  Spec={spec:.3f}  (thr=0.5)")
+      f"Acc={acc:.3f}  Sens={sens:.3f}  Spec={spec:.3f}  (thr=0.5)")
 
 rng = np.random.default_rng(42)
 y_test_arr = y_test.to_numpy()
@@ -124,7 +125,7 @@ print(f"  CatBoost:            AUROC={roc_auc_score(y_test, cb_test):.3f}")
 results_df = pd.read_csv("results/model_comparison.csv")
 new_row = pd.DataFrame([{
     "model": "Ensemble (CatBoost+XGBoost+LogReg blend)", "auroc": auroc, "auprc": auprc,
-    "sensitivity": sens, "specificity": spec,
+    "accuracy": acc, "sensitivity": sens, "specificity": spec,
 }])
 results_df = results_df[results_df["model"] != "Ensemble (CatBoost+XGBoost+LogReg blend)"]
 results_df = pd.concat([results_df, new_row], ignore_index=True)

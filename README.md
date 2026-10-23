@@ -79,7 +79,7 @@ This produces `data/diabetic_data.csv` (~19 MB) and `data/IDS_mapping.csv`.
   is 11.4% / 11.7% / 11.1%.
 - **Tune on validation, report on test.** The test set is scored once per model.
 - **Metrics:** AUROC and AUPRC (primary, given class imbalance); sensitivity and
-  specificity at a stated threshold of 0.5. Accuracy is not used.
+  specificity at a stated threshold of 0.5. Accuracy is always reported **together with** sensitivity and specificity, never alone: the always-"no" baseline scores 88.9% accuracy with 0% sensitivity.
 - **Uncertainty:** 95% bootstrap confidence intervals on the test set. The main
   table uses encounter-level resampling; `scripts/07_sensitivity.py` adds
   patient-level (cluster) bootstrap intervals, which are slightly wider.
@@ -99,14 +99,14 @@ This produces `data/diabetic_data.csv` (~19 MB) and `data/IDS_mapping.csv`.
 5. **Deep learning**: MLP on one-hot features.
 6. **Ensemble**: validation-tuned blend of XGBoost and CatBoost.
 
-| Model | AUROC | AUPRC | Sensitivity | Specificity |
-|---|---|---|---|---|
-| Baseline (majority-class) | 0.500 | 0.111 | 0.000 | 1.000 |
-| Logistic Regression | 0.668 | 0.214 | 0.547 | 0.685 |
-| XGBoost | 0.672 | 0.226 | 0.539 | 0.700 |
-| MLP | 0.660 | 0.219 | 0.630 | 0.598 |
-| CatBoost | 0.677 | 0.228 | 0.555 | 0.685 |
-| Ensemble | 0.676 | 0.228 | 0.560 | 0.688 |
+| Model | AUROC | AUPRC | Accuracy | Sensitivity | Specificity |
+|---|---|---|---|---|---|
+| Baseline (majority-class) | 0.500 | 0.111 | 0.889 | 0.000 | 1.000 |
+| Logistic Regression | 0.668 | 0.214 | 0.670 | 0.547 | 0.685 |
+| XGBoost | 0.672 | 0.226 | 0.682 | 0.539 | 0.700 |
+| MLP | 0.660 | 0.219 | 0.602 | 0.630 | 0.598 |
+| CatBoost | 0.677 | 0.228 | 0.671 | 0.555 | 0.685 |
+| Ensemble | 0.676 | 0.228 | 0.674 | 0.560 | 0.688 |
 
 95% CI on the best models is roughly +/-0.015; the models are statistically close.
 `medical_specialty` and `payer_code` are kept (they add about +0.008 AUROC, paired 95% CI

@@ -35,6 +35,8 @@ Hospitals, 99,343 usable hospital stays, 11.4% readmitted.)
 (95% intervals roughly 0.65-0.69). Published studies on this dataset land in
 the same 0.64-0.68 range, so we are where a correct analysis should be.
 
+**Reporting rule (team decision, 23 Oct):** always report **sensitivity alongside accuracy** (with specificity and AUROC/AUPRC). Full table with accuracy, sensitivity and specificity: `results/model_comparison.csv`. The always-"no" baseline has 88.9% accuracy but 0% sensitivity, which is why accuracy alone is meaningless here.
+
 **What that means in practice:** about 1 in 6 patients the model flags is
 really readmitted, and about 45% of real readmissions are missed. Good enough
 to rank risk and write a solid report; not good enough for clinical use. The

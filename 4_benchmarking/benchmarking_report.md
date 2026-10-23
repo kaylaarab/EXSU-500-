@@ -15,14 +15,14 @@
 
 *Cleaned cohort (99,343 encounters), patient-level split, test set scored once, `payer_code` and `medical_specialty` kept. Source: `results/main_models/model_comparison.csv`; reasoning in [`../3_dataset/dataset_analysis_report.md`](../3_dataset/dataset_analysis_report.md).*
 
-| Model | AUROC | AUPRC | Sensitivity | Specificity |
-|---|---|---|---|---|
-| Baseline (always "no readmission") | 0.500 | 0.111 | 0.000 | 1.000 |
-| Logistic regression | 0.668 | 0.214 | 0.547 | 0.685 |
-| XGBoost (tuned on validation) | 0.672 | 0.226 | 0.539 | 0.700 |
-| MLP (deep learning) | 0.660 | 0.219 | 0.630 | 0.598 |
-| CatBoost (engineered features) | **0.677** | 0.228 | 0.555 | 0.685 |
-| Ensemble (CatBoost + XGBoost + LogReg) | 0.676 | 0.228 | 0.560 | 0.688 |
+| Model | AUROC | AUPRC | Accuracy | Sensitivity | Specificity |
+|---|---|---|---|---|---|
+| Baseline (always "no readmission") | 0.500 | 0.111 | 0.889 | 0.000 | 1.000 |
+| Logistic regression | 0.668 | 0.214 | 0.670 | 0.547 | 0.685 |
+| XGBoost (tuned on validation) | 0.672 | 0.226 | 0.682 | 0.539 | 0.700 |
+| MLP (deep learning) | 0.660 | 0.219 | 0.602 | 0.630 | 0.598 |
+| CatBoost (engineered features) | **0.677** | 0.228 | 0.671 | 0.555 | 0.685 |
+| Ensemble (CatBoost + XGBoost + LogReg) | 0.676 | 0.228 | 0.674 | 0.560 | 0.688 |
 
 The models are statistically close (95% intervals about +/-0.015). The first-pass numbers we reported earlier (0.678-0.679) came from uncleaned data and a bug and are superseded.
 
