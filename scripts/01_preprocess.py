@@ -17,6 +17,18 @@ RANDOM_STATE = 42
 # administrative, not clinical, and ~40-50% missing)
 DROP_COLS = ["encounter_id", "weight", "payer_code", "medical_specialty"]
 
+# discharge_disposition_id codes for death / hospice (see IDS_mapping.csv):
+# 11 expired, 13 hospice-home, 14 hospice-medical facility, 19/20/21 expired
+# (Medicaid hospice). These patients cannot be readmitted, so keeping them
+# lets the model learn a trivial "died -> no readmission" rule (positive
+# rate 1.8% vs 11.4% for everyone else). Strack et al. (2014) excluded them.
+DEAD_HOSPICE_CODES = [11, 13, 14, 19, 20, 21]
+
+# Integer ID columns that are category codes, not quantities
+ID_COLS_CATEGORICAL = [
+    "admission_type_id", "discharge_disposition_id", "admission_source_id",
+]
+
 # The 23 medication columns, each coded Up/Down/Steady/No
 MED_COLS = [
     "metformin", "repaglinide", "nateglinide", "chlorpropamide", "glimepiride",
@@ -65,15 +77,24 @@ def group_icd9(code):
     return "Other"
 
 
-def load_and_clean(path: str) -> pd.DataFrame:
-    df = pd.read_csv(path)
-    df = df.replace("?", np.nan)
+def load_and_clean(path: str, drop_cols=None) -> pd.DataFrame:
+    drop_cols = DROP_COLS if drop_cols is None else drop_cols
+    # keep_default_na=False: pandas would otherwise read the literal string
+    # "None" (labs not ordered: A1Cresult, max_glu_serum) as missing, which
+    # silently breaks the A1C feature below. Only "?" means missing.
+    df = pd.read_csv(path, keep_default_na=False, na_values=["?"])
+
+    # Drop encounters that end in death/hospice (cannot be readmitted)
+    dead = df["discharge_disposition_id"].isin(DEAD_HOSPICE_CODES)
+    print(f"Excluding {dead.sum():,} death/hospice discharges "
+          f"({dead.mean() * 100:.2f}%)")
+    df = df[~dead].copy()
 
     # Binary target: readmitted within 30 days vs not
     df["readmit_30d"] = (df["readmitted"] == "<30").astype(int)
     df = df.drop(columns=["readmitted"])
 
-    df = df.drop(columns=[c for c in DROP_COLS if c in df.columns])
+    df = df.drop(columns=[c for c in drop_cols if c in df.columns])
 
     # Group raw ICD-9 diagnosis codes into broad clinical categories
     for col in ["diag_1", "diag_2", "diag_3"]:
@@ -109,8 +130,13 @@ def load_and_clean(path: str) -> pd.DataFrame:
         (df["A1Cresult"] != "None") & (df["change"] == "Ch")
     ).astype(int)
 
+    # Category-code IDs -> strings so downstream models treat them as
+    # categorical (prefix keeps them strings when the splits are re-read).
+    for c in ID_COLS_CATEGORICAL:
+        df[c] = c.replace("_id", "") + "_" + df[c].astype(str)
+
     # Remaining missing categoricals -> explicit "Unknown" category
-    cat_cols = df.select_dtypes(include="object").columns
+    cat_cols = df.select_dtypes(exclude="number").columns
     for c in cat_cols:
         df[c] = df[c].fillna("Unknown")
 

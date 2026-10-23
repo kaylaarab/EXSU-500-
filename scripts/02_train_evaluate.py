@@ -22,16 +22,16 @@ from xgboost import XGBClassifier
 TARGET = "readmit_30d"
 ID_COLS = ["patient_nbr"]
 
-train = pd.read_csv("data/train.csv")
-val = pd.read_csv("data/val.csv")
-test = pd.read_csv("data/test.csv")
+train = pd.read_csv("data/train.csv", keep_default_na=False)
+val = pd.read_csv("data/val.csv", keep_default_na=False)
+test = pd.read_csv("data/test.csv", keep_default_na=False)
 
 y_train, y_val, y_test = train[TARGET], val[TARGET], test[TARGET]
 X_train = train.drop(columns=[TARGET] + ID_COLS)
 X_val = val.drop(columns=[TARGET] + ID_COLS)
 X_test = test.drop(columns=[TARGET] + ID_COLS)
 
-cat_cols = X_train.select_dtypes(include="object").columns.tolist()
+cat_cols = X_train.select_dtypes(exclude="number").columns.tolist()
 num_cols = [c for c in X_train.columns if c not in cat_cols]
 
 preprocess = ColumnTransformer([
