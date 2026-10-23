@@ -1,27 +1,31 @@
 """
-Step 11: How much does it inflate AUROC to apply SMOTE BEFORE cross-validation?
+Step 11: How much does applying SMOTE BEFORE cross-validation inflate AUROC?
 
-Motivation: arXiv:2002.11215 (EmbPred30) reports 0.974 AUROC on this dataset using
-SMOTE-balanced data and 6-fold CV, without stating that SMOTE was confined to
-training folds (see literature/ for the review). We cannot reproduce that
-deep network, but we CAN measure the leakage mechanism on our own cohort with a
-fixed gradient-boosting model. Only the evaluation protocol changes between rows.
+Motivation: EmbPred30 (arXiv:2002.11215) reports 0.974 AUROC / 95.2% accuracy on this
+dataset. Reading the paper (checked 2026-10-23): it keeps ONE encounter per patient and
+excludes death/hospice, so repeated-patient leakage is not the explanation. Its
+preprocessing list ends with a SMOTE step ("Data Synthesis", 1:1 ratio) BEFORE
+the 6-fold cross-validation, and the text never says SMOTE was confined to
+training folds. We cannot reproduce their deep network; instead we test the
+mechanism on the same kind of cohort with a fixed gradient-boosting model.
+Only the evaluation protocol changes between rows. All use the same 6 folds.
 
-  A0  row-level 6-fold CV, real data only         (patient leakage only)
-  A1  SMOTE-NC on ALL data, then row-level 6-fold CV; scored on every held-out row
-  A2  same as A1 but scored on REAL held-out rows only
-  C   correct: patient-level split, SMOTE-NC on TRAIN only, scored on real test rows
-  D   correct: patient-level split, class weights, scored on real test rows
+  A  SMOTE-NC on all data, then 6-fold CV; scored on ALL held-out rows (real + synthetic)
+  B  same folds as A; scored on the REAL held-out rows only
+  C  SMOTE-NC inside each training fold only; scored on real held-out rows  (correct)
+  D  class weights, no SMOTE; scored on real held-out rows                 (our method)
 
-If A1/A2 are far above C/D, that gap is evaluation leakage, not model skill.
-Hyperparameters are fixed; nothing is tuned on any evaluation set.
+If A/B are far above C/D, the gap is evaluation leakage, not model skill.
+Cohort: first encounter per patient (as in EmbPred30), death/hospice excluded,
+one row per patient so row-level folds are also patient-level folds.
+Hyperparameters fixed; nothing is tuned on any evaluation fold.
 """
 import importlib.util
 import numpy as np
 import pandas as pd
 from imblearn.over_sampling import SMOTENC
 from sklearn.ensemble import HistGradientBoostingClassifier as HGB
-from sklearn.metrics import average_precision_score, roc_auc_score
+from sklearn.metrics import accuracy_score, average_precision_score, roc_auc_score
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import OrdinalEncoder
 
@@ -32,17 +36,18 @@ spec.loader.exec_module(prep)
 RAW, TARGET = "data/diabetic_data.csv", "readmit_30d"
 
 df = prep.load_and_clean(RAW)
+enc_id = pd.read_csv(RAW, usecols=["encounter_id"], low_memory=False).loc[df.index, "encounter_id"]
+df = df[enc_id.groupby(df["patient_nbr"]).transform("min") == enc_id]       # first encounter only
 cats = df.drop(columns=[TARGET, "patient_nbr"]).select_dtypes(exclude="number").columns.tolist()
 nums = [c for c in df.columns if c not in cats + [TARGET, "patient_nbr"]]
-order = cats + nums
-X = df[order].copy()
-X[cats] = OrdinalEncoder().fit_transform(X[cats])          # integer codes, no label information
+X = df[cats + nums].copy()
+X[cats] = OrdinalEncoder().fit_transform(X[cats])         # integer codes; uses no label information
 X = X.astype(float).to_numpy()
 y = df[TARGET].to_numpy()
 cat_idx = list(range(len(cats)))
 mask = np.array([True] * len(cats) + [False] * len(nums))
-n_orig = len(y)
-print(f"cohort: {n_orig:,} encounters, {y.mean():.3f} positive\n")
+n = len(y)
+print(f"cohort: {n:,} patients (first encounter), {y.mean():.3f} positive\n")
 
 
 def model():
@@ -53,53 +58,42 @@ def smote(Xs, ys):
     return SMOTENC(categorical_features=cat_idx, sampling_strategy=1.0, random_state=42).fit_resample(Xs, ys)
 
 
-def cv_scores(Xa, ya, real_flag, train_is_balanced=False):
-    """Row-level 6-fold CV. Returns (all-rows AUROC, real-rows AUROC) averaged over folds."""
-    all_, real = [], []
-    for tr, te in StratifiedKFold(6, shuffle=True, random_state=0).split(Xa, ya):
-        p = model().fit(Xa[tr], ya[tr]).predict_proba(Xa[te])[:, 1]
-        all_.append(roc_auc_score(ya[te], p))
-        r = real_flag[te]
-        real.append(roc_auc_score(ya[te][r], p[r]))
-    return np.mean(all_), np.std(all_), np.mean(real), np.std(real)
+folds = list(StratifiedKFold(6, shuffle=True, random_state=0).split(X, y))
 
-
-rows = []
-
-
-def record(name, auroc, sd, auprc=None, note=""):
-    rows.append(dict(protocol=name, auroc=auroc, auroc_sd=sd, auprc=auprc, note=note))
-    print(f"{name:62s} AUROC={auroc:.3f}" + (f" ±{sd:.3f}" if sd == sd else "")
-          + (f"  AUPRC={auprc:.3f}" if auprc is not None else "") + f"  {note}")
-
-
-# A0: real data, row-level CV (no SMOTE)
-a_all, a_sd, _, _ = cv_scores(X, y, np.ones(n_orig, bool))
-record("A0 row-level 6-fold CV, real data, no SMOTE", a_all, a_sd, note="patient leakage only")
-
-# A1 / A2: SMOTE on everything first, then row-level CV
+# A / B: SMOTE first, then CV over the balanced dataset (the suspected protocol)
 Xs, ys = smote(X, y)
-is_real = np.arange(len(ys)) < n_orig                    # SMOTE appends synthetic rows after originals
-print(f"SMOTE-NC on all data: {n_orig:,} -> {len(ys):,} rows; "
-      f"{(~is_real).sum():,} synthetic ({(~is_real).sum() / (ys == 1).sum():.0%} of positives)")
-a1, a1sd, a2, a2sd = cv_scores(Xs, ys, is_real)
-record("A1 SMOTE before 6-fold CV, scored on ALL held-out rows", a1, a1sd, note="'EmbPred30-style' protocol")
-record("A2 SMOTE before 6-fold CV, scored on REAL held-out rows", a2, a2sd, note="")
+is_real = np.arange(len(ys)) < n                          # SMOTE appends synthetic rows after the originals
+print(f"SMOTE-NC on all data: {n:,} -> {len(ys):,} rows; {(~is_real).sum():,} synthetic "
+      f"({(~is_real).sum() / (ys == 1).sum():.0%} of the positive class)\n")
+A, Aacc, B = [], [], []
+for tr, te in StratifiedKFold(6, shuffle=True, random_state=0).split(Xs, ys):
+    p = model().fit(Xs[tr], ys[tr]).predict_proba(Xs[te])[:, 1]
+    A.append(roc_auc_score(ys[te], p))
+    Aacc.append(accuracy_score(ys[te], p >= 0.5))
+    r = is_real[te]
+    B.append(roc_auc_score(ys[te][r], p[r]))
 
-# C / D: correct protocol on a patient-level split
-tr, va, te = prep.patient_level_split(df)
-pos = df.index.get_indexer
-itr, ite = pos(tr.index), pos(te.index)
-Xtr, ytr, Xte, yte = X[itr], y[itr], X[ite], y[ite]
-Xtr_s, ytr_s = smote(Xtr, ytr)
-p = model().fit(Xtr_s, ytr_s).predict_proba(Xte)[:, 1]
-record("C patient split, SMOTE on TRAIN only, real test rows", roc_auc_score(yte, p), float("nan"),
-       average_precision_score(yte, p), "correct")
-w = np.where(ytr == 1, (ytr == 0).sum() / (ytr == 1).sum(), 1.0)
-p = HGB(max_depth=6, learning_rate=0.1, max_iter=300, categorical_features=mask,
-        random_state=0).fit(Xtr, ytr, sample_weight=w).predict_proba(Xte)[:, 1]
-record("D patient split, class weights, real test rows", roc_auc_score(yte, p), float("nan"),
-       average_precision_score(yte, p), "correct, our method")
+# C / D: correct protocols on the original folds (real held-out rows)
+C, Cp, D, Dp = [], [], [], []
+for tr, te in folds:
+    Xt, yt = smote(X[tr], y[tr])
+    p = model().fit(Xt, yt).predict_proba(X[te])[:, 1]
+    C.append(roc_auc_score(y[te], p)); Cp.append(average_precision_score(y[te], p))
+    w = np.where(y[tr] == 1, (y[tr] == 0).sum() / (y[tr] == 1).sum(), 1.0)
+    p = model().fit(X[tr], y[tr], sample_weight=w).predict_proba(X[te])[:, 1]
+    D.append(roc_auc_score(y[te], p)); Dp.append(average_precision_score(y[te], p))
 
-pd.DataFrame(rows).to_csv("results/smote_leakage_demo.csv", index=False)
+rows = [
+    ("A SMOTE before CV, scored on all held-out rows (real + synthetic)", A, None, f"accuracy {np.mean(Aacc):.3f}"),
+    ("B SMOTE before CV, scored on real held-out rows only", B, None, ""),
+    ("C SMOTE inside training folds only, real held-out rows (correct)", C, Cp, ""),
+    ("D class weights, no SMOTE, real held-out rows (our method)", D, Dp, ""),
+]
+out = []
+for name, a, ap, note in rows:
+    print(f"{name:70s} AUROC={np.mean(a):.3f} ±{np.std(a):.3f}"
+          + (f"  AUPRC={np.mean(ap):.3f}" if ap else "") + (f"  {note}" if note else ""))
+    out.append(dict(protocol=name, auroc=np.mean(a), auroc_sd=np.std(a),
+                    auprc=np.mean(ap) if ap else None, note=note))
+pd.DataFrame(out).to_csv("results/smote_leakage_demo.csv", index=False)
 print("\nSaved results/smote_leakage_demo.csv")

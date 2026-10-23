@@ -88,7 +88,7 @@ This produces `data/diabetic_data.csv` (~19 MB) and `data/IDS_mapping.csv`.
 - **Imbalance handling:** class weights. SMOTE-NC was tested as an ablation and was
   clearly worse on real test data (`scripts/09_smote_ablation.py`). No synthetic
   data is used for training or evaluation.
-- Rationale for each decision and its trade-offs: `docs/dataset_analysis_report.md`.
+- Rationale for each decision and its trade-offs: `3_dataset/dataset_analysis_report.md`.
 
 ## Models and current results
 
@@ -102,46 +102,42 @@ This produces `data/diabetic_data.csv` (~19 MB) and `data/IDS_mapping.csv`.
 | Model | AUROC | AUPRC | Sensitivity | Specificity |
 |---|---|---|---|---|
 | Baseline (majority-class) | 0.500 | 0.111 | 0.000 | 1.000 |
-| Logistic Regression | 0.663 | 0.212 | 0.528 | 0.689 |
-| XGBoost | 0.665 | 0.222 | 0.540 | 0.695 |
-| MLP | 0.659 | 0.219 | 0.539 | 0.686 |
-| CatBoost | 0.669 | 0.221 | 0.568 | 0.670 |
-| Ensemble | 0.669 | 0.224 | 0.550 | 0.683 |
+| Logistic Regression | 0.668 | 0.214 | 0.547 | 0.685 |
+| XGBoost | 0.672 | 0.226 | 0.539 | 0.700 |
+| MLP | 0.660 | 0.219 | 0.630 | 0.598 |
+| CatBoost | 0.677 | 0.228 | 0.555 | 0.685 |
+| Ensemble | 0.676 | 0.228 | 0.560 | 0.688 |
 
-95% CI on the best models is roughly 0.653-0.686; the models are statistically
-indistinguishable. Keeping `medical_specialty` and `payer_code` adds about +0.008
-AUROC (paired 95% CI +0.005 to +0.011), restricting to each patient's first
+95% CI on the best models is roughly +/-0.015; the models are statistically close.
+`medical_specialty` and `payer_code` are kept (they add about +0.008 AUROC, paired 95% CI
++0.005 to +0.011). Restricting to each patient's first
 encounter gives about 0.652, and patient-history features add about +0.006 (borderline).
 These are first complete results on the cleaned data, not final manuscript numbers.
 
 ## Repository structure
 
+Numbered folders, one per topic. Open the folder you need; each has its own README.
+
 ```
-data/                    raw CSV + generated splits (git-ignored; never committed)
-scripts/
-  00_profile.py          profile the raw data (missingness, repeat patients, subgroups)
-  01_preprocess.py       clean, exclude death/hospice, patient-level split
-  02_train_evaluate.py   baseline, LogReg, XGBoost + bootstrap CI
-  03_interpretability.py SHAP
-  04_deep_learning.py    MLP
-  05_catboost.py         CatBoost + engineered features
-  06_ensemble.py         blended ensemble
-  07_sensitivity.py      specialty/payer, first-encounter, patient-level CIs
-  08_trajectory_features.py  patient-history features
-  09_smote_ablation.py   SMOTE-NC vs class weights
-results/                 all tables and figures (model_comparison.csv is the headline table)
-docs/
-  dataset_analysis_report.md   dataset, decisions, trade-offs, bias, results
-  PROJECT_STATUS.md      plain-language progress report for the team
-  CONTRIBUTING.md        git workflow for the team
-literature/
-  LITERATURE_BENCHMARKS.md       literature log and comparison with other work
-  LITERATURE_BENCHMARKS_TEAM.md  Kayla's and Magalie's literature log
-report/
-  midterm_report.docx    midterm report draft (due 9 Nov)
-course/                  course handouts (specification, dataset list, groups)
-requirements.txt         pinned packages
+README.md                 this file (project description for grading)
+requirements.txt          pinned packages
+1_course_materials/       course specification, dataset list, group assignments (PDFs)
+2_midterm_report/         midterm_report.docx (due 9 Nov)
+3_dataset/                dataset_analysis_report.md: data quality, decisions, trade-offs, bias
+4_benchmarking/           what other work on this dataset reports, and how we compare
+                          (benchmarking_report.md, EmbPred30 review, sources table, downloaded papers)
+results/                  all tables and figures (model_comparison.csv is the headline table)
+6_project_progress/       PROJECT_STATUS.md (current status + to-dos), progress_log.md, CONTRIBUTING.md
+scripts/                  all code, numbered in run order
+data/                     raw CSV + generated splits (git-ignored; never committed)
 ```
+
+Scripts: `00_profile` (profile raw data) · `01_preprocess` (clean, exclude death/hospice,
+patient-level split) · `02_train_evaluate` (baseline, LogReg, XGBoost) · `03_interpretability`
+(SHAP) · `04_deep_learning` (MLP) · `05_catboost` · `06_ensemble` · `07_sensitivity`
+(specialty/payer, first-encounter, patient-level CIs) · `08_trajectory_features` (patient history) ·
+`09_smote_ablation` · `10_hospice_death_ablation` · `11_smote_leakage_demo` ·
+`12_embeddings_tuning`.
 
 Run order: `00` (optional) then `01` to `06`; `07` to `09` are analyses. Run all
 from the repo root after downloading the data per above and installing the pinned
