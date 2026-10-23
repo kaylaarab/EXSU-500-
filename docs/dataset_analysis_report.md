@@ -134,7 +134,7 @@ Yes, partly. Ordering a patient's stays by `encounter_id` (**assumed** chronolog
 | LogReg | SMOTE-NC to 1:2 | 0.572 | 0.162 | 0.164 | 0.913 | −0.091 (−0.107 to −0.074) |
 | XGBoost | class weights | 0.665 | 0.217 | 0.563 | 0.670 | n/a |
 | XGBoost | SMOTE-NC to 1:1 | 0.625 | 0.194 | 0.024 | 0.997 | −0.040 (−0.051 to −0.029) |
-| XGBoost | SMOTE-NC to 1:2 | 0.647 | 0.209 | 0.022 | 0.998 | −0.018 (CI in `results/smote_ablation.csv`) |
+| XGBoost | SMOTE-NC to 1:2 | 0.647 | 0.209 | 0.022 | 0.998 | −0.018 (−0.027 to −0.009) |
 
 **Reading:** class weighting beats SMOTE-NC clearly for both models. Trees trained on SMOTE-NC rows learn the synthetic distribution and then flag almost nothing on real data (sensitivity ≈ 0.02). The decision to use class weights is supported by data, not only by argument.
 
