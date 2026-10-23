@@ -14,8 +14,11 @@ Threshold-free: AUROC and AUPRC (paired patient-level bootstrap vs A).
 Operating point: a threshold chosen on VALIDATION (maximising sensitivity+specificity)
 is applied to the test set for every method, so accuracy and sensitivity are comparable.
 Always-"no" accuracy is printed for reference.
+
+Two scenarios: all encounters (default) and first encounter per patient only (FIRST_ONLY=1).
 """
 import importlib.util
+import os
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingClassifier as HGB
@@ -27,7 +30,14 @@ prep = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(prep)
 RAW = "data/diabetic_data.csv"
 
+FIRST_ONLY = bool(os.environ.get("FIRST_ONLY"))
 df = prep.load_and_clean(RAW)
+if FIRST_ONLY:                      # scenario 2: one row per patient (the earliest encounter)
+    enc = pd.read_csv(RAW, usecols=["encounter_id"], low_memory=False).loc[df.index, "encounter_id"]
+    df = df[enc.groupby(df["patient_nbr"]).transform("min") == enc]
+    print(f"scenario: FIRST ENCOUNTER ONLY ({len(df):,} patients)")
+else:
+    print(f"scenario: ALL ENCOUNTERS ({len(df):,})")
 lab = pd.read_csv(RAW, usecols=["readmitted"], keep_default_na=False).loc[df.index, "readmitted"]
 tr, va, te = prep.patient_level_split(df)
 
@@ -99,5 +109,6 @@ for name, (pv, pt) in S.items():
     r = rows[-1]
     print(f"{name:34s} AUROC={r['auroc']:.3f} AUPRC={r['auprc']:.3f} | vs A: {r['auroc_diff_vs_A']:+.4f} "
           f"[{lo:+.4f}, {hi:+.4f}] | Acc={r['accuracy']:.3f} Sens={r['sensitivity']:.3f} Spec={r['specificity']:.3f}")
-pd.DataFrame(rows).to_csv("results/combined_targets.csv", index=False)
-print("Saved results/combined_targets.csv")
+out = "results/combined_targets_first_encounter.csv" if FIRST_ONLY else "results/combined_targets.csv"
+pd.DataFrame(rows).to_csv(out, index=False)
+print(f"Saved {out}")
