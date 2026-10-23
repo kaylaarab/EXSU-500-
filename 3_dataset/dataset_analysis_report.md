@@ -146,6 +146,23 @@ Yes, partly. Ordering a patient's stays by `encounter_id` (**assumed** chronolog
 
 ---
 
+## 6b. Why the target is "readmitted within 30 days", and what other definitions give
+
+Same cleaned cohort, same patient-level split, same fixed model (Script 13), test set scored once. Prevalence differs by target, so **only AUROC compares across rows**; accuracy and AUPRC must be read against their own baselines.
+
+| Target | Test n | Positive rate | AUROC | AUPRC (baseline) | Accuracy (always-"no") | Sensitivity | Specificity |
+|---|---|---|---|---|---|---|---|
+| **T1: within 30 days vs everything else (ours)** | 14,913 | 11.1% | 0.675 | 0.225 (0.111) | 0.661 (0.889) | 0.580 | 0.671 |
+| T2: any readmission vs none | 14,913 | 47.3% | 0.696 | 0.668 (0.473) | 0.642 (0.527) | 0.627 | 0.656 |
+| T3: within 30 days vs never (later readmissions dropped) | 9,519 | 17.4% | 0.728 | 0.403 (0.174) | 0.707 (0.826) | 0.596 | 0.731 |
+
+**Reading**
+- Scores rise as the question gets easier, not because the model improves: T2 asks about a much more common event, and T3 removes the hard middle group (36% of test patients) that look like both groups.
+- **T3 is not a usable task.** At prediction time we cannot know who will be readmitted late, so the test set would no longer match real use. Keep it only as a diagnostic.
+- **T2 is a legitimate but different question** ("will this patient return at all?"). It is a useful second output, not a replacement.
+- **We keep T1 as the headline** because 30-day readmission is the standard quality measure in US hospital policy (CMS Hospital Readmissions Reduction Program, which covers six conditions, not diabetes itself), and the dataset's own source paper (Strack et al.) defines it this way. The claim that an early return is more preventable by discharge planning is clinical reasoning, not a sourced finding; do not cite it as a fact.
+- Whether the "later" information can help T1 is tested in Script 14 (three-class, two-stage, stacking). Results in `results/combined_targets.csv` once finished.
+
 ## 7. Is the information sufficient to predict readmission?
 
 **Partly; enough for population-level ranking, not for individual decisions.**
@@ -209,6 +226,8 @@ python scripts/09_smote_ablation.py                    # SMOTE vs class weights
 python scripts/10_hospice_death_ablation.py            # does excluding death/hospice matter?
 python scripts/11_smote_leakage_demo.py                # SMOTE-before-CV inflation
 python scripts/12_embeddings_tuning.py                 # entity embeddings, extra tuning
+python scripts/13_target_definitions.py                # <30d vs any readmission vs <30d-vs-never
+python scripts/14_combined_targets.py                  # use the >30d information to help the 30-day model
 ```
 
 The raw data and splits are git-ignored on purpose (course rule: do not commit data).
