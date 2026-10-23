@@ -4,6 +4,9 @@ Newest first. One entry per significant piece of work, added when it is finished
 
 ## 2026-10-23
 
+- **Target definitions compared (Script 13).** Within-30-days vs rest: AUROC 0.675; any readmission vs none: 0.696; within 30 days vs never (dropping later readmissions): 0.728. Higher scores come from an easier question (T3 is not a usable task), so the 30-day target stays the headline. Also corrected an overstatement: CMS penalizes hospitals for 30-day readmissions of six conditions, not diabetes itself.
+- **SMOTE-before-CV test (Script 11).** First run: AUROC 0.964 and accuracy 94.2% when SMOTE is applied before 6-fold CV and synthetic rows are scored, vs 0.640 on real rows only and 0.614 with SMOTE kept inside training folds. Reproduces EmbPred30's claim via the protocol alone. Rerun with sensitivity in progress.
+
 - **Patient-history features re-tested on the current pipeline (Script 08):** 0.675 to 0.682 AUROC, paired gain +0.007 (CI +0.003 to +0.011), now reliably positive. Depends on `encounter_id` order being chronological (unverifiable).
 - **Accuracy always reported next to sensitivity** (team rule): scripts 02-06, 09, 12 and every results table updated; benchmarking now shows accuracy and sensitivity for each published source. Key finding: the Cureus 2025 benchmark's 0.89 accuracy equals the always-"no" baseline and it catches only 1.7% of readmissions with XGBoost.
 
