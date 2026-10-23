@@ -12,10 +12,13 @@ from sklearn.model_selection import GroupShuffleSplit
 RAW_PATH = "data/diabetic_data.csv"
 RANDOM_STATE = 42
 
-# Columns dropped outright: identifiers, or >=40% missing and not clinically
-# recoverable (weight is 96.9% missing; payer_code and medical_specialty are
-# administrative, not clinical, and ~40-50% missing)
-DROP_COLS = ["encounter_id", "weight", "payer_code", "medical_specialty"]
+# Columns dropped outright: identifiers, and weight (96.9% missing). payer_code
+# (39.6% missing) and medical_specialty (49.1% missing) are KEPT, with missing
+# encoded as an explicit "Unknown" category: in the sensitivity analysis
+# (scripts/07_sensitivity.py) keeping them gave +0.008 AUROC (paired patient-level
+# 95% CI +0.005 to +0.011). Payer is a socioeconomic proxy -- see
+# docs/dataset_analysis_report.md for the fairness trade-off.
+DROP_COLS = ["encounter_id", "weight"]
 
 # discharge_disposition_id codes for death / hospice (see IDS_mapping.csv):
 # 11 expired, 13 hospice-home, 14 hospice-medical facility, 19/20/21 expired
@@ -82,7 +85,7 @@ def load_and_clean(path: str, drop_cols=None) -> pd.DataFrame:
     # keep_default_na=False: pandas would otherwise read the literal string
     # "None" (labs not ordered: A1Cresult, max_glu_serum) as missing, which
     # silently breaks the A1C feature below. Only "?" means missing.
-    df = pd.read_csv(path, keep_default_na=False, na_values=["?"])
+    df = pd.read_csv(path, keep_default_na=False, na_values=["?"], low_memory=False)
 
     # Drop encounters that end in death/hospice (cannot be readmitted)
     dead = df["discharge_disposition_id"].isin(DEAD_HOSPICE_CODES)
