@@ -38,8 +38,8 @@ def section(title):
     print(f"\n{'=' * 70}\n{title}\n{'=' * 70}")
 
 
-raw = pd.read_csv(RAW_PATH)
-df = raw.replace("?", np.nan)
+raw = pd.read_csv(RAW_PATH, keep_default_na=False)
+df = raw.replace("?", np.nan)  # keep_default_na=False above: "None" is a real value (lab not ordered)
 df["readmit_30d"] = (df["readmitted"] == "<30").astype(int)
 
 section("1. Shape and dtypes")
