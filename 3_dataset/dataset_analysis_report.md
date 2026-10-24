@@ -161,7 +161,15 @@ Same cleaned cohort, same patient-level split, same fixed model (Script 13), tes
 - **T3 is not a usable task.** At prediction time we cannot know who will be readmitted late, so the test set would no longer match real use. Keep it only as a diagnostic.
 - **T2 is a legitimate but different question** ("will this patient return at all?"). It is a useful second output, not a replacement.
 - **We keep T1 as the headline** because 30-day readmission is the standard quality measure in US hospital policy (CMS Hospital Readmissions Reduction Program, which covers six conditions, not diabetes itself), and the dataset's own source paper (Strack et al.) defines it this way. The claim that an early return is more preventable by discharge planning is clinical reasoning, not a sourced finding; do not cite it as a fact.
-- Whether the "later" information can help T1 is tested in Script 14 (three-class, two-stage, stacking). Results in `5_results/ablations/combined_targets.csv` once finished.
+- **Can the "later readmission" label help T1?** Script 14 tests three ways to use it, scored on the 30-day target with a threshold chosen on validation. None beats the plain binary model:
+
+| Method (AUROC gain over plain, 95% CI) | All encounters (plain 0.675; accuracy 0.685, sensitivity 0.542) | First encounter only (plain 0.658; accuracy 0.593, sensitivity 0.627) |
+|---|---|---|
+| Three-class, P(<30) | +0.001 (−0.004 to +0.006) | +0.001 (−0.007 to +0.009) |
+| Two-stage, P(any) × P(<30 given any) | **−0.007 (−0.014 to −0.002)** | −0.010 (−0.021 to +0.000) |
+| Stacking with out-of-fold P(any) | −0.001 (−0.006 to +0.003) | −0.007 (−0.016 to +0.001) |
+
+The later-readmission label adds no usable signal beyond the features; keep the plain binary model. (Accuracy and sensitivity of each method are in `5_results/ablations/combined_targets*.csv`; sensitivity shifts between methods mostly reflect the threshold, not a better model.)
 
 ## 7. Is the information sufficient to predict readmission?
 
