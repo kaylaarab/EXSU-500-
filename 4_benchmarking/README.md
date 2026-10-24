@@ -10,4 +10,5 @@ What other work on this dataset reports, how it was evaluated, and how we compar
 | [`abstracts/abstracts.md`](abstracts/abstracts.md) | Abstracts of the sources we opened |
 | [`papers/`](papers/) | Downloaded open-access copies (with licence notes) |
 | [`pubmed_candidates.md`](pubmed_candidates.md) | 74 PubMed candidates (2021-2026) from six repeatable searches; **none read yet**, for Larissa to screen and for the 15-reference midterm requirement |
+| [`LARISSA/`](LARISSA/README.md) | Larissa's reading folder: 22 papers from PubMed and PhysioNet-based studies, each with a summary, links and (where licensed) a downloaded copy |
 | [`team_literature_log.md`](team_literature_log.md) | Kayla's and Magalie's own findings (empty template so far) |

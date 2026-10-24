@@ -1,0 +1,422 @@
+<!doctype html><meta charset='utf-8'><title>Predicting readmission to the cardiovascular intensive care unit using recurrent neural networks.</title><style>body{font:16px/1.5 system-ui;max-width:48em;margin:2em auto;padding:0 1em}table{border-collapse:collapse}td,th{border:1px solid #bbb;padding:2px 6px}.banner{background:#f3f3f3;padding:.6em 1em;border-left:4px solid #888}</style>
+<div class='banner'>Readable copy converted from the PubMed Central open-access XML for the team's reading list. Original: <a href='https://pmc.ncbi.nlm.nih.gov/articles/PMC9834934/'>PMC9834934</a> · PubMed <a href='https://pubmed.ncbi.nlm.nih.gov/36644663/'>36644663</a> · Licence: CC BY-NC https://creativecommons.org/licenses/by-nc/4.0. Figures omitted. Cite the original, not this copy.</div>
+<h1>Predicting readmission to the cardiovascular intensive care unit using recurrent neural networks.</h1><p>Kessler S et al. · Digital health · 2023</p>
+<h2>Abstract</h2><p>If a patient can be discharged from an intensive care unit (ICU) is usually
+decided by the treating physicians based on their clinical experience. However,
+nowadays limited capacities and growing socioeconomic burden of our health
+systems increase the pressure to discharge patients as early as possible, which
+may lead to higher readmission rates and potentially fatal consequences for the
+patients. Therefore, here we present a long short-term memory-based deep
+learning model (LSTM) trained on time series data from Medical Information Mart
+for Intensive Care (MIMIC-III) dataset to assist physicians in making decisions
+if patients can be safely discharged from cardiovascular ICUs. To underline the
+strengths of our LSTM we compare its performance with a logistic regression
+model, a random forest, extra trees, a feedforward neural network and with an
+already known, more complex LSTM as well as an LSTM combined with a
+convolutional neural network. The results of our evaluation show that our LSTM
+outperforms most of the above models in terms of area under receiver operating
+characteristic curve. Moreover, our LSTM shows the best performance with respect
+to the area under precision-recall curve. The deep learning solution presented
+in this article can help physicians decide on patient discharge from the ICU.
+This may not only help to increase the quality of patient care, but may also
+help to reduce costs and to optimize ICU resources. Further, the presented
+LSTM-based approach may help to improve existing and develop new medical machine
+learning prediction models.</p>
+<h2>Full text</h2><section><h3>Introduction</h3><p>In many medical disciplines, such as cardiac surgery, patients have to stay in
+intensive care unit (ICU) after surgical treatment. As soon as their condition is
+stabilized, they are typically transferred to the intermediate care unit (IMC), and
+later to the normal ward. This is the case for both elective and emergency cases.
+However, ICUs are wards with very limited capacity and implicitly define the number
+of patients that can receive specialized treatment. Thus, patients must be regularly
+discharged from the ICU so that new patients can be admitted to the ward. As a
+consequence, physicians are under pressure to decide if a patient is stable enough
+to be transferred to the next ward. When a patient is discharged too early, the
+clinical condition after transfer may worsen and he will have to return to the ICU
+affecting planned and emergency treatments. Thus, when choosing the time of
+discharge, the possible consequences must be taken into account. On the one hand, a
+delayed discharge may lead to a lack of the availability of ICU beds which can
+result in the cancellation of surgeries and higher mortality in general.<sup>1</sup> On the other
+hand, several studies show that premature transfers from the ICU may lead to a
+higher number of readmissions.<sup>2–4</sup>In general, patients who are
+readmitted to the ICU have a higher length of stay (LOS) and mortality in
+hospital.<sup>5,6</sup>
+Our study has several goals. On the one hand, this study aimed at providing a proof
+of concept for an artificial intelligence (AI)-based clinical decision support tool
+for predicting patient readmission to cardiovascular ICUs by analyzing the
+performance of a deep learning model with recurrent architecture as applied to
+clinical time-series data. As a result, the proposed predictive model which is
+capable of capturing temporal dependencies in the vital parameters can be used to
+support the decision-making process regarding the discharge of patients explicitly
+from cardiovascular ICUs. On the other hand, this study aims to demonstrate that,
+compared to for example, Lin et al.<sup>7</sup> simpler deep learning-based
+methods can provide comparable or even better results.</p><p>The open access Medical Information Mart for Intensive Care (MIMIC-III) dataset
+includes data from many ICU stays for patients suffering from different types of
+diseases or injuries. However, the target dataset from our cardiovascular
+department, which will be used for upcoming research comes from our cardiovascular
+ICU. Most patients who visit the cardiovascular ICUs have undergone cardiovascular
+surgery beforehand. Since cardiovascular surgeries tend to be more invasive than
+other types of operations, the patients require special kinds of care and treatment
+with longer ICU stay times up to 14 days.<sup>8,9</sup> In addition, as data-driven
+machine learning (ML) based models are sensitive to differences and characteristics
+shifts between train and held-out test cohorts, we hypothesize that a model which is
+trained on a subset of MIMIC-III database with cardiovascular stays would generalize
+better to an unseen cohort from our facilities.</p></section><section><h3>Related work</h3><p>Several deep learning methods have already been published to assist physicians in
+making decisions regarding patient discharge.<sup>10,11,7</sup> However, these deep learning
+methods focus on general ICU discharges with no regard to the specific needs of
+cardiovascular patients. Models that are specialized for the transfer of patients
+from all ICUs show either results that need improvement or an increased complexity,
+due to a combination of different deep learning layers and other mechanisms. In some
+cases, however, this complexity can be avoided by choosing alternative features and
+a different procedure for preprocessing.</p><p>Time-series analysis has been applied in various medical domains such as hospital
+admission prediction<sup>12</sup> and ICU readmission prediction.<sup>7,13</sup> Furthermore, a variety of
+deep learning methods have been used for readmission prediction.<sup>14,15</sup>One
+methodically similar approach comes from Lin et al.<sup>7</sup> It relies on the same database
+as the solution presented in this study, but it combines two different deep learning
+models to approve the classification results. Beside the more complex model than is
+used in this study, the method of Lin et al. includes patients from all types of
+ICUs. While this approach results in more data available for training and so may
+improve the deep learning models, it does not allow to focus on features or methods
+that may only be useful for a subset of patients. This also makes it more difficult
+to integrate knowledge from clinical experts into the study.</p><p>The vital parameters and patient information which are used in this study are chosen
+by experienced cardiac surgeons and intensivists at our department and are also
+compliant with related work.<sup>7</sup></p></section><section><h3>Materials and methods</h3><section><h3>Data</h3><p>The models presented in this study are trained, validated, and evaluated on data
+from the MIMIC-III dataset which contains 61,532 ICU stays with demographics,
+vital signs, laboratory tests, medications, and additional clinical data for all
+46,620 patients.<sup>16</sup> In our study, we focus on patients with cardiac
+pathologies, therefore, only patients who had a stay at an ICU related to
+cardiac treatments are considered. In the MIMIC-III dataset, those are the
+cardiac surgery recovery unit (CSRU) and the coronary care unit (CCU). This
+reduces the number of selected ICU stays to 16,222, of which 3425 are eliminated
+due to insufficient data (Table 1).</p><div class='tw'><b>Data overview.</b><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1" /><col align="left" span="1" /></colgroup><thead><tr><th align="left" rowspan="1" colspan="1">Property</th><th align="left" rowspan="1" colspan="1">Value</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">Features used</td><td rowspan="1" colspan="1">14</td></tr><tr><td rowspan="1" colspan="1">Minimum features available for ICU stay</td><td rowspan="1" colspan="1">9</td></tr><tr><td rowspan="1" colspan="1">Total ICU stays in the MIMIC-III dataset</td><td rowspan="1" colspan="1">61,532</td></tr><tr><td rowspan="1" colspan="1">Stays on CSRU and CCU</td><td rowspan="1" colspan="1">16,222</td></tr><tr><td rowspan="1" colspan="1">ICU stays used for analysis</td><td rowspan="1" colspan="1">12,797</td></tr><tr><td rowspan="1" colspan="1">ICU stays with returning patients</td><td rowspan="1" colspan="1">1023</td></tr></tbody></table></div></section><section><h3>Labeling</h3><p>As described earlier, the goal of this study is to classify patients according to
+their transferability to a downstream clinical unit, such as IMC or normal ward,
+without the need to be readmitted to the ICU within 48 hours. Since this is a
+binary classification, the corresponding labels are “returning” and “not
+returning.” In total, there are three possible outcomes on which the labeling
+depends: Patient dies during the hospital stay. Since dead or
+dying patients should not be transferred from the ICU to the
+intermediate care unit, they are referred to as
+“returning.”Patient is transferred from ICU and then leaves the hospital
+alive. This is the case for the last stay at the ICU
+during a hospital stay. These patients are labeled as “not
+returning.”Patients is transferred from the ICU and then returned to the
+ICU. Patients whose first ICU stay was less than 24  h
+are excluded due to possible logistical reasons. Readmitted patients
+are labeled as “returning.”</p></section><section><h3>Preprocessing</h3><p>The preprocessing pipeline consists of several sequential steps, illustrated in
+Figure 1. The
+procedure is as follows: first, the required features are obtained from the
+MIMIC-III dataset. Then the feature values are normalized and missing data is
+filled. Finally, the data is both resampled and oversampled and passed to the
+model. The components are explained in more detail in the subsections of this
+chapter.</p><p class='fig'><i>Figure (not reproduced): Preprocessing pipeline.</i></p><p>The features are selected according to medical expertise in a direct
+collaboration with cardiac surgeons and intersivists of the University Hospital
+D’sseldorf (UKD). As a result, 14 medical features recorded in cardiovascular
+intensive care units are used for all models (Table 2).</p><div class='tw'><b>Used features.</b><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1" /><col align="left" span="1" /><col align="left" span="1" /></colgroup><thead><tr><th align="left" rowspan="1" colspan="1">Lab values</th><th align="left" rowspan="1" colspan="1">Vital signs</th><th align="left" rowspan="1" colspan="1">Profile information</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">Creatinine</td><td rowspan="1" colspan="1">Temperature</td><td rowspan="1" colspan="1">Weight</td></tr><tr><td rowspan="1" colspan="1">Blood pH</td><td rowspan="1" colspan="1">ABP</td><td rowspan="1" colspan="1">Age</td></tr><tr><td rowspan="1" colspan="1">Potassium</td><td rowspan="1" colspan="1">Heart rate</td><td rowspan="1" colspan="1">
+</td></tr><tr><td rowspan="1" colspan="1">Sodium</td><td rowspan="1" colspan="1">Oxygenation</td><td rowspan="1" colspan="1">
+</td></tr><tr><td rowspan="1" colspan="1">Hematocrit</td><td rowspan="1" colspan="1">
+</td><td rowspan="1" colspan="1">
+</td></tr><tr><td rowspan="1" colspan="1">White blood cell counts</td><td rowspan="1" colspan="1">
+</td><td rowspan="1" colspan="1">
+</td></tr><tr><td rowspan="1" colspan="1">Bicarbonate</td><td rowspan="1" colspan="1">
+</td><td rowspan="1" colspan="1">
+</td></tr><tr><td rowspan="1" colspan="1">Bilirubin</td><td rowspan="1" colspan="1">
+</td><td rowspan="1" colspan="1">
+</td></tr></tbody></table></div><section><h3>Feature extraction</h3><p>Several required features have multiple labels assigned to multiple IDs
+inside the MIMIC-III dataset (Table 3). This results in more
+than 12,000 IDs for all features in the database and the IDs for required
+features must be found via a manual search.</p><div class='tw'><b>Used features with corresponding MIMIC-III IDs.</b><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1" /><col align="left" span="1" /></colgroup><thead><tr><th align="left" rowspan="1" colspan="1">Feature</th><th align="left" rowspan="1" colspan="1">Itemid</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">Creatinine</td><td rowspan="1" colspan="1">1525, 220615</td></tr><tr><td rowspan="1" colspan="1">Blood pH</td><td rowspan="1" colspan="1">50820, 50831</td></tr><tr><td rowspan="1" colspan="1">Potassium</td><td rowspan="1" colspan="1">50971</td></tr><tr><td rowspan="1" colspan="1">Sodium</td><td rowspan="1" colspan="1">50983</td></tr><tr><td rowspan="1" colspan="1">Hematocrit</td><td rowspan="1" colspan="1">51221, 51221</td></tr><tr><td rowspan="1" colspan="1">White blood cell counts</td><td rowspan="1" colspan="1">51301</td></tr><tr><td rowspan="1" colspan="1">Bicarbonate</td><td rowspan="1" colspan="1">50882</td></tr><tr><td rowspan="1" colspan="1">Bilirubin</td><td rowspan="1" colspan="1">50885, 51464</td></tr><tr><td rowspan="1" colspan="1">Temperature</td><td rowspan="1" colspan="1">676, 677, 678, 679, 223762, 223761</td></tr><tr><td rowspan="1" colspan="1">ABP</td><td rowspan="1" colspan="1">51, 220050, 220179</td></tr><tr><td rowspan="1" colspan="1">Heart rate</td><td rowspan="1" colspan="1">220045</td></tr><tr><td rowspan="1" colspan="1">Oxygenation</td><td rowspan="1" colspan="1">646, 220277</td></tr><tr><td rowspan="1" colspan="1">Weight</td><td rowspan="1" colspan="1">580, 581, 763, 226512, 226531</td></tr><tr><td rowspan="1" colspan="1">Age</td><td rowspan="1" colspan="1">Inferred from date of birth and admission time</td></tr></tbody></table></div><p>Particularly to mention is the age of the patients which is inferred using
+the date of birth and hospital admission time. The exact age of patients
+older than 89 years is not available for anonymization reasons and is set to
+89 years.</p></section><section><h3>Missing data handling</h3><p>As not every feature is recorded for every patient, part of the data is
+missing. The input to the models needs to have a constant size so missing
+features either need to be replaced or data of ICU stays that miss some
+features could not be used which would not leave enough data in the dataset.
+If there is no data available for a feature, the value is set to 0. This
+approach assumes that missing data would not have been significantly
+different from the mean, as it would have been recorded otherwise.</p><p>In addition, a threshold was introduced, which specifies the number of given
+features, from which a patient is included in the training/test data. When
+choosing the threshold, the relation between the minimum number of features
+per data point and the number of data points must be taken into account.
+This relationship is shown graphically in Figure 2. Thus, while an increasing
+threshold leads to each patient having an increasing number of relevant
+features in the training and testing data, the number of data sets for
+training and evaluating the model decreases exponentially. In contrast, a
+decreasing value for the threshold causes the number of data sets to
+increase, but each of the data sets contains progressively fewer relevant
+features.</p><p class='fig'><i>Figure (not reproduced): Relation between number of features and number of intensive care unit
+(ICU) stays.</i></p><p>Due to the assumption that missing data does not differ significantly from
+the mean of the data set, the number of features calculated as the mean
+increases in this case. This in turn may cause an increase of the average
+deviation from the assumption and accordingly inferior classification
+results. On this basis, the value for the threshold was chosen in such a way
+that as much data as possible remains available for training and testing the
+model, but at the same time, the number of available features is as high as
+possible. Figure 2
+shows that a threshold higher than nine reduces the number of data points by
+more than 15% so this is chosen as the threshold.</p></section><section><h3>Normalization</h3><p>In the context of this work, the term normalization encompasses two different
+meanings. On the one hand, some features may be recorded in different units
+for different IDs in the MIMIC-III dataset (e.g. weight), so the values have
+to be converted accordingly before further processing the data. On the other
+hand, to increase the numerical stability of the deep learning models, each
+data point si
+for a time series s is normalized
+according tosi^=si−μxσxwhere xi^ is
+the normalized value, μx
+is the mean of the feature over the whole dataset x, and
+σx
+is the standard deviation over x.</p></section><section><h3>Re-sampling</h3><p>Medical data is either at time steps of about 1  h or daily for laboratory
+data, but for usage with the models implemented in this study, uniform time
+series are necessary. To achieve this, vital parameters and laboratory
+values are re-sampled to a frequency of one entry per hour. If there is more
+than one value recorded per hour, the mean of each hour is used as the
+value. The mean over the whole dataset is used if there is no record for a
+time step.</p><p>Additionally, both age and weight are converted to a time series with the
+same frequency as the medical and laboratory data, but with the initial
+value at every time step.</p></section><section><h3>Oversampling</h3><p>The MIMIC-III database contains only a small number of patients who have
+returned to the ICU compared to the number of patients who were admitted to
+the ICU only once during their hospital stay (Table 1). Training a deep learning
+model on data with a significant skew of the class labels may result in a
+model that is not able to make accurate predictions on the minority
+class,<sup>17</sup> thus we oversampled the data for training the deep
+learning models in order to achieve evenly distributed classes.</p></section></section><section><h3>Classification methods</h3><p>The goal of the methods presented here is to assign two class probabilities to
+each ICU stay to make the decision if the patient is able to be transferred from
+the ICU without medical complications.</p><p>A deep learning model that is able to capture time-dependencies in the data is
+compared to four other simpler models, a feedforward neural net and a logistic
+regression model as well as decision tree-based models (Random Forest and Extra
+Trees).</p><section><h3>Logistic regression</h3><p>To establish a baseline for comparison with the deep learning models,
+logistic regression is used. This statistical model has already been applied
+to similar tasks in medicine.<sup>18,19</sup> In detail, logistic
+regression can be used as a binary classifier which models the relation
+between two discrete dependent variables and multiple independent
+variables.</p><p>In the context of this study, the two dependent variables are the labels
+“returning” and not “not returning” and the independent variables are the
+features. To reduce the number of values for each ICU stay, the time
+dimension is removed from the data as follows: for each time series, a
+linear fit is done. Slope and intercept of the resulting functions are then
+used as features. The procedure results in 28 features that are used for the
+prediction via logistic regression. To avoid overfitting, weight decay
+regularization is used with a value of 1.0.</p><p>No information about the time series is passed to the logistic regression,
+only the trend, so this approach will not be able to capture more complex
+time dependencies.</p></section><section><h3>Feedforward neural network</h3><p>The simplest form of a neural network is the feedforward neural network
+(FNN).<sup>20</sup> In contrast to other network types like the
+recurrent neural networks (RNNs), the FNN does not have any kind of feedback
+connections. Each input is passed through the same neuron and layer only
+once.</p><p>The architecture of the FNN used in this study is shown in Figure 3. It has
+|sl|*14
+neurons where sl
+is the longest time series in the dataset. Because the length of a time
+series may vary, every time series where |si|&lt;|sl| is padded at its beginning with
+zeros to the length of sl.</p><p class='fig'><i>Figure (not reproduced): Feedforward neural network (FNN) architecture.</i></p><p>Since the relation between the classes and parameters is likely to be
+non-linear, 2 hidden layers are
+used.<sup>20</sup> The first hidden layer has a size of
+500 neurons and the
+second one of 50. Rectified linear
+unit (ReLU) is used as the activation function and a dropout layer with a
+value of 0.2 for
+regularization.</p><p>The last layer has two output neurons, which are then passed through to the
+softmax function which assigns a probability to each class.</p><p>Besides the hyperparameters related to the network structure, there are also
+some parameters related to the training algorithm. For the FNN, we used Adam
+optimizer<sup>21</sup> with β=0.9
+as the optimization algorithm with the learning rate of 0.003 and
+cross-entropy as the loss function (Table 4).</p><div class='tw'><b>Training related hyperparameters.</b><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1" /><col align="left" span="1" /></colgroup><thead><tr><th align="left" rowspan="1" colspan="1">Hyperparameters</th><th align="left" rowspan="1" colspan="1">Values</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">Optimization algorithm</td><td rowspan="1" colspan="1">Adam</td></tr><tr><td rowspan="1" colspan="1">Learning rate</td><td rowspan="1" colspan="1">0.003</td></tr><tr><td rowspan="1" colspan="1">Loss function</td><td rowspan="1" colspan="1">Cross-entropy</td></tr><tr><td rowspan="1" colspan="1">Batchsize</td><td rowspan="1" colspan="1">32</td></tr><tr><td rowspan="1" colspan="1">Epochs</td><td rowspan="1" colspan="1">Early stopping</td></tr></tbody></table></div></section><section><h3>Random forest and extra trees</h3><p>To provide further baselines for comparison to long short-term memory (LSTM),
+a random forest (RF)<sup>22</sup> and an extra tree
+(ET)<sup>23</sup> model have been analyzed using the last
+measurements available from each time-series variable. The hyperparameters
+max_depth
+and min_samples_leaf
+of both models are tuned within the five-fold cross-validation.</p></section><section><h3>Long short-term memory</h3><p>An LSTM is a special kind of RNNs, which is able to learn long-term
+dependencies. The input to the LSTM is a batch of arrays, each with all the
+time series for all features. While the LSTM can have inputs of varying
+lengths, the length of the input needs to be equal inside each batch. A
+possible solution to this is to pad each time series with zeros until they
+have equal length, but instead, a PyTorch object is used that solves this
+problem.</p><p>The architecture of the LSTM-based model used in this study is shown in Figure 4. The
+training-related hyperparameters for the model are the same as for the FNN
+(Table 4).
+xi
+of the input in Figure
+4 denotes the <i>i</i>-th time step of all time
+series.</p><p class='fig'><i>Figure (not reproduced): Long short-term memory (LSTM) architecture.</i></p><p>The number of hidden units per state is chosen such that the model is capable
+to capture complex patterns but will not overfit. The chosen number of
+hidden units is 50.</p><p>The last hidden state ht
+is then passed through the ReLU function to introduce a non-linearity
+between the features of the hidden state. Before the fully connected layer,
+a dropout layer (with a value of 0.3) is used for regularization, as weight
+decay should not be used here because this may stop the model from
+recognizing time-dependent patterns.<sup>24</sup> The fully connected
+layer has two output neurons, which are then passed through the softmax
+function to assign a probability to each class.</p></section></section><section><h3>Validation</h3><p>To validate the models, the data is split into a training- and test set with 80%
+of the data being used for training. The data is split such that the
+distribution of classes is the same for both splits. Choosing a larger training
+set could improve model performance, but would lead to a higher variation during
+evaluation.</p><p>Five-fold cross-validation is used for model selection as described by
+Zhang<sup>25</sup> with random folds. The deep learning models are trained
+until the area under the precision–recall curve (AUCPR) stops increasing.</p><p>The model that achieves the highest AUCPR value during cross-validation is
+evaluated on the test set.</p><p>Evaluation results for training and testing on data from heart-related ICUs have
+some variation due to the limited amount of data, so this process is repeated
+five times and the mean is used as the final result.</p></section><section><h3>Explainability</h3><p>Providing transparent declarations on how AI algorithms draw conclusions is a
+critical factor for clinical decision support tools. For simpler classifiers
+such as support vector machines (SVMs) with linear kernels and decision
+tree-based methods, it is possible to provide an importance metrics in terms of
+coefficients for each input parameter. However, for most of the deep
+learning-based algorithms, it is an open research question how the underlying
+non-linear dependencies should be described. For the current study, we used
+feature importance parameter from the random forest classifier to identify the
+features which were most relevant in predicting the target label. This feature
+importance metrics quantifies the Gini importance of the features depending on
+how frequently a single feature is used in the ensembles of trees which form the
+forest of trees, as the sum over the splits that include the feature,
+proportional to the samples it splits.<sup>26</sup></p></section></section><section><h3>Results</h3><p>Two datasets with the designations <i>A</i> and <i>B</i> are used
+for the evaluation. The dataset <i>A</i> contains only ICU stays of CCU
+and CSRU. The dataset <i>B</i> contains ICU stays of all ICUs. All the
+five models are evaluated on the dataset <i>A</i>. Additionally, the LSTM
+is evaluated on the dataset <i>B</i> to compare the results to the model
+of Lin et al.<sup>7</sup>
+Both datasets are unbalanced, which makes commonly used evaluation metrics like the
+area under the receiver operating characteristic curve (AUCROC)<sup>27</sup> and accuracy
+not providing enough information to accurately evaluate the models.<sup>28</sup> Therefore,
+additional metrics such as the AUCPR, balanced accuracy, and
+<i>F</i>1-score are included.</p><section><h3>CCU and CSRU</h3><p>After the preprocessing steps, the dataset that only includes ICU stays on the
+CCU and CSRU contains 12,797 ICU stays, with 2560 stays used for evaluation.
+Only 8% of the training and test dataset are labeled as “returning.”</p><p>While a correct detection of true positives and negatives may more often assist
+physicians in their decision making, misclassification may lead to a premature
+ICU discharge of a patient. Therefore, false positives and negatives are just as
+important as true positives and negatives. For this reason, the models presented
+here are evaluated using both balanced accuracy and the
+<i>F</i>1-score.</p><p>These metrics are first computed using a decision threshold of 0.5 for each
+model. To evaluate the impact of the decision threshold, these results are
+compared to those using a threshold that maximizes the
+<i>F</i>1-score.</p><p>For the threshold of 0.5, the LSTM provides the best results for all metrics
+except precision (Table
+5). Here, the best precision score is achieved by the random
+forest.</p><div class='tw'><b>Threshold-based evaluation results (dataset A).</b><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1" /><col align="left" span="1" /><col align="left" span="1" /><col align="left" span="1" /><col align="left" span="1" /></colgroup><thead><tr><th align="left" rowspan="1" colspan="1" /><th align="left" rowspan="1" colspan="1">Balanced accuracy</th><th align="left" rowspan="1" colspan="1">Recall</th><th align="left" rowspan="1" colspan="1">Precision</th><th align="left" rowspan="1" colspan="1"><italic toggle="yes">F</italic>1</th></tr></thead><tbody><tr><td colspan="5" rowspan="1">Decision threshold: 0.5</td></tr><tr><td rowspan="1" colspan="1">LR</td><td rowspan="1" colspan="1">0.672</td><td rowspan="1" colspan="1">0.597</td><td rowspan="1" colspan="1">0.177</td><td rowspan="1" colspan="1">0.274</td></tr><tr><td rowspan="1" colspan="1">LSTM</td><td rowspan="1" colspan="1">0.727</td><td rowspan="1" colspan="1">0.607</td><td rowspan="1" colspan="1">0.268</td><td rowspan="1" colspan="1">0.372</td></tr><tr><td rowspan="1" colspan="1">RF</td><td rowspan="1" colspan="1">0.618</td><td rowspan="1" colspan="1">0.288</td><td rowspan="1" colspan="1">0.340</td><td rowspan="1" colspan="1">0.312</td></tr><tr><td rowspan="1" colspan="1">ET</td><td rowspan="1" colspan="1">0.675</td><td rowspan="1" colspan="1">0.513</td><td rowspan="1" colspan="1">0.261</td><td rowspan="1" colspan="1">0.290</td></tr><tr><td rowspan="1" colspan="1">FNN</td><td rowspan="1" colspan="1">0.619</td><td rowspan="1" colspan="1">0.299</td><td rowspan="1" colspan="1">0.312</td><td rowspan="1" colspan="1">0.305</td></tr><tr><td colspan="5" rowspan="1">Decision threshold: optimized</td></tr><tr><td rowspan="1" colspan="1">LR</td><td rowspan="1" colspan="1">0.671</td><td rowspan="1" colspan="1">0.363</td><td rowspan="1" colspan="1">0.621</td><td rowspan="1" colspan="1">0.457</td></tr><tr><td rowspan="1" colspan="1">LSTM</td><td rowspan="1" colspan="1">0.706</td><td rowspan="1" colspan="1">0.431</td><td rowspan="1" colspan="1">0.687</td><td rowspan="1" colspan="1">0.530</td></tr><tr><td rowspan="1" colspan="1">RF</td><td rowspan="1" colspan="1">0.682</td><td rowspan="1" colspan="1">0.467</td><td rowspan="1" colspan="1">0.296</td><td rowspan="1" colspan="1">0.361</td></tr><tr><td rowspan="1" colspan="1">ET</td><td rowspan="1" colspan="1">0.689</td><td rowspan="1" colspan="1">0.493</td><td rowspan="1" colspan="1">0.282</td><td rowspan="1" colspan="1">0.358</td></tr><tr><td rowspan="1" colspan="1">FNN</td><td rowspan="1" colspan="1">0.618</td><td rowspan="1" colspan="1">0.269</td><td rowspan="1" colspan="1">0.448</td><td rowspan="1" colspan="1">0.336</td></tr></tbody></table></div><p>The optimized threshold causes the <i>F</i>1-score of LSTM to increase
+from 0.372 to 0.530, while the balanced accuracy decreases from 0.727 to 0.706
+(Table 5).</p><p>Regarding non-threshold based evaluation results the LSTM model performs best
+with an AUCPR of 0.529 and the feedforward neural net model performs worst with
+an AUCPR of 0.281 (Table
+6). The baseline for the precision--recall (PR) curve is 0.08, given
+by the skew of the dataset, which corresponds to an unskilled classifier.</p><div class='tw'><b>Non-threshold-based evaluation results (dataset A).</b><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1" /><col align="center" span="1" /><col align="center" span="1" /></colgroup><thead><tr><th align="left" rowspan="1" colspan="1" /><th align="left" rowspan="1" colspan="1">AUCROC</th><th align="left" rowspan="1" colspan="1">AUCPR</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">LR</td><td rowspan="1" colspan="1">0.708</td><td rowspan="1" colspan="1">0.430</td></tr><tr><td rowspan="1" colspan="1">LSTM</td><td rowspan="1" colspan="1">0.777</td><td rowspan="1" colspan="1">0.529</td></tr><tr><td rowspan="1" colspan="1">RF</td><td rowspan="1" colspan="1">0.777</td><td rowspan="1" colspan="1">0.269</td></tr><tr><td rowspan="1" colspan="1">ET</td><td rowspan="1" colspan="1">0.776</td><td rowspan="1" colspan="1">0.282</td></tr><tr><td rowspan="1" colspan="1">FNN</td><td rowspan="1" colspan="1">0.640</td><td rowspan="1" colspan="1">0.281</td></tr></tbody></table></div><p>Figure 5 shows the mean
+precision–recall (PR) curves for all models compared to the baseline. All models
+perform better than an unskilled classifier.</p><p class='fig'><i>Figure (not reproduced): Mean precision–recall (PR) curves on dataset A.</i></p><p>Figure 6 shows the mean
+receiver operating characteristic curve (ROC curves) for all models compared to
+a baseline of 0.5 which corresponds to an unskilled classifier. Similar to the
+PR Curves, all models perform better than an unskilled classifier, with most
+models performing similarly, except the FNN which performs worse than the other
+models.</p><p class='fig'><i>Figure (not reproduced): Mean receiver operating characteristic curve (ROC curves) on dataset
+A.</i></p></section><section><h3>All ICUs</h3><p>The dataset contains 40,663 ICU stays, 8127 of those are used for evaluation.
+13.5% of stays are labeled as ‘’returning.” The results are compared to those of
+the best models of the study by Lin et al.<sup>7</sup> The LSTM model of this
+study achieves a higher AUCROC than the two best-performing models (LSTM and
+LSTM+CNN) from the study by Lin et al. (Table 7). The AUCPR value is not
+recorded for the other model. Both AUCROC and AUCPR are better using data from
+all ICUs instead of just data from the CCU and CSRU (Table 7).</p><div class='tw'><b>Non-threshold based evaluation results (dataset B).</b><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1" /><col align="center" span="1" /><col align="center" span="1" /></colgroup><thead><tr><th align="left" rowspan="1" colspan="1" /><th align="left" rowspan="1" colspan="1">AUCROC</th><th align="left" rowspan="1" colspan="1">AUCPR</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">LSTM</td><td rowspan="1" colspan="1">0.861</td><td rowspan="1" colspan="1">0.706</td></tr><tr><td rowspan="1" colspan="1">LSTM<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup></td><td rowspan="1" colspan="1">0.787</td><td rowspan="1" colspan="1">–</td></tr><tr><td rowspan="1" colspan="1">LSTM + CNN<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup></td><td rowspan="1" colspan="1">0.791</td><td rowspan="1" colspan="1">–</td></tr></tbody></table></div><p>Figures 7 and 8 show the mean PR curve
+and ROC curve of the LSTM trained and evaluated on dataset <i>B</i>,
+with the PR curve showing good detection, especially of the majority class and
+both curves being above the curve of the unskilled classifier.</p><p class='fig'><i>Figure (not reproduced): Precision–recall (PR) curve on dataset B.</i></p><p class='fig'><i>Figure (not reproduced): Receiver operating characteristic curve (ROC curve) on dataset
+B.</i></p><p>A model trained on data from all ICUs was also evaluated on test set that only
+consists of patients from the CCU and CSRU. PR and ROC curvess are shown in
+Figures 9 and 10. The area under the
+curve is 0.716 for the PR curve and 0.853 for the ROC curve.</p><p class='fig'><i>Figure (not reproduced): PR curve for evaluation on heart-related ICUs. ICU: intensive care unit;
+PR: precision–recall.</i></p><p class='fig'><i>Figure (not reproduced): ROC curve for evaluation on heart-related ICUs. ICUs: intensive care
+units; ROC: receiver operating characteristic.</i></p></section><section><h3>Direct comparison of LSTM and LR</h3><p>As the LSTM was shown to be the superior method, we further analyzed how the LSTM
+and LR models performed on cases from the held-out test set: out of 2560 cases
+in the test cohort, 1791 cases were predicted correctly by both of the
+classifiers. The number of cases for which the LSTM model predicted correctly
+while the LR predicted incorrectly was 405. The number of cases for which the LR
+model predicted correctly while the LSTM predicted incorrectly was 106.</p></section><section><h3>Feature importances</h3><p>As described in the methods section, to provide a simplified declaration about
+how the random forest model has made its conclusion, the most relevant features
+are shown in the diagram in Figure 11.</p><p class='fig'><i>Figure (not reproduced): Most relevant features used by the random forest classifier.</i></p></section></section><section><h3>Discussion</h3><p>In this study, we presented an LSTM-based deep learning model to assist intensivists
+in making decisions if patients can be discharged from cardiovascular intensive care
+units, which has been shown to outperform comparable models. Despite the fact that
+RF and ET have the same or similar AUCROC compared to our LSTM, the LSTM model
+provides a higher precision (Figure 5), that leads to a higher AUCPR (Table 6). In the context of these
+observations, the LSTM performs better than all alternative models such as decision
+tree-based models. This indicates that the class label depends on non-linear
+relations of the input data and its temporal structure so classifiers that are able
+to detect those perform better.</p><p>Table 5 shows that the
+balanced accuracy is slightly higher than the recall, so the true negative rate is
+higher than the true positive rate. This indicates that although the models have a
+bias for the majority class, it is smaller than it would be without oversampling the
+training data.</p><p>Using the optimized decision threshold decreases recall and increases precision for
+all models with only a small decrease for the balanced accuracy. While the optimized
+threshold results in a better compromise between recall and precision, indicated by
+the F1 score, there is no strictly optimal threshold that results in the correct
+classification of all cases. Therefore, the threshold in a practical application
+should be chosen depending on whether an intensivist is more likely to need
+assistance in correctly identifying transferable or non-transferable patients.</p><p>Using patient data from all ICUs instead of focusing on cardiovascular ICUs improves
+AUCROC and AUCPR (Table
+7). The advantages of using the complete dataset are a higher amount of
+data available for training and a less skewed dataset, so results of the models
+trained on heart-related ICU data could be further improved by using larger
+datasets.</p><p>A model trained on data from all ICUs performs better than the model trained on data
+from heart-related ICUs when both are evaluated on data from heart-related ICUs.
+This indicates that a model trained on all data from one hospital could be used on
+specific units of the hospital, even if there is some difference in data on
+different units. However, as acquiring real patient data from multiple departments,
+even within the same hospital would result in complications, mostly caused by data
+protection protocols, the feasibility of training such a model remains still in
+question. Therefore, for this study, we compared the performance of the models
+trained with data from cardiovascular care units together.</p><p>The resulting LSTM model is compared to the best performing model of the study of Lin
+et al.,<sup>7</sup> which
+uses more input features and a bi-directional LSTM which also utilizes convolutions.
+While the preprocessing and labeling processes are different, the main goals of this
+study and the study by Lin et al. are similar and so the results are comparable.</p><p>While the LSTM and the choice of features in this work are aimed at transferring
+cardiac patients, it provides better results than the models of Lin et al. The
+comparison of the results with LSTM+CNN (Table 7) also shows that the choice of
+features and the preprocessing has a greater influence on the performance of a deep
+learning model than the number of features or the complexity of the model.</p><p>In order to realize the use of the LSTM model presented in this study in a clinical
+context, explainability and improved performance is necessary. The explainability of
+the machine and deep learning models not only help to make the models more reliable
+and to draw accurate conclusions about the patient’s condition, but may also be a
+legal necessity.<sup>29</sup> However, the explainability of deep learning models is one of
+the current research areas, and there is currently no established method for an
+accurate and widely accepted explanation of the classification results. Also, since
+intensivists decisions depend on the performance of the model, its accuracy should
+still be significantly increased which might be achieved with dedicated and
+high-resolution data, the next step in our work.</p><p>Promising results for the explainability of black box models are provided by methods
+like LIME<sup>30</sup>
+and SHAP.<sup>31</sup>
+Based on these methods, the next steps will be to explore the possibility of
+explaining the results of LSTM-based models. For the current study, we used feature
+importance metric of the random forest model to identify the most relevant features
+for this classifier to decide on the target label. The results are shown in Figure 11. However,
+analyzing the parameter importance for the LSTM model is a out of focus for this
+current study. Nevertheless, state-of-the-art ML models for time-series analysis,
+such as LSTM are capable of investigating hidden non-linear patterns in the data
+which might make them superior even to experienced domain experts. Thus, as part of
+our future work, we plan to conduct empirical studies comparing performance of the
+proposed model to that of domain experts. Another possible way to improve
+performance might be utilizing state-of-the-art models such as residual
+networks<sup>32</sup> which have shown to achieve good results for multivariate
+time-series classification and prediction.<sup>33</sup> This study has further
+limitations. One of them is that the comparison with the models of Lin et al. is
+vague based only on the AUCROC. As mentioned earlier, AUROC does not perform well on
+an unbalanced dataset. Unfortunately, Lin et al. do not present other metrics for a
+better comparison with our models. Another aspect is the relationship between
+precision and recall. As the results show, an increase of precision reduces recall
+and vice versa. Contextually, a decreasing precision means that the number of false
+alarms of the model increases. Decreasing recall, on the other hand, means that the
+number of patients for whom the model falsely predicts that they would be
+successfully transferred from the ICU, increases. In a practical application, both
+cases are disadvantageous and should be avoided if possible. Finally, the
+improvement of AUCROC and AUCPR by using patient data from all ICUs should be
+explored empirically. In this context, in addition to a larger dataset, the results
+for cardiovascular ICU could be further improved by an even more specific feature
+selection.</p><p>To conclude, the current study was aimed at analyzing the overall relevance of an
+established method for time-series data analysis (LSTM) on an open access dataset
+(MIMIC-III) to provide a proof of concept for further follow-ups. Therefore,
+evaluating the proposed model on an independent cardiovascular cohort, which is an
+important step toward establishing a new tool for clinical decision support, is the
+motivation behind an upcoming study of ours. Furthermore as proposed in the related
+work,<sup>34</sup> in the future, we consider natural language processing (NLP)
+approaches for readmission prediction based on patients’ electronic health records
+(EHRs) and treatment reports during their stays at ICUs. This will require extra
+preprocessing steps as our datasets of patient records feature bilingual texts.</p><p>Nonetheless, the use of a system based on machine or deep learning methods to support
+the intensivists in making decisions regarding the discharge of a patient from the
+ICU has some important clinical implications. In fact, the additional information
+provided by the system makes it possible to analyze the patient’s health condition
+systematically and in a rapid fashion. Faster analysis allows rapid and flexible
+allocation of patients to the ICU, which remains a scarce resource. Additionally,
+optimization of the timing of patient discharge from the ICU may help to reduce
+patient readmissions. Hence LSTM-based decision making in this context, may not only
+help to increase the quality of patient care, but may also help to reduce costs and
+to optimize ICU resources.</p></section>

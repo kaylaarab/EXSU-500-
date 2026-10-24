@@ -1,0 +1,577 @@
+<?xml version="1.0"  ?><!DOCTYPE pmc-articleset PUBLIC "-//NLM//DTD ARTICLE SET 2.0//EN" "https://dtd.nlm.nih.gov/ncbi/pmc/articleset/nlm-articleset-2.0.dtd"><pmc-articleset><article xml:lang="en" article-type="research-article" dtd-version="1.4"><processing-meta base-tagset="archiving" mathml-version="3.0" table-model="xhtml" tagset-family="jats"><restricted-by>pmc</restricted-by></processing-meta><front><journal-meta><journal-id journal-id-type="nlm-ta">Digit Health</journal-id><journal-id journal-id-type="iso-abbrev">Digit Health</journal-id><journal-id journal-id-type="pmc-domain-id">3398</journal-id><journal-id journal-id-type="pmc-domain">dghealth</journal-id><journal-id journal-id-type="nlm-id">101690863</journal-id><journal-id journal-id-type="publisher-id">DHJ</journal-id><journal-title-group><journal-title>Digital Health</journal-title></journal-title-group><issn pub-type="epub">2055-2076</issn><publisher><publisher-name>SAGE Publications</publisher-name></publisher></journal-meta><article-meta><article-id pub-id-type="pmcid">PMC9834934</article-id><article-id pub-id-type="pmcid-ver">PMC9834934.1</article-id><article-id pub-id-type="pmcaid">9834934</article-id><article-id pub-id-type="pmcaiid">9834934</article-id><article-id pub-id-type="pmid">36644663</article-id><article-id pub-id-type="doi">10.1177/20552076221149529</article-id><article-id pub-id-type="publisher-id">10.1177_20552076221149529</article-id><article-version article-version-type="pmc-version">1</article-version><article-categories><subj-group subj-group-type="heading"><subject>Original Research</subject></subj-group></article-categories><title-group><article-title>Predicting readmission to the cardiovascular intensive care unit
+using recurrent neural networks</article-title></title-group><contrib-group><contrib contrib-type="author"><name name-style="western"><surname>Kessler</surname><given-names initials="S">Steven</given-names></name><xref rid="aff1-20552076221149529" ref-type="aff">1</xref><xref rid="aff2-20552076221149529" ref-type="aff">2</xref></contrib><contrib contrib-type="author"><name name-style="western"><surname>Schroeder</surname><given-names initials="D">Dennis</given-names></name><xref rid="aff1-20552076221149529" ref-type="aff">1</xref><xref rid="aff2-20552076221149529" ref-type="aff">2</xref></contrib><contrib contrib-type="author"><contrib-id contrib-id-type="orcid" authenticated="false">https://orcid.org/0000-0001-5690-199X</contrib-id><name name-style="western"><surname>Korlakov</surname><given-names initials="S">Sergej</given-names></name><xref rid="aff1-20552076221149529" ref-type="aff">1</xref><xref rid="aff2-20552076221149529" ref-type="aff">2</xref></contrib><contrib contrib-type="author"><name name-style="western"><surname>Hettlich</surname><given-names initials="V">Vincent</given-names></name><xref rid="aff1-20552076221149529" ref-type="aff">1</xref><xref rid="aff2-20552076221149529" ref-type="aff">2</xref></contrib><contrib contrib-type="author"><name name-style="western"><surname>Kalkhoff</surname><given-names initials="S">Sebastian</given-names></name><xref rid="aff1-20552076221149529" ref-type="aff">1</xref><xref rid="aff2-20552076221149529" ref-type="aff">2</xref></contrib><contrib contrib-type="author"><name name-style="western"><surname>Moazemi</surname><given-names initials="S">Sobhan</given-names></name><xref rid="aff1-20552076221149529" ref-type="aff">1</xref><xref rid="aff2-20552076221149529" ref-type="aff">2</xref></contrib><contrib contrib-type="author"><name name-style="western"><surname>Lichtenberg</surname><given-names initials="A">Artur</given-names></name><xref rid="aff1-20552076221149529" ref-type="aff">1</xref><xref rid="aff2-20552076221149529" ref-type="aff">2</xref></contrib><contrib contrib-type="author" corresp="yes"><name name-style="western"><surname>Schmid</surname><given-names initials="F">Falko</given-names></name><xref rid="aff1-20552076221149529" ref-type="aff">1</xref><xref rid="aff2-20552076221149529" ref-type="aff">2</xref><xref rid="corresp1-20552076221149529" ref-type="corresp"/></contrib><contrib contrib-type="author"><contrib-id contrib-id-type="orcid" authenticated="false">https://orcid.org/0000-0001-9289-8927</contrib-id><name name-style="western"><surname>Aubin</surname><given-names initials="H">Hug</given-names></name><xref rid="aff1-20552076221149529" ref-type="aff">1</xref><xref rid="aff2-20552076221149529" ref-type="aff">2</xref></contrib></contrib-group><aff id="aff1-20552076221149529">
+<label>1</label>Digital Health Lab Düsseldorf, University Hospital Düsseldorf,
+Düsseldorf, Germany</aff><aff id="aff2-20552076221149529">
+<label>2</label>Department of Cardiac Surgery, University Hospital Düsseldorf,
+Düsseldorf, Germany</aff><author-notes><corresp id="corresp1-20552076221149529">Falko Schmid, Digital Health Lab
+Düsseldorf, University Hospital Düsseldorf, Moorenstr. 5, Düsseldorf,
+Düsseldorf, NRW 40225, Germany. Email:
+<email>falko.schmid@med.uni-duesseldorf.de</email>
+</corresp></author-notes><pub-date pub-type="epub"><day>9</day><month>1</month><year>2023</year></pub-date><pub-date pub-type="collection"><season>Jan-Dec</season><year>2023</year></pub-date><volume>9</volume><issue-id pub-id-type="pmc-issue-id">425542</issue-id><elocation-id>20552076221149529</elocation-id><history><date date-type="received"><day>13</day><month>9</month><year>2021</year></date><date date-type="accepted"><day>18</day><month>12</month><year>2022</year></date></history><pub-history><event event-type="pmc-release"><date><day>09</day><month>01</month><year>2023</year></date></event><event event-type="pmc-live"><date><day>13</day><month>01</month><year>2023</year></date></event><event event-type="pmc-last-change"><date iso-8601-date="2023-01-16 16:10:14.217"><day>16</day><month>01</month><year>2023</year></date></event></pub-history><permissions><copyright-statement>© The Author(s) 2023</copyright-statement><copyright-year>2023</copyright-year><copyright-holder content-type="sage">SAGE Publications Ltd, unless otherwise noted.
+Manuscript content on this site is licensed under Creative Commons
+Licenses</copyright-holder><license><ali:license_ref xmlns:ali="http://www.niso.org/schemas/ali/1.0/" specific-use="textmining" content-type="ccbynclicense">https://creativecommons.org/licenses/by-nc/4.0/</ali:license_ref><license-p>This article is distributed under the terms of the Creative Commons
+Attribution-NonCommercial 4.0 License (<ext-link xmlns:xlink="http://www.w3.org/1999/xlink" ext-link-type="uri" xlink:href="https://creativecommons.org/licenses/by-nc/4.0/">https://creativecommons.org/licenses/by-nc/4.0/</ext-link>) which
+permits non-commercial use, reproduction and distribution of the work
+without further permission provided the original work is attributed as
+specified on the SAGE and Open Access page (<ext-link xmlns:xlink="http://www.w3.org/1999/xlink" ext-link-type="uri" xlink:href="https://us.sagepub.com/en-us/nam/open-access-at-sage">https://us.sagepub.com/en-us/nam/open-access-at-sage</ext-link>).</license-p></license></permissions><self-uri xmlns:xlink="http://www.w3.org/1999/xlink" content-type="pmc-pdf" xlink:href="10.1177_20552076221149529.pdf"/><abstract><p>If a patient can be discharged from an intensive care unit (ICU) is usually
+decided by the treating physicians based on their clinical experience. However,
+nowadays limited capacities and growing socioeconomic burden of our health
+systems increase the pressure to discharge patients as early as possible, which
+may lead to higher readmission rates and potentially fatal consequences for the
+patients. Therefore, here we present a long short-term memory-based deep
+learning model (LSTM) trained on time series data from Medical Information Mart
+for Intensive Care (MIMIC-III) dataset to assist physicians in making decisions
+if patients can be safely discharged from cardiovascular ICUs. To underline the
+strengths of our LSTM we compare its performance with a logistic regression
+model, a random forest, extra trees, a feedforward neural network and with an
+already known, more complex LSTM as well as an LSTM combined with a
+convolutional neural network. The results of our evaluation show that our LSTM
+outperforms most of the above models in terms of area under receiver operating
+characteristic curve. Moreover, our LSTM shows the best performance with respect
+to the area under precision-recall curve. The deep learning solution presented
+in this article can help physicians decide on patient discharge from the ICU.
+This may not only help to increase the quality of patient care, but may also
+help to reduce costs and to optimize ICU resources. Further, the presented
+LSTM-based approach may help to improve existing and develop new medical machine
+learning prediction models.</p></abstract><kwd-group><kwd>Digital health</kwd><kwd>deep learning</kwd><kwd>intensive care unit</kwd><kwd>readmission prediction</kwd><kwd>time-series analysis</kwd></kwd-group><funding-group specific-use="FundRef"><award-group id="award1-20552076221149529"><funding-source id="funding1-20552076221149529">
+<institution-wrap><institution>Federal Ministry of Education and Research of
+German</institution></institution-wrap>
+</funding-source><award-id rid="funding1-20552076221149529">16SV8601</award-id></award-group></funding-group><custom-meta-group><custom-meta><meta-name>pmc-status-qastatus</meta-name><meta-value>0</meta-value></custom-meta><custom-meta><meta-name>pmc-status-live</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-status-embargo</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-status-released</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-open-access</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-olf</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-manuscript</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-legally-suppressed</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-has-pdf</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-has-supplement</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-pdf-only</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-suppress-copyright</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-is-real-version</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-is-scanned-article</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-preprint</meta-name><meta-value>no</meta-value></custom-meta><custom-meta><meta-name>pmc-prop-in-epmc</meta-name><meta-value>yes</meta-value></custom-meta><custom-meta><meta-name>pmc-license-ref</meta-name><meta-value>CC BY-NC</meta-value></custom-meta><custom-meta><meta-name>typesetter</meta-name><meta-value>ts19</meta-value></custom-meta><custom-meta><meta-name>cover-date</meta-name><meta-value>January-December 2023</meta-value></custom-meta></custom-meta-group></article-meta></front><body><sec sec-type="intro" id="section1-20552076221149529"><title>Introduction</title><p>In many medical disciplines, such as cardiac surgery, patients have to stay in
+intensive care unit (ICU) after surgical treatment. As soon as their condition is
+stabilized, they are typically transferred to the intermediate care unit (IMC), and
+later to the normal ward. This is the case for both elective and emergency cases.
+However, ICUs are wards with very limited capacity and implicitly define the number
+of patients that can receive specialized treatment. Thus, patients must be regularly
+discharged from the ICU so that new patients can be admitted to the ward. As a
+consequence, physicians are under pressure to decide if a patient is stable enough
+to be transferred to the next ward. When a patient is discharged too early, the
+clinical condition after transfer may worsen and he will have to return to the ICU
+affecting planned and emergency treatments. Thus, when choosing the time of
+discharge, the possible consequences must be taken into account. On the one hand, a
+delayed discharge may lead to a lack of the availability of ICU beds which can
+result in the cancellation of surgeries and higher mortality in general.<sup><xref rid="bibr1-20552076221149529" ref-type="bibr">1</xref></sup> On the other
+hand, several studies show that premature transfers from the ICU may lead to a
+higher number of readmissions.<sup><xref rid="bibr2-20552076221149529" ref-type="bibr">2</xref><xref rid="bibr3-20552076221149529" ref-type="bibr"/>–<xref rid="bibr4-20552076221149529" ref-type="bibr">4</xref></sup>In general, patients who are
+readmitted to the ICU have a higher length of stay (LOS) and mortality in
+hospital.<sup><xref rid="bibr5-20552076221149529" ref-type="bibr">5</xref>,<xref rid="bibr6-20552076221149529" ref-type="bibr">6</xref></sup>
+Our study has several goals. On the one hand, this study aimed at providing a proof
+of concept for an artificial intelligence (AI)-based clinical decision support tool
+for predicting patient readmission to cardiovascular ICUs by analyzing the
+performance of a deep learning model with recurrent architecture as applied to
+clinical time-series data. As a result, the proposed predictive model which is
+capable of capturing temporal dependencies in the vital parameters can be used to
+support the decision-making process regarding the discharge of patients explicitly
+from cardiovascular ICUs. On the other hand, this study aims to demonstrate that,
+compared to for example, Lin et al.<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup> simpler deep learning-based
+methods can provide comparable or even better results.</p><p>The open access Medical Information Mart for Intensive Care (MIMIC-III) dataset
+includes data from many ICU stays for patients suffering from different types of
+diseases or injuries. However, the target dataset from our cardiovascular
+department, which will be used for upcoming research comes from our cardiovascular
+ICU. Most patients who visit the cardiovascular ICUs have undergone cardiovascular
+surgery beforehand. Since cardiovascular surgeries tend to be more invasive than
+other types of operations, the patients require special kinds of care and treatment
+with longer ICU stay times up to 14 days.<sup><xref rid="bibr8-20552076221149529" ref-type="bibr">8</xref>,<xref rid="bibr9-20552076221149529" ref-type="bibr">9</xref></sup> In addition, as data-driven
+machine learning (ML) based models are sensitive to differences and characteristics
+shifts between train and held-out test cohorts, we hypothesize that a model which is
+trained on a subset of MIMIC-III database with cardiovascular stays would generalize
+better to an unseen cohort from our facilities.</p></sec><sec id="section2-20552076221149529"><title>Related work</title><p>Several deep learning methods have already been published to assist physicians in
+making decisions regarding patient discharge.<sup><xref rid="bibr10-20552076221149529" ref-type="bibr">10</xref>,<xref rid="bibr11-20552076221149529" ref-type="bibr">11</xref>,<xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup> However, these deep learning
+methods focus on general ICU discharges with no regard to the specific needs of
+cardiovascular patients. Models that are specialized for the transfer of patients
+from all ICUs show either results that need improvement or an increased complexity,
+due to a combination of different deep learning layers and other mechanisms. In some
+cases, however, this complexity can be avoided by choosing alternative features and
+a different procedure for preprocessing.</p><p>Time-series analysis has been applied in various medical domains such as hospital
+admission prediction<sup><xref rid="bibr12-20552076221149529" ref-type="bibr">12</xref></sup> and ICU readmission prediction.<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref>,<xref rid="bibr13-20552076221149529" ref-type="bibr">13</xref></sup> Furthermore, a variety of
+deep learning methods have been used for readmission prediction.<sup><xref rid="bibr14-20552076221149529" ref-type="bibr">14</xref>,<xref rid="bibr15-20552076221149529" ref-type="bibr">15</xref></sup>One
+methodically similar approach comes from Lin et al.<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup> It relies on the same database
+as the solution presented in this study, but it combines two different deep learning
+models to approve the classification results. Beside the more complex model than is
+used in this study, the method of Lin et al. includes patients from all types of
+ICUs. While this approach results in more data available for training and so may
+improve the deep learning models, it does not allow to focus on features or methods
+that may only be useful for a subset of patients. This also makes it more difficult
+to integrate knowledge from clinical experts into the study.</p><p>The vital parameters and patient information which are used in this study are chosen
+by experienced cardiac surgeons and intensivists at our department and are also
+compliant with related work.<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup></p></sec><sec sec-type="materials|methods" id="section3-20552076221149529"><title>Materials and methods</title><sec id="section3A-20552076221149529"><title>Data</title><p>The models presented in this study are trained, validated, and evaluated on data
+from the MIMIC-III dataset which contains 61,532 ICU stays with demographics,
+vital signs, laboratory tests, medications, and additional clinical data for all
+46,620 patients.<sup><xref rid="bibr16-20552076221149529" ref-type="bibr">16</xref></sup> In our study, we focus on patients with cardiac
+pathologies, therefore, only patients who had a stay at an ICU related to
+cardiac treatments are considered. In the MIMIC-III dataset, those are the
+cardiac surgery recovery unit (CSRU) and the coronary care unit (CCU). This
+reduces the number of selected ICU stays to 16,222, of which 3425 are eliminated
+due to insufficient data (<xref rid="table1-20552076221149529" ref-type="table">Table 1</xref>).</p><table-wrap position="float" id="table1-20552076221149529" orientation="portrait"><label>Table 1.</label><caption><p>Data overview.</p></caption><alternatives><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-table1.jpg"/><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1"/><col align="left" span="1"/></colgroup><thead><tr><th align="left" rowspan="1" colspan="1">Property</th><th align="left" rowspan="1" colspan="1">Value</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">Features used</td><td rowspan="1" colspan="1">14</td></tr><tr><td rowspan="1" colspan="1">Minimum features available for ICU stay</td><td rowspan="1" colspan="1">9</td></tr><tr><td rowspan="1" colspan="1">Total ICU stays in the MIMIC-III dataset</td><td rowspan="1" colspan="1">61,532</td></tr><tr><td rowspan="1" colspan="1">Stays on CSRU and CCU</td><td rowspan="1" colspan="1">16,222</td></tr><tr><td rowspan="1" colspan="1">ICU stays used for analysis</td><td rowspan="1" colspan="1">12,797</td></tr><tr><td rowspan="1" colspan="1">ICU stays with returning patients</td><td rowspan="1" colspan="1">1023</td></tr></tbody></table></alternatives><table-wrap-foot><fn id="table-fn1-20552076221149529"><p>CSRU: cardiac surgery recovery unit; CCU: coronary care unit;
+MIMIC-III: Medical Information Mart for Intensive Care; ICU:
+intensive care unit.</p></fn></table-wrap-foot></table-wrap></sec><sec id="section3B-20552076221149529"><title>Labeling</title><p>As described earlier, the goal of this study is to classify patients according to
+their transferability to a downstream clinical unit, such as IMC or normal ward,
+without the need to be readmitted to the ICU within 48 hours. Since this is a
+binary classification, the corresponding labels are “returning” and “not
+returning.” In total, there are three possible outcomes on which the labeling
+depends: <list list-type="order"><list-item><p><bold>Patient dies during the hospital stay</bold>. Since dead or
+dying patients should not be transferred from the ICU to the
+intermediate care unit, they are referred to as
+“returning.”</p></list-item><list-item><p><bold>Patient is transferred from ICU and then leaves the hospital
+alive.</bold> This is the case for the last stay at the ICU
+during a hospital stay. These patients are labeled as “not
+returning.”</p></list-item><list-item><p><bold>Patients is transferred from the ICU and then returned to the
+ICU.</bold> Patients whose first ICU stay was less than 24  h
+are excluded due to possible logistical reasons. Readmitted patients
+are labeled as “returning.”</p></list-item></list></p></sec><sec id="section3C-20552076221149529"><title>Preprocessing</title><p>The preprocessing pipeline consists of several sequential steps, illustrated in
+<xref rid="fig1-20552076221149529" ref-type="fig">Figure 1</xref>. The
+procedure is as follows: first, the required features are obtained from the
+MIMIC-III dataset. Then the feature values are normalized and missing data is
+filled. Finally, the data is both resampled and oversampled and passed to the
+model. The components are explained in more detail in the subsections of this
+chapter.</p><fig position="float" id="fig1-20552076221149529" orientation="portrait"><label>Figure 1.</label><caption><p>Preprocessing pipeline.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig1.jpg"/></fig><p>The features are selected according to medical expertise in a direct
+collaboration with cardiac surgeons and intersivists of the University Hospital
+D’sseldorf (UKD). As a result, 14 medical features recorded in cardiovascular
+intensive care units are used for all models (<xref rid="table2-20552076221149529" ref-type="table">Table 2</xref>).</p><table-wrap position="float" id="table2-20552076221149529" orientation="portrait"><label>Table 2.</label><caption><p>Used features.</p></caption><alternatives><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-table2.jpg"/><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1"/><col align="left" span="1"/><col align="left" span="1"/></colgroup><thead><tr><th align="left" rowspan="1" colspan="1">Lab values</th><th align="left" rowspan="1" colspan="1">Vital signs</th><th align="left" rowspan="1" colspan="1">Profile information</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">Creatinine</td><td rowspan="1" colspan="1">Temperature</td><td rowspan="1" colspan="1">Weight</td></tr><tr><td rowspan="1" colspan="1">Blood pH</td><td rowspan="1" colspan="1">ABP</td><td rowspan="1" colspan="1">Age</td></tr><tr><td rowspan="1" colspan="1">Potassium</td><td rowspan="1" colspan="1">Heart rate</td><td rowspan="1" colspan="1">
+</td></tr><tr><td rowspan="1" colspan="1">Sodium</td><td rowspan="1" colspan="1">Oxygenation</td><td rowspan="1" colspan="1">
+</td></tr><tr><td rowspan="1" colspan="1">Hematocrit</td><td rowspan="1" colspan="1">
+</td><td rowspan="1" colspan="1">
+</td></tr><tr><td rowspan="1" colspan="1">White blood cell counts</td><td rowspan="1" colspan="1">
+</td><td rowspan="1" colspan="1">
+</td></tr><tr><td rowspan="1" colspan="1">Bicarbonate</td><td rowspan="1" colspan="1">
+</td><td rowspan="1" colspan="1">
+</td></tr><tr><td rowspan="1" colspan="1">Bilirubin</td><td rowspan="1" colspan="1">
+</td><td rowspan="1" colspan="1">
+</td></tr></tbody></table></alternatives><table-wrap-foot><fn id="table-fn2-20552076221149529"><p>ABP: ambulatory blood pressure.</p></fn></table-wrap-foot></table-wrap><sec id="section3C1-20552076221149529"><title>Feature extraction</title><p>Several required features have multiple labels assigned to multiple IDs
+inside the MIMIC-III dataset (<xref rid="table3-20552076221149529" ref-type="table">Table 3</xref>). This results in more
+than 12,000 IDs for all features in the database and the IDs for required
+features must be found via a manual search.</p><table-wrap position="float" id="table3-20552076221149529" orientation="portrait"><label>Table 3.</label><caption><p>Used features with corresponding MIMIC-III IDs.</p></caption><alternatives><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-table3.jpg"/><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1"/><col align="left" span="1"/></colgroup><thead><tr><th align="left" rowspan="1" colspan="1">Feature</th><th align="left" rowspan="1" colspan="1">Itemid</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">Creatinine</td><td rowspan="1" colspan="1">1525, 220615</td></tr><tr><td rowspan="1" colspan="1">Blood pH</td><td rowspan="1" colspan="1">50820, 50831</td></tr><tr><td rowspan="1" colspan="1">Potassium</td><td rowspan="1" colspan="1">50971</td></tr><tr><td rowspan="1" colspan="1">Sodium</td><td rowspan="1" colspan="1">50983</td></tr><tr><td rowspan="1" colspan="1">Hematocrit</td><td rowspan="1" colspan="1">51221, 51221</td></tr><tr><td rowspan="1" colspan="1">White blood cell counts</td><td rowspan="1" colspan="1">51301</td></tr><tr><td rowspan="1" colspan="1">Bicarbonate</td><td rowspan="1" colspan="1">50882</td></tr><tr><td rowspan="1" colspan="1">Bilirubin</td><td rowspan="1" colspan="1">50885, 51464</td></tr><tr><td rowspan="1" colspan="1">Temperature</td><td rowspan="1" colspan="1">676, 677, 678, 679, 223762, 223761</td></tr><tr><td rowspan="1" colspan="1">ABP</td><td rowspan="1" colspan="1">51, 220050, 220179</td></tr><tr><td rowspan="1" colspan="1">Heart rate</td><td rowspan="1" colspan="1">220045</td></tr><tr><td rowspan="1" colspan="1">Oxygenation</td><td rowspan="1" colspan="1">646, 220277</td></tr><tr><td rowspan="1" colspan="1">Weight</td><td rowspan="1" colspan="1">580, 581, 763, 226512, 226531</td></tr><tr><td rowspan="1" colspan="1">Age</td><td rowspan="1" colspan="1">Inferred from date of birth and admission time</td></tr></tbody></table></alternatives><table-wrap-foot><fn id="table-fn3-20552076221149529"><p>ABP: ambulatory blood pressure; MIMIC-III : Medical Information
+Mart for Intensive Care.</p></fn></table-wrap-foot></table-wrap><p>Particularly to mention is the age of the patients which is inferred using
+the date of birth and hospital admission time. The exact age of patients
+older than 89 years is not available for anonymization reasons and is set to
+89 years.</p></sec><sec id="section3C2-20552076221149529"><title>Missing data handling</title><p>As not every feature is recorded for every patient, part of the data is
+missing. The input to the models needs to have a constant size so missing
+features either need to be replaced or data of ICU stays that miss some
+features could not be used which would not leave enough data in the dataset.
+If there is no data available for a feature, the value is set to 0. This
+approach assumes that missing data would not have been significantly
+different from the mean, as it would have been recorded otherwise.</p><p>In addition, a threshold was introduced, which specifies the number of given
+features, from which a patient is included in the training/test data. When
+choosing the threshold, the relation between the minimum number of features
+per data point and the number of data points must be taken into account.
+This relationship is shown graphically in <xref rid="fig2-20552076221149529" ref-type="fig">Figure 2</xref>. Thus, while an increasing
+threshold leads to each patient having an increasing number of relevant
+features in the training and testing data, the number of data sets for
+training and evaluating the model decreases exponentially. In contrast, a
+decreasing value for the threshold causes the number of data sets to
+increase, but each of the data sets contains progressively fewer relevant
+features.</p><fig position="float" id="fig2-20552076221149529" orientation="portrait"><label>Figure 2.</label><caption><p>Relation between number of features and number of intensive care unit
+(ICU) stays.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig2.jpg"/></fig><p>Due to the assumption that missing data does not differ significantly from
+the mean of the data set, the number of features calculated as the mean
+increases in this case. This in turn may cause an increase of the average
+deviation from the assumption and accordingly inferior classification
+results. On this basis, the value for the threshold was chosen in such a way
+that as much data as possible remains available for training and testing the
+model, but at the same time, the number of available features is as high as
+possible. <xref rid="fig2-20552076221149529" ref-type="fig">Figure 2</xref>
+shows that a threshold higher than nine reduces the number of data points by
+more than 15% so this is chosen as the threshold.</p></sec><sec id="section3C3-20552076221149529"><title>Normalization</title><p>In the context of this work, the term normalization encompasses two different
+meanings. On the one hand, some features may be recorded in different units
+for different IDs in the MIMIC-III dataset (e.g. weight), so the values have
+to be converted accordingly before further processing the data. On the other
+hand, to increase the numerical stability of the deep learning models, each
+data point <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline1" display="inline" overflow="scroll"><mml:msub><mml:mi>s</mml:mi><mml:mi>i</mml:mi></mml:msub></mml:math></inline-formula>
+for a time series <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline2" display="inline" overflow="scroll"><mml:mi>s</mml:mi></mml:math></inline-formula> is normalized
+according to<disp-formula><alternatives><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-disp" display="block" overflow="scroll"><mml:mrow><mml:mover><mml:msub><mml:mi>s</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mo stretchy="false">^</mml:mo></mml:mover></mml:mrow><mml:mo>=</mml:mo><mml:mrow><mml:mfrac><mml:mrow><mml:msub><mml:mi>s</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mo>−</mml:mo><mml:msub><mml:mi>μ</mml:mi><mml:mi>x</mml:mi></mml:msub></mml:mrow><mml:msub><mml:mi>σ</mml:mi><mml:mi>x</mml:mi></mml:msub></mml:mfrac></mml:mrow></mml:math><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-eq1.jpg"/></alternatives></disp-formula>where <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline3" display="inline" overflow="scroll"><mml:mrow><mml:mover><mml:msub><mml:mi>x</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mo stretchy="false">^</mml:mo></mml:mover></mml:mrow></mml:math></inline-formula> is
+the normalized value, <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline4" display="inline" overflow="scroll"><mml:msub><mml:mi>μ</mml:mi><mml:mi>x</mml:mi></mml:msub></mml:math></inline-formula>
+is the mean of the feature over the whole dataset <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline5" display="inline" overflow="scroll"><mml:mi>x</mml:mi></mml:math></inline-formula>, and
+<inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline6" display="inline" overflow="scroll"><mml:msub><mml:mi>σ</mml:mi><mml:mi>x</mml:mi></mml:msub></mml:math></inline-formula>
+is the standard deviation over <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline7" display="inline" overflow="scroll"><mml:mi>x</mml:mi></mml:math></inline-formula>.</p></sec><sec id="section3C4-20552076221149529"><title>Re-sampling</title><p>Medical data is either at time steps of about 1  h or daily for laboratory
+data, but for usage with the models implemented in this study, uniform time
+series are necessary. To achieve this, vital parameters and laboratory
+values are re-sampled to a frequency of one entry per hour. If there is more
+than one value recorded per hour, the mean of each hour is used as the
+value. The mean over the whole dataset is used if there is no record for a
+time step.</p><p>Additionally, both age and weight are converted to a time series with the
+same frequency as the medical and laboratory data, but with the initial
+value at every time step.</p></sec><sec id="section3C5-20552076221149529"><title>Oversampling</title><p>The MIMIC-III database contains only a small number of patients who have
+returned to the ICU compared to the number of patients who were admitted to
+the ICU only once during their hospital stay (<xref rid="table1-20552076221149529" ref-type="table">Table 1</xref>). Training a deep learning
+model on data with a significant skew of the class labels may result in a
+model that is not able to make accurate predictions on the minority
+class,<sup><xref rid="bibr17-20552076221149529" ref-type="bibr">17</xref></sup> thus we oversampled the data for training the deep
+learning models in order to achieve evenly distributed classes.</p></sec></sec><sec id="section3D-20552076221149529"><title>Classification methods</title><p>The goal of the methods presented here is to assign two class probabilities to
+each ICU stay to make the decision if the patient is able to be transferred from
+the ICU without medical complications.</p><p>A deep learning model that is able to capture time-dependencies in the data is
+compared to four other simpler models, a feedforward neural net and a logistic
+regression model as well as decision tree-based models (Random Forest and Extra
+Trees).</p><sec id="section3D1-20552076221149529"><title>Logistic regression</title><p>To establish a baseline for comparison with the deep learning models,
+logistic regression is used. This statistical model has already been applied
+to similar tasks in medicine.<sup><xref rid="bibr18-20552076221149529" ref-type="bibr">18</xref>,<xref rid="bibr19-20552076221149529" ref-type="bibr">19</xref></sup> In detail, logistic
+regression can be used as a binary classifier which models the relation
+between two discrete dependent variables and multiple independent
+variables.</p><p>In the context of this study, the two dependent variables are the labels
+“returning” and not “not returning” and the independent variables are the
+features. To reduce the number of values for each ICU stay, the time
+dimension is removed from the data as follows: for each time series, a
+linear fit is done. Slope and intercept of the resulting functions are then
+used as features. The procedure results in 28 features that are used for the
+prediction via logistic regression. To avoid overfitting, weight decay
+regularization is used with a value of 1.0.</p><p>No information about the time series is passed to the logistic regression,
+only the trend, so this approach will not be able to capture more complex
+time dependencies.</p></sec><sec id="section3D2-20552076221149529"><title>Feedforward neural network</title><p>The simplest form of a neural network is the feedforward neural network
+(FNN).<sup><xref rid="bibr20-20552076221149529" ref-type="bibr">20</xref></sup> In contrast to other network types like the
+recurrent neural networks (RNNs), the FNN does not have any kind of feedback
+connections. Each input is passed through the same neuron and layer only
+once.</p><p>The architecture of the FNN used in this study is shown in <xref rid="fig3-20552076221149529" ref-type="fig">Figure 3</xref>. It has
+<inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline8" display="inline" overflow="scroll"><mml:mo fence="false" stretchy="false">|</mml:mo><mml:msub><mml:mi>s</mml:mi><mml:mi>l</mml:mi></mml:msub><mml:mo fence="false" stretchy="false">|</mml:mo><mml:mo>*</mml:mo><mml:mn>14</mml:mn></mml:math></inline-formula>
+neurons where <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline9" display="inline" overflow="scroll"><mml:msub><mml:mi>s</mml:mi><mml:mi>l</mml:mi></mml:msub></mml:math></inline-formula>
+is the longest time series in the dataset. Because the length of a time
+series may vary, every time series where <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline10" display="inline" overflow="scroll"><mml:mo fence="false" stretchy="false">|</mml:mo><mml:msub><mml:mi>s</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mo fence="false" stretchy="false">|</mml:mo><mml:mo>&lt;</mml:mo><mml:mo fence="false" stretchy="false">|</mml:mo><mml:msub><mml:mi>s</mml:mi><mml:mi>l</mml:mi></mml:msub><mml:mo fence="false" stretchy="false">|</mml:mo></mml:math></inline-formula> is padded at its beginning with
+zeros to the length of <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline11" display="inline" overflow="scroll"><mml:msub><mml:mi>s</mml:mi><mml:mi>l</mml:mi></mml:msub></mml:math></inline-formula>.</p><fig position="float" id="fig3-20552076221149529" orientation="portrait"><label>Figure 3.</label><caption><p>Feedforward neural network (FNN) architecture.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig3.jpg"/></fig><p>Since the relation between the classes and parameters is likely to be
+non-linear, <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline12" display="inline" overflow="scroll"><mml:mn>2</mml:mn></mml:math></inline-formula> hidden layers are
+used.<sup><xref rid="bibr20-20552076221149529" ref-type="bibr">20</xref></sup> The first hidden layer has a size of
+<inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline13" display="inline" overflow="scroll"><mml:mn>500</mml:mn></mml:math></inline-formula> neurons and the
+second one of <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline14" display="inline" overflow="scroll"><mml:mn>50</mml:mn></mml:math></inline-formula>. Rectified linear
+unit (ReLU) is used as the activation function and a dropout layer with a
+value of <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline15" display="inline" overflow="scroll"><mml:mn>0.2</mml:mn></mml:math></inline-formula> for
+regularization.</p><p>The last layer has two output neurons, which are then passed through to the
+softmax function which assigns a probability to each class.</p><p>Besides the hyperparameters related to the network structure, there are also
+some parameters related to the training algorithm. For the FNN, we used Adam
+optimizer<sup><xref rid="bibr21-20552076221149529" ref-type="bibr">21</xref></sup> with <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline16" display="inline" overflow="scroll"><mml:mi>β</mml:mi><mml:mo>=</mml:mo><mml:mn>0.9</mml:mn></mml:math></inline-formula>
+as the optimization algorithm with the learning rate of 0.003 and
+cross-entropy as the loss function (<xref rid="table4-20552076221149529" ref-type="table">Table 4</xref>).</p><table-wrap position="float" id="table4-20552076221149529" orientation="portrait"><label>Table 4.</label><caption><p>Training related hyperparameters.</p></caption><alternatives><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-table4.jpg"/><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1"/><col align="left" span="1"/></colgroup><thead><tr><th align="left" rowspan="1" colspan="1">Hyperparameters</th><th align="left" rowspan="1" colspan="1">Values</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">Optimization algorithm</td><td rowspan="1" colspan="1">Adam</td></tr><tr><td rowspan="1" colspan="1">Learning rate</td><td rowspan="1" colspan="1">0.003</td></tr><tr><td rowspan="1" colspan="1">Loss function</td><td rowspan="1" colspan="1">Cross-entropy</td></tr><tr><td rowspan="1" colspan="1">Batchsize</td><td rowspan="1" colspan="1">32</td></tr><tr><td rowspan="1" colspan="1">Epochs</td><td rowspan="1" colspan="1">Early stopping</td></tr></tbody></table></alternatives></table-wrap></sec><sec id="section3D3-20552076221149529"><title>Random forest and extra trees</title><p>To provide further baselines for comparison to long short-term memory (LSTM),
+a random forest (RF)<sup><xref rid="bibr22-20552076221149529" ref-type="bibr">22</xref></sup> and an extra tree
+(ET)<sup><xref rid="bibr23-20552076221149529" ref-type="bibr">23</xref></sup> model have been analyzed using the last
+measurements available from each time-series variable. The hyperparameters
+<inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline17" display="inline" overflow="scroll"><mml:mi>m</mml:mi><mml:mi>a</mml:mi><mml:mi>x</mml:mi><mml:mi mathvariant="normal">_</mml:mi><mml:mi>d</mml:mi><mml:mi>e</mml:mi><mml:mi>p</mml:mi><mml:mi>t</mml:mi><mml:mi>h</mml:mi></mml:math></inline-formula>
+and <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline18" display="inline" overflow="scroll"><mml:mi>m</mml:mi><mml:mi>i</mml:mi><mml:mi>n</mml:mi><mml:mi mathvariant="normal">_</mml:mi><mml:mi>s</mml:mi><mml:mi>a</mml:mi><mml:mi>m</mml:mi><mml:mi>p</mml:mi><mml:mi>l</mml:mi><mml:mi>e</mml:mi><mml:mi>s</mml:mi><mml:mi mathvariant="normal">_</mml:mi><mml:mi>l</mml:mi><mml:mi>e</mml:mi><mml:mi>a</mml:mi><mml:mi>f</mml:mi></mml:math></inline-formula>
+of both models are tuned within the five-fold cross-validation.</p></sec><sec id="section3D4-20552076221149529"><title>Long short-term memory</title><p>An LSTM is a special kind of RNNs, which is able to learn long-term
+dependencies. The input to the LSTM is a batch of arrays, each with all the
+time series for all features. While the LSTM can have inputs of varying
+lengths, the length of the input needs to be equal inside each batch. A
+possible solution to this is to pad each time series with zeros until they
+have equal length, but instead, a PyTorch object is used that solves this
+problem.</p><p>The architecture of the LSTM-based model used in this study is shown in <xref rid="fig4-20552076221149529" ref-type="fig">Figure 4</xref>. The
+training-related hyperparameters for the model are the same as for the FNN
+(<xref rid="table4-20552076221149529" ref-type="table">Table 4</xref>).
+<inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline19" display="inline" overflow="scroll"><mml:msub><mml:mi>x</mml:mi><mml:mi>i</mml:mi></mml:msub></mml:math></inline-formula>
+of the input in <xref rid="fig4-20552076221149529" ref-type="fig">Figure
+4</xref> denotes the <italic toggle="yes">i</italic>-th time step of all time
+series.</p><fig position="float" id="fig4-20552076221149529" orientation="portrait"><label>Figure 4.</label><caption><p>Long short-term memory (LSTM) architecture.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig4.jpg"/></fig><p>The number of hidden units per state is chosen such that the model is capable
+to capture complex patterns but will not overfit. The chosen number of
+hidden units is 50.</p><p>The last hidden state <inline-formula><mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" id="mml-inline20" display="inline" overflow="scroll"><mml:msub><mml:mi>h</mml:mi><mml:mi>t</mml:mi></mml:msub></mml:math></inline-formula>
+is then passed through the ReLU function to introduce a non-linearity
+between the features of the hidden state. Before the fully connected layer,
+a dropout layer (with a value of 0.3) is used for regularization, as weight
+decay should not be used here because this may stop the model from
+recognizing time-dependent patterns.<sup><xref rid="bibr24-20552076221149529" ref-type="bibr">24</xref></sup> The fully connected
+layer has two output neurons, which are then passed through the softmax
+function to assign a probability to each class.</p></sec></sec><sec id="section3E-20552076221149529"><title>Validation</title><p>To validate the models, the data is split into a training- and test set with 80%
+of the data being used for training. The data is split such that the
+distribution of classes is the same for both splits. Choosing a larger training
+set could improve model performance, but would lead to a higher variation during
+evaluation.</p><p>Five-fold cross-validation is used for model selection as described by
+Zhang<sup><xref rid="bibr25-20552076221149529" ref-type="bibr">25</xref></sup> with random folds. The deep learning models are trained
+until the area under the precision–recall curve (AUCPR) stops increasing.</p><p>The model that achieves the highest AUCPR value during cross-validation is
+evaluated on the test set.</p><p>Evaluation results for training and testing on data from heart-related ICUs have
+some variation due to the limited amount of data, so this process is repeated
+five times and the mean is used as the final result.</p></sec><sec id="section3F-20552076221149529"><title>Explainability</title><p>Providing transparent declarations on how AI algorithms draw conclusions is a
+critical factor for clinical decision support tools. For simpler classifiers
+such as support vector machines (SVMs) with linear kernels and decision
+tree-based methods, it is possible to provide an importance metrics in terms of
+coefficients for each input parameter. However, for most of the deep
+learning-based algorithms, it is an open research question how the underlying
+non-linear dependencies should be described. For the current study, we used
+feature importance parameter from the random forest classifier to identify the
+features which were most relevant in predicting the target label. This feature
+importance metrics quantifies the Gini importance of the features depending on
+how frequently a single feature is used in the ensembles of trees which form the
+forest of trees, as the sum over the splits that include the feature,
+proportional to the samples it splits.<sup><xref rid="bibr26-20552076221149529" ref-type="bibr">26</xref></sup></p></sec></sec><sec sec-type="results" id="section4-20552076221149529"><title>Results</title><p>Two datasets with the designations <italic toggle="yes">A</italic> and <italic toggle="yes">B</italic> are used
+for the evaluation. The dataset <italic toggle="yes">A</italic> contains only ICU stays of CCU
+and CSRU. The dataset <italic toggle="yes">B</italic> contains ICU stays of all ICUs. All the
+five models are evaluated on the dataset <italic toggle="yes">A</italic>. Additionally, the LSTM
+is evaluated on the dataset <italic toggle="yes">B</italic> to compare the results to the model
+of Lin et al.<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup>
+Both datasets are unbalanced, which makes commonly used evaluation metrics like the
+area under the receiver operating characteristic curve (AUCROC)<sup><xref rid="bibr27-20552076221149529" ref-type="bibr">27</xref></sup> and accuracy
+not providing enough information to accurately evaluate the models.<sup><xref rid="bibr28-20552076221149529" ref-type="bibr">28</xref></sup> Therefore,
+additional metrics such as the AUCPR, balanced accuracy, and
+<italic toggle="yes">F</italic>1-score are included.</p><sec id="section4A-20552076221149529"><title>CCU and CSRU</title><p>After the preprocessing steps, the dataset that only includes ICU stays on the
+CCU and CSRU contains 12,797 ICU stays, with 2560 stays used for evaluation.
+Only 8% of the training and test dataset are labeled as “returning.”</p><p>While a correct detection of true positives and negatives may more often assist
+physicians in their decision making, misclassification may lead to a premature
+ICU discharge of a patient. Therefore, false positives and negatives are just as
+important as true positives and negatives. For this reason, the models presented
+here are evaluated using both balanced accuracy and the
+<italic toggle="yes">F</italic>1-score.</p><p>These metrics are first computed using a decision threshold of 0.5 for each
+model. To evaluate the impact of the decision threshold, these results are
+compared to those using a threshold that maximizes the
+<italic toggle="yes">F</italic>1-score.</p><p>For the threshold of 0.5, the LSTM provides the best results for all metrics
+except precision (<xref rid="table5-20552076221149529" ref-type="table">Table
+5</xref>). Here, the best precision score is achieved by the random
+forest.</p><table-wrap position="float" id="table5-20552076221149529" orientation="portrait"><label>Table 5.</label><caption><p>Threshold-based evaluation results (dataset <italic toggle="yes">A</italic>).</p></caption><alternatives><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-table5.jpg"/><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1"/><col align="left" span="1"/><col align="left" span="1"/><col align="left" span="1"/><col align="left" span="1"/></colgroup><thead><tr><th align="left" rowspan="1" colspan="1"/><th align="left" rowspan="1" colspan="1">Balanced accuracy</th><th align="left" rowspan="1" colspan="1">Recall</th><th align="left" rowspan="1" colspan="1">Precision</th><th align="left" rowspan="1" colspan="1"><italic toggle="yes">F</italic>1</th></tr></thead><tbody><tr><td colspan="5" rowspan="1">Decision threshold: 0.5</td></tr><tr><td rowspan="1" colspan="1">LR</td><td rowspan="1" colspan="1">0.672</td><td rowspan="1" colspan="1">0.597</td><td rowspan="1" colspan="1">0.177</td><td rowspan="1" colspan="1">0.274</td></tr><tr><td rowspan="1" colspan="1">LSTM</td><td rowspan="1" colspan="1">0.727</td><td rowspan="1" colspan="1">0.607</td><td rowspan="1" colspan="1">0.268</td><td rowspan="1" colspan="1">0.372</td></tr><tr><td rowspan="1" colspan="1">RF</td><td rowspan="1" colspan="1">0.618</td><td rowspan="1" colspan="1">0.288</td><td rowspan="1" colspan="1">0.340</td><td rowspan="1" colspan="1">0.312</td></tr><tr><td rowspan="1" colspan="1">ET</td><td rowspan="1" colspan="1">0.675</td><td rowspan="1" colspan="1">0.513</td><td rowspan="1" colspan="1">0.261</td><td rowspan="1" colspan="1">0.290</td></tr><tr><td rowspan="1" colspan="1">FNN</td><td rowspan="1" colspan="1">0.619</td><td rowspan="1" colspan="1">0.299</td><td rowspan="1" colspan="1">0.312</td><td rowspan="1" colspan="1">0.305</td></tr><tr><td colspan="5" rowspan="1">Decision threshold: optimized</td></tr><tr><td rowspan="1" colspan="1">LR</td><td rowspan="1" colspan="1">0.671</td><td rowspan="1" colspan="1">0.363</td><td rowspan="1" colspan="1">0.621</td><td rowspan="1" colspan="1">0.457</td></tr><tr><td rowspan="1" colspan="1">LSTM</td><td rowspan="1" colspan="1">0.706</td><td rowspan="1" colspan="1">0.431</td><td rowspan="1" colspan="1">0.687</td><td rowspan="1" colspan="1">0.530</td></tr><tr><td rowspan="1" colspan="1">RF</td><td rowspan="1" colspan="1">0.682</td><td rowspan="1" colspan="1">0.467</td><td rowspan="1" colspan="1">0.296</td><td rowspan="1" colspan="1">0.361</td></tr><tr><td rowspan="1" colspan="1">ET</td><td rowspan="1" colspan="1">0.689</td><td rowspan="1" colspan="1">0.493</td><td rowspan="1" colspan="1">0.282</td><td rowspan="1" colspan="1">0.358</td></tr><tr><td rowspan="1" colspan="1">FNN</td><td rowspan="1" colspan="1">0.618</td><td rowspan="1" colspan="1">0.269</td><td rowspan="1" colspan="1">0.448</td><td rowspan="1" colspan="1">0.336</td></tr></tbody></table></alternatives><table-wrap-foot><fn id="table-fn4-20552076221149529"><p>LR: logistic regression; LSTM: long short-term memory; RF: random
+forest; ETs: extra trees; FNN: feedforward neural network.</p></fn></table-wrap-foot></table-wrap><p>The optimized threshold causes the <italic toggle="yes">F</italic>1-score of LSTM to increase
+from 0.372 to 0.530, while the balanced accuracy decreases from 0.727 to 0.706
+(<xref rid="table5-20552076221149529" ref-type="table">Table 5</xref>).</p><p>Regarding non-threshold based evaluation results the LSTM model performs best
+with an AUCPR of 0.529 and the feedforward neural net model performs worst with
+an AUCPR of 0.281 (<xref rid="table6-20552076221149529" ref-type="table">Table
+6</xref>). The baseline for the precision--recall (PR) curve is 0.08, given
+by the skew of the dataset, which corresponds to an unskilled classifier.</p><table-wrap position="float" id="table6-20552076221149529" orientation="portrait"><label>Table 6.</label><caption><p>Non-threshold-based evaluation results (dataset <italic toggle="yes">A</italic>).</p></caption><alternatives><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-table6.jpg"/><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1"/><col align="center" span="1"/><col align="center" span="1"/></colgroup><thead><tr><th align="left" rowspan="1" colspan="1"/><th align="left" rowspan="1" colspan="1">AUCROC</th><th align="left" rowspan="1" colspan="1">AUCPR</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">LR</td><td rowspan="1" colspan="1">0.708</td><td rowspan="1" colspan="1">0.430</td></tr><tr><td rowspan="1" colspan="1">LSTM</td><td rowspan="1" colspan="1">0.777</td><td rowspan="1" colspan="1">0.529</td></tr><tr><td rowspan="1" colspan="1">RF</td><td rowspan="1" colspan="1">0.777</td><td rowspan="1" colspan="1">0.269</td></tr><tr><td rowspan="1" colspan="1">ET</td><td rowspan="1" colspan="1">0.776</td><td rowspan="1" colspan="1">0.282</td></tr><tr><td rowspan="1" colspan="1">FNN</td><td rowspan="1" colspan="1">0.640</td><td rowspan="1" colspan="1">0.281</td></tr></tbody></table></alternatives><table-wrap-foot><fn id="table-fn5-20552076221149529"><p>LR: logistic regression; LSTM: long short-term memory; RF: random
+forest; ETs: extra trees; FNN: feedforward neural network; AUCROC:
+area under the receiver operator characteristic curve; AUCPR: area
+under the precision–recall curve.</p></fn></table-wrap-foot></table-wrap><p><xref rid="fig5-20552076221149529" ref-type="fig">Figure 5</xref> shows the mean
+precision–recall (PR) curves for all models compared to the baseline. All models
+perform better than an unskilled classifier.</p><fig position="float" id="fig5-20552076221149529" orientation="portrait"><label>Figure 5.</label><caption><p>Mean precision–recall (PR) curves on dataset <italic toggle="yes">A</italic>.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig5.jpg"/></fig><p><xref rid="fig6-20552076221149529" ref-type="fig">Figure 6</xref> shows the mean
+receiver operating characteristic curve (ROC curves) for all models compared to
+a baseline of 0.5 which corresponds to an unskilled classifier. Similar to the
+PR Curves, all models perform better than an unskilled classifier, with most
+models performing similarly, except the FNN which performs worse than the other
+models.</p><fig position="float" id="fig6-20552076221149529" orientation="portrait"><label>Figure 6.</label><caption><p>Mean receiver operating characteristic curve (ROC curves) on dataset
+<italic toggle="yes">A</italic>.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig6.jpg"/></fig></sec><sec id="section4B-20552076221149529"><title>All ICUs</title><p>The dataset contains 40,663 ICU stays, 8127 of those are used for evaluation.
+13.5% of stays are labeled as ‘’returning.” The results are compared to those of
+the best models of the study by Lin et al.<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup> The LSTM model of this
+study achieves a higher AUCROC than the two best-performing models (LSTM and
+LSTM+CNN) from the study by Lin et al. (<xref rid="table7-20552076221149529" ref-type="table">Table 7</xref>). The AUCPR value is not
+recorded for the other model. Both AUCROC and AUCPR are better using data from
+all ICUs instead of just data from the CCU and CSRU (<xref rid="table7-20552076221149529" ref-type="table">Table 7</xref>).</p><table-wrap position="float" id="table7-20552076221149529" orientation="portrait"><label>Table 7.</label><caption><p>Non-threshold based evaluation results (dataset <italic toggle="yes">B</italic>).</p></caption><alternatives><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-table7.jpg"/><table frame="hsides" rules="groups"><colgroup span="1"><col align="left" span="1"/><col align="center" span="1"/><col align="center" span="1"/></colgroup><thead><tr><th align="left" rowspan="1" colspan="1"/><th align="left" rowspan="1" colspan="1">AUCROC</th><th align="left" rowspan="1" colspan="1">AUCPR</th></tr></thead><tbody><tr><td rowspan="1" colspan="1">LSTM</td><td rowspan="1" colspan="1">0.861</td><td rowspan="1" colspan="1">0.706</td></tr><tr><td rowspan="1" colspan="1">LSTM<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup></td><td rowspan="1" colspan="1">0.787</td><td rowspan="1" colspan="1">–</td></tr><tr><td rowspan="1" colspan="1">LSTM + CNN<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup></td><td rowspan="1" colspan="1">0.791</td><td rowspan="1" colspan="1">–</td></tr></tbody></table></alternatives><table-wrap-foot><fn id="table-fn6-20552076221149529"><p>AUCROC: area under the receiver operator characteristic curve; AUCPR:
+area under the precision–recall curve; LSTM: long short-term memory;
+CNN: convolutional neural network.</p></fn></table-wrap-foot></table-wrap><p><xref rid="fig7-20552076221149529" ref-type="fig">Figures 7</xref> and <xref rid="fig8-20552076221149529" ref-type="fig">8</xref> show the mean PR curve
+and ROC curve of the LSTM trained and evaluated on dataset <italic toggle="yes">B</italic>,
+with the PR curve showing good detection, especially of the majority class and
+both curves being above the curve of the unskilled classifier.</p><fig position="float" id="fig7-20552076221149529" orientation="portrait"><label>Figure 7.</label><caption><p>Precision–recall (PR) curve on dataset <italic toggle="yes">B</italic>.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig7.jpg"/></fig><fig position="float" id="fig8-20552076221149529" orientation="portrait"><label>Figure 8.</label><caption><p>Receiver operating characteristic curve (ROC curve) on dataset
+<italic toggle="yes">B</italic>.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig8.jpg"/></fig><p>A model trained on data from all ICUs was also evaluated on test set that only
+consists of patients from the CCU and CSRU. PR and ROC curvess are shown in
+<xref rid="fig9-20552076221149529" ref-type="fig">Figures 9</xref> and <xref rid="fig10-20552076221149529" ref-type="fig">10</xref>. The area under the
+curve is 0.716 for the PR curve and 0.853 for the ROC curve.</p><fig position="float" id="fig9-20552076221149529" orientation="portrait"><label>Figure 9.</label><caption><p>PR curve for evaluation on heart-related ICUs. ICU: intensive care unit;
+PR: precision–recall.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig9.jpg"/></fig><fig position="float" id="fig10-20552076221149529" orientation="portrait"><label>Figure 10.</label><caption><p>ROC curve for evaluation on heart-related ICUs. ICUs: intensive care
+units; ROC: receiver operating characteristic.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig10.jpg"/></fig></sec><sec id="section4C-20552076221149529"><title>Direct comparison of LSTM and LR</title><p>As the LSTM was shown to be the superior method, we further analyzed how the LSTM
+and LR models performed on cases from the held-out test set: out of 2560 cases
+in the test cohort, 1791 cases were predicted correctly by both of the
+classifiers. The number of cases for which the LSTM model predicted correctly
+while the LR predicted incorrectly was 405. The number of cases for which the LR
+model predicted correctly while the LSTM predicted incorrectly was 106.</p></sec><sec id="section4D-20552076221149529"><title>Feature importances</title><p>As described in the methods section, to provide a simplified declaration about
+how the random forest model has made its conclusion, the most relevant features
+are shown in the diagram in <xref rid="fig11-20552076221149529" ref-type="fig">Figure 11</xref>.</p><fig position="float" id="fig11-20552076221149529" orientation="portrait"><label>Figure 11.</label><caption><p>Most relevant features used by the random forest classifier.</p></caption><graphic xmlns:xlink="http://www.w3.org/1999/xlink" position="float" orientation="portrait" xlink:href="10.1177_20552076221149529-fig11.jpg"/></fig></sec></sec><sec sec-type="discussion" id="section5-20552076221149529"><title>Discussion</title><p>In this study, we presented an LSTM-based deep learning model to assist intensivists
+in making decisions if patients can be discharged from cardiovascular intensive care
+units, which has been shown to outperform comparable models. Despite the fact that
+RF and ET have the same or similar AUCROC compared to our LSTM, the LSTM model
+provides a higher precision (<xref rid="fig5-20552076221149529" ref-type="fig">Figure 5</xref>), that leads to a higher AUCPR (<xref rid="table6-20552076221149529" ref-type="table">Table 6</xref>). In the context of these
+observations, the LSTM performs better than all alternative models such as decision
+tree-based models. This indicates that the class label depends on non-linear
+relations of the input data and its temporal structure so classifiers that are able
+to detect those perform better.</p><p><xref rid="table5-20552076221149529" ref-type="table">Table 5</xref> shows that the
+balanced accuracy is slightly higher than the recall, so the true negative rate is
+higher than the true positive rate. This indicates that although the models have a
+bias for the majority class, it is smaller than it would be without oversampling the
+training data.</p><p>Using the optimized decision threshold decreases recall and increases precision for
+all models with only a small decrease for the balanced accuracy. While the optimized
+threshold results in a better compromise between recall and precision, indicated by
+the F1 score, there is no strictly optimal threshold that results in the correct
+classification of all cases. Therefore, the threshold in a practical application
+should be chosen depending on whether an intensivist is more likely to need
+assistance in correctly identifying transferable or non-transferable patients.</p><p>Using patient data from all ICUs instead of focusing on cardiovascular ICUs improves
+AUCROC and AUCPR (<xref rid="table7-20552076221149529" ref-type="table">Table
+7</xref>). The advantages of using the complete dataset are a higher amount of
+data available for training and a less skewed dataset, so results of the models
+trained on heart-related ICU data could be further improved by using larger
+datasets.</p><p>A model trained on data from all ICUs performs better than the model trained on data
+from heart-related ICUs when both are evaluated on data from heart-related ICUs.
+This indicates that a model trained on all data from one hospital could be used on
+specific units of the hospital, even if there is some difference in data on
+different units. However, as acquiring real patient data from multiple departments,
+even within the same hospital would result in complications, mostly caused by data
+protection protocols, the feasibility of training such a model remains still in
+question. Therefore, for this study, we compared the performance of the models
+trained with data from cardiovascular care units together.</p><p>The resulting LSTM model is compared to the best performing model of the study of Lin
+et al.,<sup><xref rid="bibr7-20552076221149529" ref-type="bibr">7</xref></sup> which
+uses more input features and a bi-directional LSTM which also utilizes convolutions.
+While the preprocessing and labeling processes are different, the main goals of this
+study and the study by Lin et al. are similar and so the results are comparable.</p><p>While the LSTM and the choice of features in this work are aimed at transferring
+cardiac patients, it provides better results than the models of Lin et al. The
+comparison of the results with LSTM+CNN (<xref rid="table7-20552076221149529" ref-type="table">Table 7</xref>) also shows that the choice of
+features and the preprocessing has a greater influence on the performance of a deep
+learning model than the number of features or the complexity of the model.</p><p>In order to realize the use of the LSTM model presented in this study in a clinical
+context, explainability and improved performance is necessary. The explainability of
+the machine and deep learning models not only help to make the models more reliable
+and to draw accurate conclusions about the patient’s condition, but may also be a
+legal necessity.<sup><xref rid="bibr29-20552076221149529" ref-type="bibr">29</xref></sup> However, the explainability of deep learning models is one of
+the current research areas, and there is currently no established method for an
+accurate and widely accepted explanation of the classification results. Also, since
+intensivists decisions depend on the performance of the model, its accuracy should
+still be significantly increased which might be achieved with dedicated and
+high-resolution data, the next step in our work.</p><p>Promising results for the explainability of black box models are provided by methods
+like LIME<sup><xref rid="bibr30-20552076221149529" ref-type="bibr">30</xref></sup>
+and SHAP.<sup><xref rid="bibr31-20552076221149529" ref-type="bibr">31</xref></sup>
+Based on these methods, the next steps will be to explore the possibility of
+explaining the results of LSTM-based models. For the current study, we used feature
+importance metric of the random forest model to identify the most relevant features
+for this classifier to decide on the target label. The results are shown in <xref rid="fig11-20552076221149529" ref-type="fig">Figure 11</xref>. However,
+analyzing the parameter importance for the LSTM model is a out of focus for this
+current study. Nevertheless, state-of-the-art ML models for time-series analysis,
+such as LSTM are capable of investigating hidden non-linear patterns in the data
+which might make them superior even to experienced domain experts. Thus, as part of
+our future work, we plan to conduct empirical studies comparing performance of the
+proposed model to that of domain experts. Another possible way to improve
+performance might be utilizing state-of-the-art models such as residual
+networks<sup><xref rid="bibr32-20552076221149529" ref-type="bibr">32</xref></sup> which have shown to achieve good results for multivariate
+time-series classification and prediction.<sup><xref rid="bibr33-20552076221149529" ref-type="bibr">33</xref></sup> This study has further
+limitations. One of them is that the comparison with the models of Lin et al. is
+vague based only on the AUCROC. As mentioned earlier, AUROC does not perform well on
+an unbalanced dataset. Unfortunately, Lin et al. do not present other metrics for a
+better comparison with our models. Another aspect is the relationship between
+precision and recall. As the results show, an increase of precision reduces recall
+and vice versa. Contextually, a decreasing precision means that the number of false
+alarms of the model increases. Decreasing recall, on the other hand, means that the
+number of patients for whom the model falsely predicts that they would be
+successfully transferred from the ICU, increases. In a practical application, both
+cases are disadvantageous and should be avoided if possible. Finally, the
+improvement of AUCROC and AUCPR by using patient data from all ICUs should be
+explored empirically. In this context, in addition to a larger dataset, the results
+for cardiovascular ICU could be further improved by an even more specific feature
+selection.</p><p>To conclude, the current study was aimed at analyzing the overall relevance of an
+established method for time-series data analysis (LSTM) on an open access dataset
+(MIMIC-III) to provide a proof of concept for further follow-ups. Therefore,
+evaluating the proposed model on an independent cardiovascular cohort, which is an
+important step toward establishing a new tool for clinical decision support, is the
+motivation behind an upcoming study of ours. Furthermore as proposed in the related
+work,<sup><xref rid="bibr34-20552076221149529" ref-type="bibr">34</xref></sup> in the future, we consider natural language processing (NLP)
+approaches for readmission prediction based on patients’ electronic health records
+(EHRs) and treatment reports during their stays at ICUs. This will require extra
+preprocessing steps as our datasets of patient records feature bilingual texts.</p><p>Nonetheless, the use of a system based on machine or deep learning methods to support
+the intensivists in making decisions regarding the discharge of a patient from the
+ICU has some important clinical implications. In fact, the additional information
+provided by the system makes it possible to analyze the patient’s health condition
+systematically and in a rapid fashion. Faster analysis allows rapid and flexible
+allocation of patients to the ICU, which remains a scarce resource. Additionally,
+optimization of the timing of patient discharge from the ICU may help to reduce
+patient readmissions. Hence LSTM-based decision making in this context, may not only
+help to increase the quality of patient care, but may also help to reduce costs and
+to optimize ICU resources.</p></sec></body><back><ack><title>Acknowledgements</title><p>The authors would like to thank Susanne Bunnenberg Herzstiftung for their general
+support.</p></ack><fn-group><fn fn-type="other"><p><bold>Contributership:</bold> HA and FS conceived the study. HA, AL, and VH provided the medical expertise. SKe
+and DS preprocessed the data, selected the classification methods and developed
+the classifiers. SKo carried out the machine learning related guidance and
+supervision. SKe and SKo wrote the first draft of the manuscript. HA, FS and AL
+contributed substantially to the manuscript. SKa and SM conceptualized the
+revised manuscript. SKe, SKa and SM contributed substantially to the revised
+version of the manuscript in model selection, data processing, writing, and
+revising. SKo reviewed and corrected the manuscript during the final review. All
+authors reviewed and approved the (re-)submitted version of the manuscript.</p></fn><fn fn-type="COI-statement"><p>The authors declared no potential conflicts of interest with respect to the
+research, authorship, and/or publication of this article.</p></fn><fn fn-type="other"><p><bold>Ethical approval:</bold> Ethical approval is not required.</p></fn><fn fn-type="financial-disclosure"><p><bold>Funding:</bold> The authors disclosed receipt of the following financial support for the
+research, authorship, and/or publication of this article: This work was
+supported by the Federal Ministry of Education and Research of Germany [grant
+number 16SV8601].</p></fn><fn fn-type="other"><p><bold>Guarantor:</bold> Falko Schmid</p></fn><fn fn-type="other"><p><bold>ORCID iDs:</bold> Sergej Korlakov <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://orcid.org/0000-0001-5690-199X" ext-link-type="uri">https://orcid.org/0000-0001-5690-199X</ext-link></p><p>Hug Aubin <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://orcid.org/0000-0001-9289-8927" ext-link-type="uri">https://orcid.org/0000-0001-9289-8927</ext-link></p></fn></fn-group><ref-list><title>References</title><ref id="bibr1-20552076221149529"><label>1</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Angelo</surname><given-names>SA</given-names></name><name name-style="western"><surname>Arruda</surname><given-names>EF</given-names></name><name name-style="western"><surname>Goldwasser</surname><given-names>R</given-names></name></person-group>
+<etal>et al</etal>. <article-title>Demand forecast and optimal planning of
+intensive care unit (ICU) capacity</article-title>. <source>Pesqui
+Operacional</source>
+<year>2017</year>; <volume>37</volume>:
+<fpage>229</fpage>–<lpage>245</lpage>.</mixed-citation></ref><ref id="bibr2-20552076221149529"><label>2</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Franklin</surname><given-names>C</given-names></name><name name-style="western"><surname>Jackson</surname><given-names>D</given-names></name></person-group>. <article-title>Discharge decision-making in a
+medical icu: characteristics of unexpected readmissions</article-title>.
+<source>Crit Care Med</source>
+<year>1983</year>; <volume>11</volume>:
+<fpage>61</fpage>–<lpage>66</lpage>.<pub-id pub-id-type="pmid">6822082</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1097/00003246-198302000-00001</pub-id></mixed-citation></ref><ref id="bibr3-20552076221149529"><label>3</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Baigelman</surname><given-names>W</given-names></name><name name-style="western"><surname>Katz</surname><given-names>R</given-names></name><name name-style="western"><surname>Geary</surname><given-names>G</given-names></name></person-group>. <article-title>Patient readmission to critical care
+units during the same hospitalization at a community teaching
+hospital</article-title>. <source>Intens Care Med</source>
+<year>1983</year>; <volume>9</volume><issue>5</issue>): :
+<fpage>253</fpage>–<lpage>256</lpage>.<pub-id pub-id-type="doi" assigning-authority="pmc">10.1007/BF01691250</pub-id><pub-id pub-id-type="pmid">6619393</pub-id></mixed-citation></ref><ref id="bibr4-20552076221149529"><label>4</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Snow</surname><given-names>N</given-names></name><name name-style="western"><surname>Bergin</surname><given-names>KT</given-names></name><name name-style="western"><surname>Horrigan</surname><given-names>TP</given-names></name></person-group>. <article-title>Readmission of patients to the
+surgical intensive care unit: patient profiles and possibilities for
+prevention</article-title>. <source>Crit Care Med</source>
+<year>1985</year>; <volume>13</volume><issue>11</issue>): :
+<fpage>961</fpage>–<lpage>964</lpage>.<pub-id pub-id-type="pmid">4053645</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1097/00003246-198511000-00037</pub-id></mixed-citation></ref><ref id="bibr5-20552076221149529"><label>5</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Rosenberg</surname><given-names>AL</given-names></name><name name-style="western"><surname>Hofer</surname><given-names>TP</given-names></name><name name-style="western"><surname>Hayward</surname><given-names>RA</given-names></name></person-group>
+<etal>et al</etal>. <article-title>Who bounces back? Physiologic and other
+predictors of intensive care unit readmission</article-title>. <source>Crit
+Care Med</source>
+<year>2001</year>; <volume>29</volume><issue>3</issue>): :
+<fpage>511</fpage>–<lpage>518</lpage>.<pub-id pub-id-type="pmid">11373413</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1097/00003246-200103000-00008</pub-id></mixed-citation></ref><ref id="bibr6-20552076221149529"><label>6</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Elliott</surname><given-names>M</given-names></name></person-group>. <article-title>Readmission to intensive care: a
+review of the literature</article-title>. <source>Aust Crit Care</source>
+<year>2006</year>; <volume>19</volume><issue>3</issue>): :
+<fpage>96</fpage>–<lpage>104</lpage>.<pub-id pub-id-type="pmid">16933636</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1016/s1036-7314(06)80004-4</pub-id></mixed-citation></ref><ref id="bibr7-20552076221149529"><label>7</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Lin</surname><given-names>YW</given-names></name><name name-style="western"><surname>Zhou</surname><given-names>Y</given-names></name><name name-style="western"><surname>Faghri</surname><given-names>F</given-names></name></person-group>
+<etal>et al</etal>. <article-title>Analysis and prediction of unplanned
+intensive care unit readmission using recurrent neural networks with long
+short-term memory</article-title>. <source>PLoS ONE</source>
+<year>2019</year>; <volume>14</volume><issue>7</issue>): :
+<fpage>e0218942</fpage>.<pub-id pub-id-type="pmid">31283759</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1371/journal.pone.0218942</pub-id><pub-id pub-id-type="pmcid">PMC6613707</pub-id></mixed-citation></ref><ref id="bibr8-20552076221149529"><label>8</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Azarfarin</surname><given-names>R</given-names></name><name name-style="western"><surname>Ashouri</surname><given-names>N</given-names></name><name name-style="western"><surname>Totonchi</surname><given-names>Z</given-names></name></person-group>
+<etal>et al</etal>. <article-title>Factors influencing prolonged ICU stay after
+open heart surgery</article-title>. <source>Res Cardiovasc Med</source>
+<year>2014</year>; <volume>3</volume><issue>4</issue>): :
+<fpage>2</fpage>.<pub-id pub-id-type="doi" assigning-authority="pmc">10.5812/cardiovascmed.20159</pub-id><pub-id pub-id-type="pmcid">PMC4347792</pub-id><pub-id pub-id-type="pmid">25785249</pub-id></mixed-citation></ref><ref id="bibr9-20552076221149529"><label>9</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Almashrafi</surname><given-names>A</given-names></name><name name-style="western"><surname>Elmontsri</surname><given-names>M</given-names></name><name name-style="western"><surname>Aylin</surname><given-names>P</given-names></name></person-group>. <article-title>Systematic review of factors
+influencing length of stay in ICU after adult cardiac
+surgery</article-title>. <source>BMC Health Serv Res</source>
+<year>2016</year>; <volume>16</volume><issue>1</issue>): :
+<fpage>318</fpage>.<pub-id pub-id-type="pmid">27473872</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1186/s12913-016-1591-3</pub-id><pub-id pub-id-type="pmcid">PMC4966741</pub-id></mixed-citation></ref><ref id="bibr10-20552076221149529"><label>10</label><mixed-citation publication-type="other"><person-group person-group-type="author"><name name-style="western"><surname>Rafi</surname><given-names>P</given-names></name><name name-style="western"><surname>Pakbin</surname><given-names>A</given-names></name><name name-style="western"><surname>Pentyala</surname><given-names>SK</given-names></name></person-group>. <comment>Interpretable deep learning framework for
+predicting all-cause 30-day icu readmissions</comment>.</mixed-citation></ref><ref id="bibr11-20552076221149529"><label>11</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Wang</surname><given-names>H</given-names></name><name name-style="western"><surname>Cui</surname><given-names>Z</given-names></name><name name-style="western"><surname>Chen</surname><given-names>Y</given-names></name></person-group>
+<etal>et al</etal>. <article-title>Predicting hospital readmission via
+cost-sensitive deep learning</article-title>. <source>IEEE/ACM Trans Comput
+Biol Bioinf</source>
+<year>2018</year>; <volume>15</volume><issue>6</issue>): :
+<fpage>1968</fpage>–<lpage>1978</lpage>.<pub-id pub-id-type="doi" assigning-authority="pmc">10.1109/TCBB.2018.2827029</pub-id><pub-id pub-id-type="pmid">29993930</pub-id></mixed-citation></ref><ref id="bibr12-20552076221149529"><label>12</label><mixed-citation publication-type="other"><person-group person-group-type="author"><name name-style="western"><surname>Spiga</surname><given-names>R</given-names></name><name name-style="western"><surname>Batton-Hubert</surname><given-names>M</given-names></name><name name-style="western"><surname>Sarazin</surname><given-names>M</given-names></name></person-group>. <comment>Predicting hospital admissions with
+integer-valued time series. International Conference on Time Series and
+Forecasting, ITISE 2019, 2019</comment>. <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://hal-emse.ccsd.cnrs.fr/emse-02301132" ext-link-type="uri">https://hal-emse.ccsd.cnrs.fr/emse-02301132</ext-link>.
+<comment>Poster</comment>.</mixed-citation></ref><ref id="bibr13-20552076221149529"><label>13</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Desautels</surname><given-names>T</given-names></name><name name-style="western"><surname>Das</surname><given-names>R</given-names></name><name name-style="western"><surname>Calvert</surname><given-names>J</given-names></name></person-group>
+<etal>et al</etal>. <article-title>Prediction of early unplanned intensive care
+unit readmission in a UK tertiary care hospital: a cross-sectional machine
+learning approach</article-title>. <source>BMJ Open</source>
+<year>2017</year>; <volume>7</volume>: DOI: <pub-id pub-id-type="doi">10.1136/bmjopen-2017-017199</pub-id>. <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://bmjopen.bmj.com/content/7/9/e017199.full.pdf" ext-link-type="uri">https://bmjopen.bmj.com/content/7/9/e017199.full.pdf</ext-link>.<pub-id pub-id-type="pmcid">PMC5640090</pub-id><pub-id pub-id-type="pmid">28918412</pub-id></mixed-citation></ref><ref id="bibr14-20552076221149529"><label>14</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Huang</surname><given-names>Y</given-names></name><name name-style="western"><surname>Talwar</surname><given-names>A</given-names></name><name name-style="western"><surname>Chatterjee</surname><given-names>S</given-names></name></person-group>
+<etal>et al</etal>. <article-title>Application of machine learning in predicting
+hospital readmissions: a scoping review of the literature</article-title>.
+<source>BMC Med Res Methodol</source>
+<year>2021</year>; <volume>21</volume><issue>1</issue>): :
+<fpage>96</fpage>.<pub-id pub-id-type="pmid">33952192</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1186/s12874-021-01284-z</pub-id><pub-id pub-id-type="pmcid">PMC8101040</pub-id></mixed-citation></ref><ref id="bibr15-20552076221149529"><label>15</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Ashfaq</surname><given-names>A</given-names></name><name name-style="western"><surname>Sant-Anna</surname><given-names>A</given-names></name><name name-style="western"><surname>Lingman</surname><given-names>M</given-names></name></person-group>
+<etal>et al</etal>. <article-title>Readmission prediction using deep learning on
+electronic health records</article-title>. <source>J Biomed Inform</source>
+<year>2019</year>; <volume>97</volume>: <fpage>103256</fpage>. DOI: <pub-id pub-id-type="doi">10.1016/j.jbi.2019.103256</pub-id>. <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://www.sciencedirect.com/science/article/pii/S1532046419" ext-link-type="uri">https://www.sciencedirect.com/science/article/pii/S1532046419</ext-link>.<pub-id pub-id-type="pmid">31351136</pub-id></mixed-citation></ref><ref id="bibr16-20552076221149529"><label>16</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Johnson</surname><given-names>AEW</given-names></name><name name-style="western"><surname>Pollard</surname><given-names>TJ</given-names></name><name name-style="western"><surname>Shen</surname><given-names>L</given-names></name></person-group>
+<etal>et al</etal>. <article-title>MIMIC-III, a freely accessible critical care
+database</article-title>. <source>Sci Data</source>
+<year>2016</year>; <volume>3</volume><issue>160035</issue>): :
+<fpage>1</fpage>–<lpage>9</lpage>.<pub-id pub-id-type="doi" assigning-authority="pmc">10.1038/sdata.2016.35</pub-id><pub-id pub-id-type="pmcid">PMC4878278</pub-id><pub-id pub-id-type="pmid">27219127</pub-id></mixed-citation></ref><ref id="bibr17-20552076221149529"><label>17</label><mixed-citation publication-type="other"><person-group person-group-type="author"><name name-style="western"><surname>Bauder</surname><given-names>RA</given-names></name><name name-style="western"><surname>Khoshgoftaar</surname><given-names>TM</given-names></name><name name-style="western"><surname>Hasanin</surname><given-names>T</given-names></name></person-group>. <comment>An Empirical Study on Class Rarity in Big
+Data. In: <italic toggle="yes">2018 17th IEEE International Conference on Machine
+Learning and Applications (ICMLA)</italic>. IEEE, 2018. pp. 785–790.
+doi:10.1109/ICMLA.2018.00125</comment>.</mixed-citation></ref><ref id="bibr18-20552076221149529"><label>18</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Lemeshow</surname><given-names>S</given-names></name><name name-style="western"><surname>Teres</surname><given-names>D</given-names></name><name name-style="western"><surname>Pastides</surname><given-names>H</given-names></name></person-group>
+<etal>et al</etal>. <article-title>A method for predicting survival and
+mortality of ICU patients using objectively derived weights</article-title>.
+<source>Crit Care Med</source>
+<year>1985</year>; <volume>13</volume><issue>7</issue>): :
+<fpage>519</fpage>–<lpage>525</lpage>.<pub-id pub-id-type="pmid">4006490</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1097/00003246-198507000-00001</pub-id></mixed-citation></ref><ref id="bibr19-20552076221149529"><label>19</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Nguile-Makao</surname><given-names>M</given-names></name><name name-style="western"><surname>Zahar</surname><given-names>JR</given-names></name><name name-style="western"><surname>Français</surname><given-names>A</given-names></name></person-group>
+<etal>et al</etal>. <article-title>Attributable mortality of
+ventilator-associated pneumonia: respective impact of main characteristics
+at ICU admission and VAP onset using conditional logistic regression and
+multi-state models</article-title>. <source>Intens Care Med</source>
+<year>2010</year>; <volume>36</volume><issue>5</issue>): :
+<fpage>781</fpage>–<lpage>789</lpage>.<pub-id pub-id-type="doi" assigning-authority="pmc">10.1007/s00134-010-1824-6</pub-id><pub-id pub-id-type="pmid">20232046</pub-id></mixed-citation></ref><ref id="bibr20-20552076221149529"><label>20</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Schmidhuber</surname><given-names>J</given-names></name></person-group>. <article-title>Deep learning in neural networks: an
+overview</article-title>. <source>Neural Netw</source>
+<year>2015</year>; <volume>61</volume>:
+<fpage>85</fpage>–<lpage>117</lpage>.<pub-id pub-id-type="pmid">25462637</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1016/j.neunet.2014.09.003</pub-id></mixed-citation></ref><ref id="bibr21-20552076221149529"><label>21</label><mixed-citation publication-type="other"><person-group person-group-type="author"><name name-style="western"><surname>Kingma</surname><given-names>DP</given-names></name><name name-style="western"><surname>Ba</surname><given-names>J</given-names></name></person-group>. <comment>Adam: A Method for Stochastic Optimization.
+<italic toggle="yes">arXiv</italic> 2014; 1412.6980</comment>.</mixed-citation></ref><ref id="bibr22-20552076221149529"><label>22</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Breiman</surname><given-names>L</given-names></name></person-group>. <article-title>Random forests</article-title>.
+<source>Mach Learn</source>
+<year>2001</year>; <volume>45</volume><issue>1</issue>): :
+<fpage>5</fpage>–<lpage>32</lpage>.</mixed-citation></ref><ref id="bibr23-20552076221149529"><label>23</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Geurts</surname><given-names>P</given-names></name><name name-style="western"><surname>Ernst</surname><given-names>D</given-names></name><name name-style="western"><surname>Wehenkel</surname><given-names>L</given-names></name></person-group>. <article-title>Extremely randomized
+trees</article-title>. <source>Mach Learn</source>
+<year>2006</year>; <volume>63</volume><issue>1</issue>): :
+<fpage>3</fpage>–<lpage>42</lpage>.</mixed-citation></ref><ref id="bibr24-20552076221149529"><label>24</label><mixed-citation publication-type="other"><person-group person-group-type="author"><name name-style="western"><surname>Loshchilov</surname><given-names>I</given-names></name><name name-style="western"><surname>Hutter</surname><given-names>F</given-names></name></person-group>. <comment>Decoupled Weight Decay Regularization.
+<italic toggle="yes">arXiv</italic> 2017; 1711.05101</comment>.</mixed-citation></ref><ref id="bibr25-20552076221149529"><label>25</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Zhang</surname><given-names>P</given-names></name></person-group>. <article-title>Model selection via multifold cross
+validation</article-title>. <source>Ann Stat</source>
+<year>1993</year>; <volume>21</volume><issue>1</issue>): :
+<fpage>299</fpage>–<lpage>313</lpage>.</mixed-citation></ref><ref id="bibr26-20552076221149529"><label>26</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Menze</surname><given-names>BH</given-names></name><name name-style="western"><surname>Kelm</surname><given-names>BM</given-names></name><name name-style="western"><surname>Masuch</surname><given-names>R</given-names></name></person-group>
+<etal>et al</etal>. <article-title>A comparison of random forest and its gini
+importance with standard chemometric methods for the feature selection and
+classification of spectral data</article-title>. <source>BMC
+Bioinformatics</source>
+<year>2009</year>; <volume>10</volume><issue>1</issue>): :
+<fpage>213</fpage>.<pub-id pub-id-type="pmid">19591666</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1186/1471-2105-10-213</pub-id><pub-id pub-id-type="pmcid">PMC2724423</pub-id></mixed-citation></ref><ref id="bibr27-20552076221149529"><label>27</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Fawcett</surname><given-names>T</given-names></name></person-group>. <article-title>An introduction to ROC
+analysis</article-title>. <source>Pattern Recognit Lett</source>
+<year>2006</year>; <volume>27</volume><issue>8</issue>): :
+<fpage>861</fpage>–<lpage>874</lpage>. <comment>ROC Analysis in Pattern
+Recognition</comment>.</mixed-citation></ref><ref id="bibr28-20552076221149529"><label>28</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Saito</surname><given-names>T</given-names></name><name name-style="western"><surname>Rehmsmeier</surname><given-names>M</given-names></name></person-group>. <article-title>The precision-Recall DIFdelPplot is
+more informative Than the ROC plot when evaluating binary classifiers on
+imbalanced datasets</article-title>. <source>PLoS ONE</source>
+<year>2015</year>; <volume>10</volume><issue>3</issue>): :
+<fpage>e0118432</fpage>.<pub-id pub-id-type="pmid">25738806</pub-id><pub-id pub-id-type="doi" assigning-authority="pmc">10.1371/journal.pone.0118432</pub-id><pub-id pub-id-type="pmcid">PMC4349800</pub-id></mixed-citation></ref><ref id="bibr29-20552076221149529"><label>29</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Selbst</surname><given-names>AD</given-names></name><name name-style="western"><surname>Powles</surname><given-names>J</given-names></name></person-group>. <article-title>Meaningful information and the right
+to explanation</article-title>. <source>Int Data Privacy Law</source>
+<year>2017</year>; <volume>7</volume><issue>4</issue>): :
+<fpage>233</fpage>–<lpage>242</lpage>.</mixed-citation></ref><ref id="bibr30-20552076221149529"><label>30</label><mixed-citation publication-type="other"><person-group person-group-type="author"><name name-style="western"><surname>Ribeiro</surname><given-names>MT</given-names></name><name name-style="western"><surname>Singh</surname><given-names>S</given-names></name><name name-style="western"><surname>Guestrin</surname><given-names>C</given-names></name></person-group>. <comment>“why should i trust you?”: explaining the
+predictions of any classifier, 2016. 1602.04938</comment>.</mixed-citation></ref><ref id="bibr31-20552076221149529"><label>31</label><mixed-citation publication-type="other"><person-group person-group-type="author"><name name-style="western"><surname>Schlegel</surname><given-names>U</given-names></name><name name-style="western"><surname>Arnout</surname><given-names>H</given-names></name><name name-style="western"><surname>El-Assady</surname><given-names>M</given-names></name></person-group>
+<etal>et al</etal>. <comment>Towards a rigorous evaluation of xai methods on
+time series, 2019. 1909.07082</comment>.</mixed-citation></ref><ref id="bibr32-20552076221149529"><label>32</label><mixed-citation publication-type="journal"><person-group person-group-type="author"><name name-style="western"><surname>Wang</surname><given-names>Z</given-names></name><name name-style="western"><surname>Yan</surname><given-names>W</given-names></name><name name-style="western"><surname>Oates</surname><given-names>T</given-names></name></person-group>. <article-title>Time series classification from
+scratch with deep neural networks: a strong baseline</article-title>.
+<source>ResearchGate</source>
+<year>2017</year>; <fpage>1578</fpage>–<lpage>1585</lpage>. DOI: <pub-id pub-id-type="doi">10.1109/IJCNN.2017.7966039</pub-id>.</mixed-citation></ref><ref id="bibr33-20552076221149529"><label>33</label><mixed-citation publication-type="other"><person-group person-group-type="author"><name name-style="western"><surname>Fawaz</surname><given-names>HI</given-names></name><name name-style="western"><surname>Forestier</surname><given-names>G</given-names></name><name name-style="western"><surname>Weber</surname><given-names>J</given-names></name></person-group>
+<etal>et al</etal>. <comment>Deep learning for time series classification: a
+review. <italic toggle="yes">arXiv</italic> 2018; doi:10.1007/s10618-019-00619-1.
+1809.04356</comment>.</mixed-citation></ref><ref id="bibr34-20552076221149529"><label>34</label><mixed-citation publication-type="other"><person-group person-group-type="author"><name name-style="western"><surname>Huang</surname><given-names>K</given-names></name><name name-style="western"><surname>Altosaar</surname><given-names>J</given-names></name><name name-style="western"><surname>Ranganath</surname><given-names>R</given-names></name></person-group>. <comment>Clinicalbert: modeling clinical notes and
+predicting hospital readmission, 2019.
+doi:10.48550/ARXIV.1904.05342</comment>. <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://arxiv.org/abs/1904.05342" ext-link-type="uri">https://arxiv.org/abs/1904.05342</ext-link>.</mixed-citation></ref></ref-list></back></article></pmc-articleset>
