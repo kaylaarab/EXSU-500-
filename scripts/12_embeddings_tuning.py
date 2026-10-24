@@ -9,7 +9,9 @@ Each neural model: random search over RANDOM_CONFIGS configs (seed 0), best conf
 refit with 3 seeds. Paired patient-level bootstrap for the differences that matter.
 Uses the same patient-level splits as scripts 02-06 (run 01_preprocess.py first).
 """
+import json
 import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
@@ -21,6 +23,17 @@ TARGET, DEVICE = "readmit_30d", ("cuda" if torch.cuda.is_available() else "cpu")
 SMOKE = bool(os.environ.get("SMOKE"))               # SMOKE=1: tiny run to check the code only
 RANDOM_CONFIGS, N_SEEDS, MAX_EPOCHS, PATIENCE = (1, 1, 1, 1) if SMOKE else (8, 3, 60, 8)
 rng = np.random.default_rng(0)
+
+# Checkpoint cache so a machine restart does not lose finished work (data/ is git-ignored)
+CACHE = Path("data/cache_12_smoke.json" if SMOKE else "data/cache_12.json")
+cache = json.loads(CACHE.read_text()) if CACHE.exists() else {}
+
+
+def cached(key, fn):
+    if key not in cache:
+        cache[key] = fn()
+        CACHE.write_text(json.dumps(cache))
+    return cache[key]
 
 
 def at_half(yt, p):
@@ -139,10 +152,10 @@ def pboot(p1, p0, n=1000):
 for kind, name in (("onehot", "MLP one-hot (tuned)"), ("emb", "MLP entity embeddings (tuned)")):
     results = []
     for i, cfg in enumerate(cfgs):
-        _, v = fit(kind, cfg, 0)
+        v = cached(f"{kind}_cfg{i}", lambda: float(fit(kind, cfg, 0)[1]))
         results.append((v, cfg)); print(f"  [{name}] config {i}: val AUPRC={v:.4f} {cfg}")
     bestcfg = max(results, key=lambda t: t[0])[1]
-    ps = [predict(fit(kind, bestcfg, s)[0], "te") for s in range(N_SEEDS)]
+    ps = [np.array(cached(f"{kind}_seed{s}", lambda: predict(fit(kind, bestcfg, s)[0], "te").tolist())) for s in range(N_SEEDS)]
     p = np.mean(ps, 0); preds[name] = p
     aucs = [roc_auc_score(y["te"], q) for q in ps]
     rows.append(dict(model=name, auroc_seed_mean=np.mean(aucs), auroc_seed_sd=np.std(aucs),
@@ -160,18 +173,22 @@ for k in Xc:
 pool = {k: Pool(Xc[k], y[k], cat_features=cats) for k in Xc}
 w = (y["tr"] == 0).sum() / (y["tr"] == 1).sum()
 def cb(depth, lr, l2, oh):
+    return cached(f"cb_{depth}_{lr}_{l2}_{oh}", lambda: cb_fit(depth, lr, l2, oh))
+
+
+def cb_fit(depth, lr, l2, oh):
     m = CatBoostClassifier(depth=depth, learning_rate=lr, l2_leaf_reg=l2, one_hot_max_size=oh, iterations=20 if SMOKE else 1000,
                            loss_function="Logloss", eval_metric="AUC", scale_pos_weight=w, random_seed=42,
                            verbose=False, early_stopping_rounds=50)
     m.fit(pool["tr"], eval_set=pool["va"])
-    return m, average_precision_score(y["va"], m.predict_proba(pool["va"])[:, 1])
-base, bv = cb(4, 0.1, 3, 2)
+    return [average_precision_score(y["va"], m.predict_proba(pool["va"])[:, 1]), m.predict_proba(pool["te"])[:, 1].tolist()]
+bv, base = cb(4, 0.1, 3, 2)
 best, bestv, bestp = base, bv, (4, 0.1, 3, 2)
 for _ in range(RANDOM_CONFIGS):
     p_ = (int(rng.choice([4, 6, 8])), float(rng.choice([0.03, 0.05, 0.1])), float(rng.choice([1, 3, 10, 20])), int(rng.choice([2, 10])))
-    m, v = cb(*p_); print(f"  [CatBoost] {p_}: val AUPRC={v:.4f}")
+    v, m = cb(*p_); print(f"  [CatBoost] {p_}: val AUPRC={v:.4f}")
     if v > bestv: best, bestv, bestp = m, v, p_
-pb, pt = base.predict_proba(pool["te"])[:, 1], best.predict_proba(pool["te"])[:, 1]
+pb, pt = np.array(base), np.array(best)
 lo, hi = pboot(pt, pb)
 rows += [dict(model="CatBoost default (depth 4, lr 0.1)", auroc_seed_ensemble=roc_auc_score(y["te"], pb), auprc_seed_ensemble=average_precision_score(y["te"], pb), **at_half(y["te"], pb)),
          dict(model="CatBoost tuned", auroc_seed_ensemble=roc_auc_score(y["te"], pt), auprc_seed_ensemble=average_precision_score(y["te"], pt), **at_half(y["te"], pt), best_config=str(bestp))]
