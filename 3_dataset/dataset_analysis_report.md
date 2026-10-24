@@ -3,7 +3,7 @@
 **Project:** Predicting 30-day readmission in diabetic inpatients (EXSU 500, Team 8)
 **Dataset:** Diabetes 130-US Hospitals, 1999–2008 (UCI #296, CC BY 4.0)
 **Purpose of this file:** one place where the team can see *what the data is, what is wrong with it, what we decided and why, and what each decision costs*. Use it as the source for the Data, Methods and Limitations sections of the report.
-**Last updated:** 2026-10-23 (after keeping payer/specialty in the main pipeline and the death/hospice ablation). All numbers come from scripts in `scripts/` and tables in `results/`; nothing here is hand-typed from memory.
+**Last updated:** 2026-10-23 (after keeping payer/specialty in the main pipeline and the death/hospice ablation). All numbers come from scripts in `scripts/` and tables in `5_results/`; nothing here is hand-typed from memory.
 
 ---
 
@@ -161,7 +161,7 @@ Same cleaned cohort, same patient-level split, same fixed model (Script 13), tes
 - **T3 is not a usable task.** At prediction time we cannot know who will be readmitted late, so the test set would no longer match real use. Keep it only as a diagnostic.
 - **T2 is a legitimate but different question** ("will this patient return at all?"). It is a useful second output, not a replacement.
 - **We keep T1 as the headline** because 30-day readmission is the standard quality measure in US hospital policy (CMS Hospital Readmissions Reduction Program, which covers six conditions, not diabetes itself), and the dataset's own source paper (Strack et al.) defines it this way. The claim that an early return is more preventable by discharge planning is clinical reasoning, not a sourced finding; do not cite it as a fact.
-- Whether the "later" information can help T1 is tested in Script 14 (three-class, two-stage, stacking). Results in `results/combined_targets.csv` once finished.
+- Whether the "later" information can help T1 is tested in Script 14 (three-class, two-stage, stacking). Results in `5_results/ablations/combined_targets.csv` once finished.
 
 ## 7. Is the information sufficient to predict readmission?
 
@@ -214,7 +214,7 @@ Earlier numbers (ensemble 0.679) came from uncleaned data and the broken A1C fea
 ```bash
 # data: download from UCI (see README), place diabetic_data.csv in data/
 pip install -r requirements.txt
-python scripts/00_profile.py data/diabetic_data.csv    # profile + results/data_profile/
+python scripts/00_profile.py data/diabetic_data.csv    # profile + 3_dataset/profile_tables/
 python scripts/01_preprocess.py                        # cleaned patient-level splits
 python scripts/02_train_evaluate.py                    # baseline, LogReg, XGBoost
 python scripts/03_interpretability.py                  # SHAP

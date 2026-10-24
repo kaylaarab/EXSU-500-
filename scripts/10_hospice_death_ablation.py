@@ -117,5 +117,5 @@ for a, b in [("no_death", "no_death_hospice"), ("all", "no_death_hospice")]:
     lo, hi = np.percentile(d, [2.5, 97.5])
     print(f"paired AUROC on common test, {a} minus {b}: "
           f"{roc_auc_score(yc, preds[a]) - roc_auc_score(yc, preds[b]):+.4f} 95% CI [{lo:+.4f}, {hi:+.4f}]")
-pd.DataFrame(rows).to_csv("results/hospice_death_ablation.csv", index=False)
-print("\nSaved results/hospice_death_ablation.csv")
+pd.DataFrame(rows).to_csv("5_results/ablations/hospice_death_ablation.csv", index=False)
+print("\nSaved 5_results/ablations/hospice_death_ablation.csv")

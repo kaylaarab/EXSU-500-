@@ -177,5 +177,5 @@ rows += [dict(model="CatBoost default (depth 4, lr 0.1)", auroc_seed_ensemble=ro
          dict(model="CatBoost tuned", auroc_seed_ensemble=roc_auc_score(y["te"], pt), auprc_seed_ensemble=average_precision_score(y["te"], pt), **at_half(y["te"], pt), best_config=str(bestp))]
 print(f"CatBoost default AUROC={rows[-2]['auroc_seed_ensemble']:.3f}; tuned {bestp} AUROC={rows[-1]['auroc_seed_ensemble']:.3f}; paired diff CI [{lo:+.4f}, {hi:+.4f}]")
 if not SMOKE:
-    pd.DataFrame(rows).to_csv("results/embeddings_tuning.csv", index=False)
-print("Saved results/embeddings_tuning.csv")
+    pd.DataFrame(rows).to_csv("5_results/ablations/embeddings_tuning.csv", index=False)
+print("Saved 5_results/ablations/embeddings_tuning.csv")

@@ -82,12 +82,12 @@ importance_df = pd.DataFrame({
 print("\nTop 15 features by CatBoost importance:")
 print(importance_df.to_string(index=False))
 
-results_df = pd.read_csv("results/model_comparison.csv")
+results_df = pd.read_csv("5_results/main_models/model_comparison.csv")
 new_row = pd.DataFrame([{
     "model": "CatBoost (engineered features)", "auroc": auroc, "auprc": auprc,
     "accuracy": acc, "sensitivity": sens, "specificity": spec,
 }])
 results_df = results_df[results_df["model"] != "CatBoost (engineered features)"]
 results_df = pd.concat([results_df, new_row], ignore_index=True)
-results_df.to_csv("results/model_comparison.csv", index=False)
-print("\nUpdated results/model_comparison.csv")
+results_df.to_csv("5_results/main_models/model_comparison.csv", index=False)
+print("\nUpdated 5_results/main_models/model_comparison.csv")

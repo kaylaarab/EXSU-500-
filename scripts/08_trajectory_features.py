@@ -101,5 +101,5 @@ for name, use in [("Base (no history)", []),
           f"[{ci[0]:.3f}, {ci[1]:.3f}] | diff 95% CI [{dci[0]:+.3f}, {dci[1]:+.3f}]")
     res.append(dict(model=name, auroc=roc_auc_score(y, p), auprc=average_precision_score(y, p),
                     auroc_lo=ci[0], auroc_hi=ci[1], diff_lo=dci[0], diff_hi=dci[1]))
-pd.DataFrame(res).to_csv("results/trajectory_features.csv", index=False)
-print("\nSaved results/trajectory_features.csv")
+pd.DataFrame(res).to_csv("5_results/ablations/trajectory_features.csv", index=False)
+print("\nSaved 5_results/ablations/trajectory_features.csv")

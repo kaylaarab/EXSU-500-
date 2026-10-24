@@ -2,6 +2,12 @@
 
 Newest first. One entry per significant piece of work, added when it is finished. The current summary, to-dos and key dates are in [`PROJECT_STATUS.md`](PROJECT_STATUS.md).
 
+## 2026-10-24
+
+- **Consolidated experiment log created** (`5_results/model_variations_log.md` and `.csv`, built by `scripts/build_experiment_log.py`): all 63 model variations in order, with AUROC, AUPRC, accuracy, sensitivity, specificity and the take-away for each, plus the hyperparameter searches. Rerun the script after each new experiment.
+- **Results moved into `5_results/`** (`main_models/`, `ablations/`) and the data profile into `3_dataset/profile_tables/`; all scripts and docs updated.
+- **Machine restarted overnight**, killing three background runs (first-encounter combined-target test, SMOTE-leakage rerun with sensitivity, embedding/tuning experiment); relaunched in sequence.
+
 ## 2026-10-23
 
 - **Target definitions compared (Script 13).** Within-30-days vs rest: AUROC 0.675; any readmission vs none: 0.696; within 30 days vs never (dropping later readmissions): 0.728. Higher scores come from an easier question (T3 is not a usable task), so the 30-day target stays the headline. Also corrected an overstatement: CMS penalizes hospitals for 30-day readmissions of six conditions, not diabetes itself.

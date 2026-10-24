@@ -4,7 +4,7 @@ Step 0: Profile the raw Diabetes 130-US Hospitals data.
 Prints structure, missingness, target balance, and the data-quality checks
 that matter for the readmission task (repeat encounters, death/hospice
 discharges, near-constant columns, subgroup positive rates). Writes the
-tables to results/data_profile/ so they can be cited in the report.
+tables to 3_dataset/profile_tables/ so they can be cited in the report.
 
 Usage (from the repo root):
     python scripts/00_profile.py [path/to/diabetic_data.csv]
@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 
 RAW_PATH = sys.argv[1] if len(sys.argv) > 1 else "data/diabetic_data.csv"
-OUT = Path("results/data_profile")
+OUT = Path("3_dataset/profile_tables")
 OUT.mkdir(parents=True, exist_ok=True)
 
 # discharge_disposition_id codes for death / hospice (IDS_mapping.csv):

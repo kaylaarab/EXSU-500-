@@ -83,7 +83,7 @@ This produces `data/diabetic_data.csv` (~19 MB) and `data/IDS_mapping.csv`.
 - **Uncertainty:** 95% bootstrap confidence intervals on the test set. The main
   table uses encounter-level resampling; `scripts/07_sensitivity.py` adds
   patient-level (cluster) bootstrap intervals, which are slightly wider.
-- **Interpretability:** SHAP feature importance (`results/shap_summary.png`).
+- **Interpretability:** SHAP feature importance (`5_results/main_models/shap_summary.png`).
   Top drivers: prior-year inpatient visits, then discharge destination.
 - **Imbalance handling:** class weights. SMOTE-NC was tested as an ablation and was
   clearly worse on real test data (`scripts/09_smote_ablation.py`). No synthetic
@@ -126,7 +126,7 @@ requirements.txt          pinned packages
 3_dataset/                dataset_analysis_report.md: data quality, decisions, trade-offs, bias
 4_benchmarking/           what other work on this dataset reports, and how we compare
                           (benchmarking_report.md, EmbPred30 review, sources table, downloaded papers)
-results/                  all tables and figures (model_comparison.csv is the headline table)
+5_results/                all tables and figures; start with model_variations_log.md (every model variation we ran)
 6_project_progress/       PROJECT_STATUS.md (current status + to-dos), progress_log.md, CONTRIBUTING.md
 scripts/                  all code, numbered in run order
 data/                     raw CSV + generated splits (git-ignored; never committed)

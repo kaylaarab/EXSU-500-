@@ -61,5 +61,5 @@ for name, (f, keep) in TARGETS.items():
     print(f"{name:34s} n={r['n_test']:6d} prev={r['prevalence']:.3f} AUROC={r['auroc']:.3f} "
           f"AUPRC={r['auprc']:.3f} (baseline {r['auprc_baseline']:.3f}) Acc={r['accuracy']:.3f} "
           f"(always-no {r['always_no_accuracy']:.3f}) Sens={r['sensitivity']:.3f} Spec={r['specificity']:.3f}")
-pd.DataFrame(rows).to_csv("results/target_definitions.csv", index=False)
-print("Saved results/target_definitions.csv")
+pd.DataFrame(rows).to_csv("5_results/ablations/target_definitions.csv", index=False)
+print("Saved 5_results/ablations/target_definitions.csv")

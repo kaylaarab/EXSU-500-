@@ -122,12 +122,12 @@ print(f"  Logistic Regression: AUROC={roc_auc_score(y_test, logreg_test):.3f}")
 print(f"  XGBoost:             AUROC={roc_auc_score(y_test, xgb_test):.3f}")
 print(f"  CatBoost:            AUROC={roc_auc_score(y_test, cb_test):.3f}")
 
-results_df = pd.read_csv("results/model_comparison.csv")
+results_df = pd.read_csv("5_results/main_models/model_comparison.csv")
 new_row = pd.DataFrame([{
     "model": "Ensemble (CatBoost+XGBoost+LogReg blend)", "auroc": auroc, "auprc": auprc,
     "accuracy": acc, "sensitivity": sens, "specificity": spec,
 }])
 results_df = results_df[results_df["model"] != "Ensemble (CatBoost+XGBoost+LogReg blend)"]
 results_df = pd.concat([results_df, new_row], ignore_index=True)
-results_df.to_csv("results/model_comparison.csv", index=False)
-print("\nUpdated results/model_comparison.csv")
+results_df.to_csv("5_results/main_models/model_comparison.csv", index=False)
+print("\nUpdated 5_results/main_models/model_comparison.csv")

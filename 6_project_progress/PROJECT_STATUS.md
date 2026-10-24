@@ -35,7 +35,7 @@ Hospitals, 99,343 usable hospital stays, 11.4% readmitted.)
 (95% intervals roughly 0.65-0.69). Published studies on this dataset land in
 the same 0.64-0.68 range, so we are where a correct analysis should be.
 
-**Reporting rule (team decision, 23 Oct):** always report **sensitivity alongside accuracy** (with specificity and AUROC/AUPRC). Full table with accuracy, sensitivity and specificity: `results/model_comparison.csv`. The always-"no" baseline has 88.9% accuracy but 0% sensitivity, which is why accuracy alone is meaningless here.
+**Reporting rule (team decision, 23 Oct):** always report **sensitivity alongside accuracy** (with specificity and AUROC/AUPRC). Full table with accuracy, sensitivity and specificity: `5_results/main_models/model_comparison.csv`. The always-"no" baseline has 88.9% accuracy but 0% sensitivity, which is why accuracy alone is meaningless here.
 
 **What that means in practice:** about 1 in 6 patients the model flags is
 really readmitted, and about 45% of real readmissions are missed. Good enough
@@ -52,7 +52,7 @@ report must say so.
 - **Re-ran every model** on the cleaned data. First-pass scores (e.g. 0.679)
   were inflated; the table above replaces them.
 - **Profiled the real dataset** (`scripts/00_profile.py`): what's missing, repeat
-  patients, subgroups. Tables in `results/data_profile/`.
+  patients, subgroups. Tables in `3_dataset/profile_tables/`.
 - **Sensitivity checks** (Scripts 07-09):
   - Keeping `medical_specialty` and `payer_code` helps: **+0.008 AUROC** (reliable).
   - First-visit patients only: 0.652 (harder, no history).
@@ -108,7 +108,9 @@ README.md                                   formal project description (for grad
 4_benchmarking/benchmarking_report.md       what others report + our comparison + 21-source table
 4_benchmarking/embpred30_review.md          why the 0.974 AUROC claim is not credible
 4_benchmarking/team_literature_log.md       Kayla's and Magalie's literature notes (empty so far)
-results/                                    all tables and figures (model_comparison.csv is the headline)
+5_results/model_variations_log.md          EVERY model variation we ran, in one table
+5_results/main_models/                      headline model_comparison.csv, SHAP
+5_results/ablations/                        sensitivity, SMOTE, targets, history, ... result tables
 6_project_progress/PROJECT_STATUS.md        this file
 6_project_progress/progress_log.md          dated log of finished work
 6_project_progress/CONTRIBUTING.md          how to use git here
