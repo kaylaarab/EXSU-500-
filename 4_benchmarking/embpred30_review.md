@@ -59,7 +59,22 @@ We downloaded the paper and read its text.
 
 `scripts/11_smote_leakage_demo.py` reproduces the *protocol*, not their network. On a first-encounter cohort like theirs (death/hospice excluded), with a fixed gradient-boosting model and the same 6 folds, only the evaluation protocol changes.
 
-SMOTE_LEAKAGE_RESULT
+Cohort: 69,990 first encounters (9.0% readmitted), death/hospice excluded. SMOTE-NC to 1:1 makes 57,420 synthetic rows, **90% of the positive class**. Model: HistGradientBoosting, fixed settings. Same 6 folds throughout. Threshold 0.5. The always-"no" accuracy on the real cohort is 0.910.
+
+| Protocol | AUROC | Accuracy | Sensitivity | Specificity | Scored on |
+|---|---|---|---|---|---|
+| **A. SMOTE before CV, scored on all held-out rows** | **0.964** | **0.942** | **0.890** | 0.994 | real + synthetic rows |
+| B. Same folds, scored on real rows only | 0.640 | 0.908 | **0.033** | 0.994 | real rows |
+| C. SMOTE inside training folds only (correct) | 0.614 | 0.908 | **0.027** | 0.995 | real rows |
+| D. Class weights, no SMOTE (our method) | 0.654 | 0.683 | **0.519** | 0.699 | real rows |
+
+**What this shows**
+1. **Protocol A reproduces the scale of EmbPred30's claim** (theirs: 0.974 AUROC, 95.2% accuracy, about 94% sensitivity) with an ordinary gradient-boosting model. The inflation comes entirely from scoring on a mixture that is half synthetic: each synthetic positive is an interpolation of real training positives, so it is easy to recognise.
+2. **The same model scores 0.640 on real patients (B)**, and only 0.614 when SMOTE is properly confined to training folds (C). The high score is evaluation artefact, not skill.
+3. **Accuracy and sensitivity tell a striking story in B and C.** Accuracy is 0.908, almost the always-"no" baseline of 0.910, while sensitivity is 3%. A model trained on SMOTE data and evaluated on real data flags almost nobody at threshold 0.5, because it learned the synthetic distribution. This is why we report sensitivity beside accuracy.
+4. **Class weights (D) are the only protocol that gives a usable operating point** (sensitivity 0.52) on real patients.
+
+**Caveats.** We reproduced the protocol, not their embedding network or their exact preprocessing, so this shows that the protocol *can* produce their numbers, not that it did. Their paper does not say where SMOTE sits relative to the folds; our test is evidence about the mechanism, not proof about their run.
 
 ---
 
