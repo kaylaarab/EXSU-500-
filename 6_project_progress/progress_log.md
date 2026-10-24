@@ -4,6 +4,8 @@ Newest first. One entry per significant piece of work, added when it is finished
 
 ## 2026-10-24
 
+- **Larissa's reading folder** (`4_benchmarking/LARISSA/`): 22 papers from PubMed and PhysioNet-based (MIMIC) studies, with abstract-based summaries, links, licence-compliant local copies (14 files stored; the rest link-only), the PhysioNet dataset access table (MIMIC-IV, eICU, MIMIC-IV-Note are credentialed and not allowed for the project; the MIMIC-IV demo is open) and rules for PhysioNet material. 74 PubMed candidates are in `pubmed_candidates.md`.
+
 - **LACE benchmark and comorbidity features (Script 15).** LACE alone: AUROC 0.575 (our model 0.677), conventional cut-off catches 27% of readmissions. Adding LACE, Charlson score and flags, or 3-digit diagnoses to CatBoost: no gain (changes between -0.0001 and +0.0004). Negative result; the model already uses this information.
 - **EmbPred30 test finished (Script 11, with sensitivity):** SMOTE before CV scores AUROC 0.964 / accuracy 94.2% / sensitivity 89%; on real patients only, 0.640 with sensitivity 3%.
 
