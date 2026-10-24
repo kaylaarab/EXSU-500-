@@ -13,6 +13,7 @@ bootstrap on the AUROC difference. Sensitivity is always shown with accuracy.
 SMOKE=1: tiny run to check the code only (nothing is saved).
 """
 import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
@@ -109,7 +110,10 @@ P = {"CatBoost (reference)": (cb.predict_proba(pools["va"])[:, 1], cb.predict_pr
 for name, fn in MODELS.items():
     vs, ts, per = [], [], []
     for s in range(N_SEEDS):
-        v, t = fn(s); vs.append(v); ts.append(t); per.append(roc_auc_score(y["te"], t))
+        f = Path(f"data/cache16{'_smoke' if SMOKE else ''}_{name}_{s}.npz")
+        if f.exists(): z = np.load(f); v, t = z['v'], z['t']
+        else: v, t = fn(s); np.savez(f, v=v, t=t)
+        vs.append(v); ts.append(t); per.append(roc_auc_score(y["te"], t))
         print(f"  {name} seed {s}: test AUROC {per[-1]:.4f}", flush=True)
     P[name] = (np.mean(vs, 0), np.mean(ts, 0), per)
 
