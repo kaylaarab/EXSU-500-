@@ -149,6 +149,15 @@ for name, path in [("first-encounter scenario", R / "ablations/combined_targets_
                 r.method, r.auroc, None, r.auprc, r.accuracy, r.sensitivity, r.specificity, None,
                 "baseline" if r.auroc_diff_vs_A == 0 else f"vs A {r.auroc_diff_vs_A:+.4f} (CI {r.diff_lo:+.4f} to {r.diff_hi:+.4f})", str(path))
 
+lc = pd.read_csv(R / "ablations/lace_comorbidity.csv")
+for _, r in lc.iterrows():
+    add(S4, "2026-10-24", "15", "LACE clinical score and comorbidity features (CatBoost, fixed params; threshold from validation)",
+        "99,343 encounters; 14,913 test rows", r.model, r.auroc, f"{r.lo:.3f}-{r.hi:.3f}", r.auprc, r.accuracy, r.sensitivity,
+        r.specificity, None,
+        "Clinical benchmark: our model beats it by 0.10 AUROC" if r.model.startswith("LACE") else
+        ("baseline" if r.model.startswith("M0") else f"vs M0 {r['diff']:+.4f} (CI {r.diff_lo:+.4f} to {r.diff_hi:+.4f}): no gain"),
+        "5_results/ablations/lace_comorbidity.csv")
+
 path = R / "ablations/smote_leakage_demo.csv"
 if path.exists():
     for _, r in pd.read_csv(path).iterrows():
