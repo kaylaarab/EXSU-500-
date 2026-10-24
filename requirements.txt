@@ -8,3 +8,7 @@ torch==2.14.1
 shap==0.54.1
 matplotlib==3.11.2
 imbalanced-learn==0.14.2
+# Script 16 (stronger tabular deep-learning baselines)
+pytabkit==1.7.3
+rtdl_revisiting_models==0.0.2
+tabm==0.0.3
