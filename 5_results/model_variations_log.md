@@ -97,10 +97,10 @@ Legend: `*` accuracy derived exactly from sensitivity, specificity and the test 
 
 | ID | Date | Script | What changed | Cohort / target | Model | AUROC | AUPRC | Acc | Sens | Spec | Take-away |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| E58 | 2026-10-23 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting; first run | A SMOTE before CV, scored on all held-out rows (real + synthetic) | 0.964 (+/-0.001 (folds)) |  | 0.942 |  |  | Reproduces EmbPred30-sized numbers by protocol alone |
-| E59 | 2026-10-23 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting; first run | B SMOTE before CV, scored on real held-out rows only | 0.640 (+/-0.004 (folds)) |  | n/r |  |  |  |
-| E60 | 2026-10-23 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting; first run | C SMOTE inside training folds only (correct) | 0.614 (+/-0.006 (folds)) | 0.147 | n/r |  |  |  |
-| E61 | 2026-10-23 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting; first run | D class weights, no SMOTE (our method) | 0.654 (+/-0.009 (folds)) | 0.182 | n/r |  |  |  |
+| E58 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | A SMOTE before CV, scored on all held-out rows (real + synthetic) | 0.964 (+/-0.001 (folds)) |  | 0.942 | 0.890 | 0.994 | Reproduces EmbPred30-sized numbers by protocol alone |
+| E59 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | B SMOTE before CV, scored on real held-out rows only | 0.640 (+/-0.004 (folds)) |  | 0.908 | 0.033 | 0.994 |  |
+| E60 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | C SMOTE inside training folds only, real held-out rows (correct) | 0.614 (+/-0.006 (folds)) | 0.147 | 0.908 | 0.027 | 0.995 |  |
+| E61 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | D class weights, no SMOTE, real held-out rows (our method) | 0.654 (+/-0.009 (folds)) | 0.182 | 0.683 | 0.519 | 0.699 |  |
 
 ## 7 Planned or running
 
