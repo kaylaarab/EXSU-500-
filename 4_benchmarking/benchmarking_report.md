@@ -14,7 +14,7 @@
 
 ## 2. Our results for reference
 
-*Cleaned cohort (99,343 encounters), patient-level split, test set scored once, `payer_code` and `medical_specialty` kept. Source: `results/main_models/model_comparison.csv`; reasoning in [`../3_dataset/dataset_analysis_report.md`](../3_dataset/dataset_analysis_report.md).*
+*Cleaned cohort (99,343 encounters), patient-level split, test set scored once, `payer_code` and `medical_specialty` kept. Source: `5_results/main_models/model_comparison.csv`; reasoning in [`../3_dataset/dataset_analysis_report.md`](../3_dataset/dataset_analysis_report.md).*
 
 | Model | AUROC | AUPRC | Accuracy | Sensitivity | Specificity |
 |---|---|---|---|---|---|

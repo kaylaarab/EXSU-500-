@@ -104,5 +104,5 @@ for name, a, ap, m in rows:
     out.append(dict(protocol=name, auroc=np.mean(a), auroc_sd=np.std(a), auprc=np.mean(ap) if ap else None,
                     accuracy=acc, sensitivity=sens, specificity=spec))
 print(f"\nalways-'no' accuracy on the real cohort: {1 - y.mean():.3f}")
-pd.DataFrame(out).to_csv("results/smote_leakage_demo.csv", index=False)
-print("\nSaved results/smote_leakage_demo.csv")
+pd.DataFrame(out).to_csv("5_results/ablations/smote_leakage_demo.csv", index=False)
+print("\nSaved 5_results/ablations/smote_leakage_demo.csv")

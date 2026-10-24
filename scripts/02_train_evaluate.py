@@ -117,5 +117,5 @@ print(f"\nXGBoost test AUROC: {roc_auc_score(y_test, xgb_prob):.3f} "
       f"(95% bootstrap CI: [{ci_lo:.3f}, {ci_hi:.3f}], n_boot={len(boot_aurocs)})")
 
 results_df = pd.DataFrame(results)
-results_df.to_csv("results/model_comparison.csv", index=False)
-print("\nSaved results/model_comparison.csv")
+results_df.to_csv("5_results/main_models/model_comparison.csv", index=False)
+print("\nSaved 5_results/main_models/model_comparison.csv")

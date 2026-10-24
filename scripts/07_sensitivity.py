@@ -131,5 +131,5 @@ for _ in range(N_BOOT):
 print(f"\nReference AUROC CI width: encounter-level {np.ptp(np.percentile(enc, [2.5, 97.5])):.4f} "
       f"vs patient-level {np.ptp(np.percentile(patient_boot(y, pA, teA['patient_nbr'].to_numpy())[:, 0], [2.5, 97.5])):.4f}")
 
-pd.DataFrame(rows).to_csv("results/sensitivity_analysis.csv", index=False)
-print("\nSaved results/sensitivity_analysis.csv")
+pd.DataFrame(rows).to_csv("5_results/ablations/sensitivity_analysis.csv", index=False)
+print("\nSaved 5_results/ablations/sensitivity_analysis.csv")

@@ -109,6 +109,6 @@ for name, (pv, pt) in S.items():
     r = rows[-1]
     print(f"{name:34s} AUROC={r['auroc']:.3f} AUPRC={r['auprc']:.3f} | vs A: {r['auroc_diff_vs_A']:+.4f} "
           f"[{lo:+.4f}, {hi:+.4f}] | Acc={r['accuracy']:.3f} Sens={r['sensitivity']:.3f} Spec={r['specificity']:.3f}")
-out = "results/combined_targets_first_encounter.csv" if FIRST_ONLY else "results/combined_targets.csv"
+out = "5_results/ablations/combined_targets_first_encounter.csv" if FIRST_ONLY else "5_results/ablations/combined_targets.csv"
 pd.DataFrame(rows).to_csv(out, index=False)
 print(f"Saved {out}")

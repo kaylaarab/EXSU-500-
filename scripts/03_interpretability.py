@@ -62,9 +62,9 @@ shap.summary_plot(
     show=False, max_display=15,
 )
 plt.tight_layout()
-plt.savefig("results/shap_summary.png", dpi=150, bbox_inches="tight")
+plt.savefig("5_results/main_models/shap_summary.png", dpi=150, bbox_inches="tight")
 plt.close()
-print("Saved results/shap_summary.png")
+print("Saved 5_results/main_models/shap_summary.png")
 
 # Mean |SHAP value| per feature -> simple ranked table, easier to read than the plot
 mean_abs_shap = np.abs(shap_values).mean(axis=0)
@@ -72,7 +72,7 @@ importance_df = pd.DataFrame({
     "feature": feature_names,
     "mean_abs_shap": mean_abs_shap,
 }).sort_values("mean_abs_shap", ascending=False).head(15)
-importance_df.to_csv("results/shap_feature_importance.csv", index=False)
-print("Saved results/shap_feature_importance.csv")
+importance_df.to_csv("5_results/main_models/shap_feature_importance.csv", index=False)
+print("Saved 5_results/main_models/shap_feature_importance.csv")
 print("\nTop 15 features by mean |SHAP value|:")
 print(importance_df.to_string(index=False))

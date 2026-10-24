@@ -117,5 +117,5 @@ for r in rows:
         print(f"{r['model']:8s} {r['arm']:10s} AUROC diff vs weights: "
               f"{r['auroc'] - [x for x in rows if x['model'] == r['model'] and x['arm'] == 'weights'][0]['auroc']:+.4f} "
               f"95% CI [{lo:+.4f}, {hi:+.4f}]")
-pd.DataFrame(rows).to_csv("results/smote_ablation.csv", index=False)
-print("\nSaved results/smote_ablation.csv")
+pd.DataFrame(rows).to_csv("5_results/ablations/smote_ablation.csv", index=False)
+print("\nSaved 5_results/ablations/smote_ablation.csv")
