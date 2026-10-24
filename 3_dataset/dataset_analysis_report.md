@@ -171,6 +171,22 @@ Same cleaned cohort, same patient-level split, same fixed model (Script 13), tes
 
 The later-readmission label adds no usable signal beyond the features; keep the plain binary model. (Accuracy and sensitivity of each method are in `5_results/ablations/combined_targets*.csv`; sensitivity shifts between methods mostly reflect the threshold, not a better model.)
 
+## 6c. Clinical-score benchmark (LACE) and comorbidity features
+
+Script 15. LACE (length of stay, acuity, comorbidity, emergency visits; score 0-19, 10 or more = high risk) is the standard clinical readmission score. We computed it from our columns (approximations: acuity = emergency or urgent admission; ED visits use the prior-year count, not 6 months; the Charlson comorbidity score uses only the three diagnosis fields on the stay, so it under-counts).
+
+| Model | AUROC (95% CI) | AUPRC | Accuracy | Sensitivity | Specificity |
+|---|---|---|---|---|---|
+| **LACE score alone, no training** | **0.575 (0.560-0.592)** | 0.139 | 0.642 | 0.435 | 0.668 |
+| LACE at the conventional cut-off (10 or more, flags 18.5%) | n/a | n/a | 0.763 | 0.267 | 0.825 |
+| CatBoost, current features (M0) | 0.677 (0.660-0.693) | 0.228 | 0.655 | 0.574 | 0.666 |
+
+(LACE row 1 uses a threshold chosen on validation; always-"no" accuracy is 0.889.)
+
+**Reading:** our model beats the clinical score by about 0.10 AUROC, and at the conventional LACE cut-off the score catches only 27% of readmissions. That is a useful point for the report: the data does carry signal, and ML adds real value over the standard score.
+
+**Do LACE or comorbidity features help the model?** No. Adding LACE (M1), a Charlson score with 17 condition flags (M2), 3-digit primary diagnosis codes (M3), or all of them (M4) leaves AUROC at 0.677, with paired gains between -0.0001 and +0.0004 (all intervals contain zero). The model already extracts this information from the raw columns (stay length, prior visits, diagnosis groups, number of diagnoses). Comorbidity is also under-counted here because only three diagnoses are recorded.
+
 ## 7. Is the information sufficient to predict readmission?
 
 **Partly; enough for population-level ranking, not for individual decisions.**
@@ -236,6 +252,7 @@ python scripts/11_smote_leakage_demo.py                # SMOTE-before-CV inflati
 python scripts/12_embeddings_tuning.py                 # entity embeddings, extra tuning
 python scripts/13_target_definitions.py                # <30d vs any readmission vs <30d-vs-never
 python scripts/14_combined_targets.py                  # use the >30d information to help the 30-day model
+python scripts/15_lace_and_comorbidity.py              # LACE clinical-score benchmark + comorbidity features
 ```
 
 The raw data and splits are git-ignored on purpose (course rule: do not commit data).

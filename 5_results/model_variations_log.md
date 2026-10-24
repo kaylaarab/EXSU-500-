@@ -76,6 +76,12 @@ Legend: `*` accuracy derived exactly from sensitivity, specificity and the test 
 | E44 | 2026-10-23 | 10 | Death/hospice exclusion ablation (CatBoost, one patient split) | train 71,520; scored on common test | all | 0.679 (0.663-0.694) | 0.244 | n/r |  |  | Same score as the cleaned cohort (paired diff -0.0003): exclusion is for validity, not score |
 | E45 | 2026-10-23 | 10 | Death/hospice exclusion ablation (CatBoost, one patient split) | train 70,344; scored on common test | no_death | 0.681 (0.665-0.695) | 0.244 | n/r |  |  |  |
 | E46 | 2026-10-23 | 10 | Death/hospice exclusion ablation (CatBoost, one patient split) | train 69,797; scored on common test | no_death_hospice | 0.679 (0.663-0.694) | 0.244 | n/r |  |  | Our cohort |
+| E58 | 2026-10-24 | 15 | LACE clinical score and comorbidity features (CatBoost, fixed params; threshold from validation) | 99,343 encounters; 14,913 test rows | LACE score alone (no training) | 0.575 (0.560-0.592) | 0.139 | 0.642 | 0.435 | 0.668 | Clinical benchmark: our model beats it by 0.10 AUROC |
+| E59 | 2026-10-24 | 15 | LACE clinical score and comorbidity features (CatBoost, fixed params; threshold from validation) | 99,343 encounters; 14,913 test rows | M0 baseline (current features) | 0.677 (0.660-0.693) | 0.228 | 0.655 | 0.574 | 0.666 | baseline |
+| E60 | 2026-10-24 | 15 | LACE clinical score and comorbidity features (CatBoost, fixed params; threshold from validation) | 99,343 encounters; 14,913 test rows | M1 + LACE score and its 4 components | 0.677 (0.661-0.694) | 0.227 | 0.693 | 0.536 | 0.712 | vs M0 +0.0000 (CI -0.0040 to +0.0041): no gain |
+| E61 | 2026-10-24 | 15 | LACE clinical score and comorbidity features (CatBoost, fixed params; threshold from validation) | 99,343 encounters; 14,913 test rows | M2 + Charlson score and condition flags | 0.677 (0.661-0.694) | 0.224 | 0.616 | 0.634 | 0.614 | vs M0 -0.0001 (CI -0.0040 to +0.0039): no gain |
+| E62 | 2026-10-24 | 15 | LACE clinical score and comorbidity features (CatBoost, fixed params; threshold from validation) | 99,343 encounters; 14,913 test rows | M3 + 3-digit primary diagnosis | 0.677 (0.661-0.694) | 0.227 | 0.666 | 0.561 | 0.679 | vs M0 +0.0004 (CI -0.0029 to +0.0036): no gain |
+| E63 | 2026-10-24 | 15 | LACE clinical score and comorbidity features (CatBoost, fixed params; threshold from validation) | 99,343 encounters; 14,913 test rows | M4 all of M1 + M2 + M3 | 0.677 (0.661-0.694) | 0.226 | 0.618 | 0.635 | 0.616 | vs M0 +0.0002 (CI -0.0039 to +0.0045): no gain |
 
 ## 5 Target definitions and combinations
 
@@ -97,17 +103,17 @@ Legend: `*` accuracy derived exactly from sensitivity, specificity and the test 
 
 | ID | Date | Script | What changed | Cohort / target | Model | AUROC | AUPRC | Acc | Sens | Spec | Take-away |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| E58 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | A SMOTE before CV, scored on all held-out rows (real + synthetic) | 0.964 (+/-0.001 (folds)) |  | 0.942 | 0.890 | 0.994 | Reproduces EmbPred30-sized numbers by protocol alone |
-| E59 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | B SMOTE before CV, scored on real held-out rows only | 0.640 (+/-0.004 (folds)) |  | 0.908 | 0.033 | 0.994 |  |
-| E60 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | C SMOTE inside training folds only, real held-out rows (correct) | 0.614 (+/-0.006 (folds)) | 0.147 | 0.908 | 0.027 | 0.995 |  |
-| E61 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | D class weights, no SMOTE, real held-out rows (our method) | 0.654 (+/-0.009 (folds)) | 0.182 | 0.683 | 0.519 | 0.699 |  |
+| E64 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | A SMOTE before CV, scored on all held-out rows (real + synthetic) | 0.964 (+/-0.001 (folds)) |  | 0.942 | 0.890 | 0.994 | Reproduces EmbPred30-sized numbers by protocol alone |
+| E65 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | B SMOTE before CV, scored on real held-out rows only | 0.640 (+/-0.004 (folds)) |  | 0.908 | 0.033 | 0.994 |  |
+| E66 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | C SMOTE inside training folds only, real held-out rows (correct) | 0.614 (+/-0.006 (folds)) | 0.147 | 0.908 | 0.027 | 0.995 |  |
+| E67 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | D class weights, no SMOTE, real held-out rows (our method) | 0.654 (+/-0.009 (folds)) | 0.182 | 0.683 | 0.519 | 0.699 |  |
 
 ## 7 Planned or running
 
 | ID | Date | Script | What changed | Cohort / target | Model | AUROC | AUPRC | Acc | Sens | Spec | Take-away |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| E62 | queued | 12 | Entity-embedding MLP vs tuned one-hot MLP; CatBoost wider search | 99,343 encounters | pending |  |  | n/r |  |  | interrupted by a machine restart; rerunning |
-| E63 | planned | 15 | RealMLP, TabM, FT-Transformer | 99,343 encounters | pending |  |  | n/r |  |  | awaiting go-ahead |
+| E68 | queued | 12 | Entity-embedding MLP vs tuned one-hot MLP; CatBoost wider search | 99,343 encounters | pending |  |  | n/r |  |  | interrupted by a machine restart; rerunning |
+| E69 | planned | 15 | RealMLP, TabM, FT-Transformer | 99,343 encounters | pending |  |  | n/r |  |  | awaiting go-ahead |
 
 ## Hyperparameter searches (selection on validation only; test scored once)
 
