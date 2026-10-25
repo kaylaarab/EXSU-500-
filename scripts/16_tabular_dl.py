@@ -7,7 +7,7 @@ Step 16: Stronger deep-learning baselines for tabular data.
 
 Same patient-level splits as scripts 02-06 (run 01_preprocess.py first). Validation is used for
 early stopping and for choosing the decision threshold; the test set is scored once.
-N_SEEDS seeds per model; the seed-averaged probabilities are the model's prediction.
+N_SEEDS seeds per model (epochs shortened for CPU time: RealMLP 64, TabM 50, FT-Transformer 15, with early stopping); the seed-averaged probabilities are the model's prediction.
 Reference: CatBoost (depth 4, lr 0.1), trained here so we can run a paired patient-level
 bootstrap on the AUROC difference. Sensitivity is always shown with accuracy.
 SMOKE=1: tiny run to check the code only (nothing is saved).
@@ -68,7 +68,7 @@ def ft_run(seed):
         with torch.no_grad():
             return torch.sigmoid(torch.cat([m(T[k][0][i:i + 4096], T[k][1][i:i + 4096]).squeeze(1)
                                             for i in range(0, len(T[k][0]), 4096)])).numpy()
-    for ep in range(2 if SMOKE else 30):
+    for ep in range(2 if SMOKE else 15):                          # reduced from 30 for CPU time (machine restarts)
         m.train(); perm = torch.randperm(n)
         for i in range(0, n, 512):
             b = perm[i:i + 512]
@@ -78,7 +78,7 @@ def ft_run(seed):
         if s > best: best, bad, state = s, 0, {k: v.clone() for k, v in m.state_dict().items()}
         else:
             bad += 1
-            if bad >= 6: break
+            if bad >= 4: break
     m.load_state_dict(state)
     return pred("va"), pred("te")
 
@@ -87,7 +87,7 @@ def pytab_run(cls, seed):
     kw = dict(device="cpu", random_state=seed, verbosity=0, n_threads=os.cpu_count())
     if SMOKE: kw["n_epochs"] = 2
     elif cls.__name__.startswith("RealMLP"): kw["n_epochs"] = 64      # default is 256; reduced for CPU time
-    else: kw["n_epochs"] = 100
+    else: kw["n_epochs"] = 50                                       # reduced for CPU time
     mdl = cls(**kw)
     mdl.fit(XP["tr"], y["tr"], XP["va"], y["va"], cat_col_names=cats)
     return mdl.predict_proba(XP["va"])[:, 1], mdl.predict_proba(XP["te"])[:, 1]
