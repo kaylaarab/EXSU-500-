@@ -187,6 +187,26 @@ Script 15. LACE (length of stay, acuity, comorbidity, emergency visits; score 0-
 
 **Do LACE or comorbidity features help the model?** No. Adding LACE (M1), a Charlson score with 17 condition flags (M2), 3-digit primary diagnosis codes (M3), or all of them (M4) leaves AUROC at 0.677, with paired gains between -0.0001 and +0.0004 (all intervals contain zero). The model already extracts this information from the raw columns (stay length, prior visits, diagnosis groups, number of diagnoses). Comorbidity is also under-counted here because only three diagnoses are recorded.
 
+## 6d. Do tuning and entity embeddings help? (Script 12)
+
+Tuned on validation only (8 random configurations per neural model, plus 8 for CatBoost); test scored once; neural models use 3 seeds. Always-"no" accuracy 0.889.
+
+| Model | AUROC (per seed mean ± sd) | AUROC (3-seed average) | AUPRC | Accuracy | Sensitivity | Specificity |
+|---|---|---|---|---|---|---|
+| MLP, one-hot, first version (Script 04) | 0.660 | n/a | 0.219 | 0.602 | 0.630 | 0.598 |
+| **MLP, one-hot, tuned** | 0.674 ± 0.003 | **0.678** | 0.231 | 0.630 | 0.619 | 0.631 |
+| MLP, entity embeddings, tuned | 0.668 ± 0.005 | 0.672 | 0.225 | 0.633 | 0.601 | 0.637 |
+| CatBoost, default (depth 4, lr 0.1) | n/a | 0.677 | 0.228 | 0.671 | 0.555 | 0.685 |
+| CatBoost, wider random search | n/a | 0.676 | 0.229 | 0.661 | 0.566 | 0.673 |
+
+(Accuracy, sensitivity and specificity at a threshold chosen on validation.)
+
+**Reading**
+- Tuning lifts the neural network from 0.660 to about 0.675, which brings it level with CatBoost. Averaging seeds adds about 0.004.
+- **Entity embeddings do not help**: 0.005 lower than one-hot (paired CI −0.011 to +0.001).
+- **A wider CatBoost search does not help** (paired difference CI −0.003 to +0.001), so the model is not under-tuned.
+- Net: the extra work moves AUROC by less than 0.005 in any direction, consistent with the information-ceiling finding.
+
 ## 7. Is the information sufficient to predict readmission?
 
 **Partly; enough for population-level ranking, not for individual decisions.**

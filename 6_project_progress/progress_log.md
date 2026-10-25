@@ -2,6 +2,11 @@
 
 Newest first. One entry per significant piece of work, added when it is finished. The current summary, to-dos and key dates are in [`PROJECT_STATUS.md`](PROJECT_STATUS.md).
 
+## 2026-10-25
+
+- **Tuning and embeddings finished (Script 12).** Tuned one-hot MLP 0.674 per seed (0.678 averaged, accuracy 0.630, sensitivity 0.619); entity embeddings 0.668 (no gain, -0.005); wider CatBoost search 0.676 (no gain). Tuning brings the neural net level with CatBoost; nothing beats it. The 5-hour machine-restart problem is handled by checkpointing.
+- **Script 16 (RealMLP, TabM, FT-Transformer) running;** demo interface under construction (`7_interface/`).
+
 ## 2026-10-24
 
 - **Larissa's reading folder** (`4_benchmarking/LARISSA/`): 22 papers from PubMed and PhysioNet-based (MIMIC) studies, with abstract-based summaries, links, licence-compliant local copies (14 files stored; the rest link-only), the PhysioNet dataset access table (MIMIC-IV, eICU, MIMIC-IV-Note are credentialed and not allowed for the project; the MIMIC-IV demo is open) and rules for PhysioNet material. 74 PubMed candidates are in `pubmed_candidates.md`.
