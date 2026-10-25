@@ -4,6 +4,9 @@ Newest first. One entry per significant piece of work, added when it is finished
 
 ## 2026-10-25
 
+- **Required repo items drafted:** `MODEL_CARD.md`, `LICENSE` (MIT, proposed: team to confirm), `6_project_progress/statements.md` (CRediT and Generative-AI drafts; each member must complete their own lines). **Midterm draft text** for every required section in `2_midterm_report/midterm_draft_for_editing.md`, with a table showing which references have actually been read (none yet by a human) and a rubric checklist.
+- **Interface upgraded:** example-patient buttons (lower-risk 5.1% / higher-risk 27.3%), calibration and decision-curve figure and subgroup audit table in the results tab; still private and undeployed by decision of the team.
+
 - **Calibration, decision curves and subgroup audit (Script 18, `5_results/evaluation/`).** Brier 0.094 (raw class-weighted score 0.219), ECE 0.007, slope 0.96: well calibrated after Platt scaling. Model has higher net benefit than flag-everyone or flag-no-one at all thresholds 2-40%, modestly. Audit: sensitivity 0.62 for women vs 0.52 for men (non-overlapping CIs); no reliable race difference between the two large groups; AUROC lower in patients 70+ (0.64) than under 50 (0.72); small race groups cannot be assessed.
 
 - **Demo interface built and tested (`7_interface/`, Script 17).** Streamlit app with the required prototype notice, a risk calculator (calibrated %, risk band, observed rate per band on test patients: 5.6% / 11.5% / 21.8%, SHAP explanation), a results tab, input checks, and refusal to score patients who died or went to hospice. Tested with Streamlit's test harness (default, high-risk and excluded cases, no exceptions). Not deployed: public deployment is the team's decision (steps in `7_interface/README.md`).

@@ -49,50 +49,78 @@ def code_options(col, prefix, labels):
     return out
 
 
+PRESETS = {
+    "Example: lower-risk patient": dict(k_age="[50-60)", k_gender="Female", k_tih=2, k_nlab=30, k_nproc=0, k_nmed=8, k_ndx=5, k_nin=0, k_ned=0,
+                                         k_nout=0, k_a1c="None", k_glu="None", k_insulin="No", k_metformin="Steady", k_changed="No",
+                                         k_disch="Home", k_adm_type="Elective", k_adm_src="Physician referral", k_d1="Other"),
+    "Example: higher-risk patient": dict(k_age="[70-80)", k_gender="Male", k_tih=9, k_nlab=60, k_nproc=2, k_nmed=24, k_ndx=9, k_nin=3, k_ned=2,
+                                          k_nout=1, k_a1c=">8", k_glu="None", k_insulin="Up", k_metformin="No", k_changed="Ch",
+                                          k_disch="Skilled nursing facility", k_adm_type="Emergency", k_adm_src="Emergency room", k_d1="Circulatory"),
+}
+
+
+INIT = dict(k_age="[70-80)", k_gender="Female", k_race=cfg["defaults"]["race"], k_payer=cfg["defaults"]["payer_code"],
+            k_specialty=cfg["defaults"]["medical_specialty"], k_tih=4, k_adm_type="Emergency", k_adm_src="Emergency room", k_disch="Home",
+            k_nlab=43, k_nproc=1, k_nmed=15, k_ndx=8, k_nin=0, k_ned=0, k_nout=0, k_a1c="None", k_glu="None", k_insulin="Steady",
+            k_metformin="No", k_on_dm_med="Yes", k_changed="No", k_d1="Circulatory", k_d2=cfg["defaults"]["diag_2_group"],
+            k_d3=cfg["defaults"]["diag_3_group"])
+for _k, _v in INIT.items():
+    st.session_state.setdefault(_k, _v)
+
+
+def load_preset(name):
+    for k, v in PRESETS[name].items():
+        st.session_state[k] = v
+
+
 tab_calc, tab_about = st.tabs(["Risk calculator", "About, results and limits"])
 st.warning(DISCLAIMER)
 
 with tab_calc:
     st.title("30-day readmission risk (prototype)")
     st.caption("Enter details known at discharge. Fields you leave at their default use the most common value in the training data.")
+    pc = st.columns(len(PRESETS) + 2)
+    for i, name in enumerate(PRESETS):
+        pc[i].button(name, on_click=load_preset, args=(name,))
+    st.caption("The example buttons only fill the form with made-up values so you can see how the tool behaves. Press *Estimate risk* afterwards.")
     with st.form("inputs"):
         c1, c2, c3 = st.columns(3)
         with c1:
             st.subheader("Patient")
-            age = st.selectbox("Age band", cfg["choices"]["age"], index=cfg["choices"]["age"].index("[70-80)"))
-            gender = st.selectbox("Sex", [g for g in cfg["choices"]["gender"] if g != "Unknown/Invalid"])
-            race = st.selectbox("Race (as recorded in the dataset)", cfg["choices"]["race"], index=cfg["choices"]["race"].index(cfg["defaults"]["race"]))
-            payer = st.selectbox("Payer", cfg["choices"]["payer_code"], index=cfg["choices"]["payer_code"].index(cfg["defaults"]["payer_code"]))
-            specialty = st.selectbox("Admitting specialty", cfg["choices"]["medical_specialty"], index=cfg["choices"]["medical_specialty"].index(cfg["defaults"]["medical_specialty"]))
+            age = st.selectbox("Age band", cfg["choices"]["age"], key="k_age")
+            gender = st.selectbox("Sex", [g for g in cfg["choices"]["gender"] if g != "Unknown/Invalid"], key="k_gender")
+            race = st.selectbox("Race (as recorded in the dataset)", cfg["choices"]["race"], key="k_race")
+            payer = st.selectbox("Payer", cfg["choices"]["payer_code"], key="k_payer")
+            specialty = st.selectbox("Admitting specialty", cfg["choices"]["medical_specialty"], key="k_specialty")
         with c2:
             st.subheader("This hospital stay")
-            tih = st.number_input("Days in hospital", 1, 14, 4)
+            tih = st.number_input("Days in hospital", min_value=1, max_value=14, key="k_tih")
             adm_t = code_options("admission_type_id", "admission_type", ADM_TYPE)
-            adm_type = st.selectbox("Admission type", list(adm_t), index=list(adm_t).index("Emergency"))
+            adm_type = st.selectbox("Admission type", list(adm_t), key="k_adm_type")
             adm_s = code_options("admission_source_id", "admission_source", ADM_SRC)
-            adm_src = st.selectbox("Admission source", list(adm_s), index=list(adm_s).index("Emergency room"))
+            adm_src = st.selectbox("Admission source", list(adm_s), key="k_adm_src")
             dis = code_options("discharge_disposition_id", "discharge_disposition", DISCH)
             dis_opts = list(dis) + list(EXCLUDED_DISCHARGE)
-            disch = st.selectbox("Discharged to", dis_opts, index=dis_opts.index("Home"))
-            nlab = st.number_input("Lab procedures", 0, 132, 43)
-            nproc = st.number_input("Other procedures", 0, 6, 1)
-            nmed = st.number_input("Distinct medications given", 1, 81, 15)
-            ndx = st.number_input("Number of diagnoses recorded", 1, 16, 8)
+            disch = st.selectbox("Discharged to", dis_opts, key="k_disch")
+            nlab = st.number_input("Lab procedures", min_value=0, max_value=132, key="k_nlab")
+            nproc = st.number_input("Other procedures", min_value=0, max_value=6, key="k_nproc")
+            nmed = st.number_input("Distinct medications given", min_value=1, max_value=81, key="k_nmed")
+            ndx = st.number_input("Number of diagnoses recorded", min_value=1, max_value=16, key="k_ndx")
         with c3:
             st.subheader("History and diabetes care")
-            nin = st.number_input("Inpatient visits in the past year", 0, 21, 0)
-            ned = st.number_input("Emergency visits in the past year", 0, 76, 0)
-            nout = st.number_input("Outpatient visits in the past year", 0, 42, 0)
-            a1c = st.selectbox("HbA1c result", ["None", "Norm", ">7", ">8"], format_func=lambda v: {"None": "Not measured"}.get(v, v))
-            glu = st.selectbox("Serum glucose result", ["None", "Norm", ">200", ">300"], format_func=lambda v: {"None": "Not measured"}.get(v, v))
-            insulin = st.selectbox("Insulin", ["No", "Steady", "Up", "Down"], index=1)
-            metformin = st.selectbox("Metformin", ["No", "Steady", "Up", "Down"])
-            on_dm_med = st.selectbox("On any diabetes medication", ["Yes", "No"])
-            changed = st.selectbox("Medication changed during stay", ["No", "Ch"], format_func=lambda v: "Yes" if v == "Ch" else "No")
+            nin = st.number_input("Inpatient visits in the past year", min_value=0, max_value=21, key="k_nin")
+            ned = st.number_input("Emergency visits in the past year", min_value=0, max_value=76, key="k_ned")
+            nout = st.number_input("Outpatient visits in the past year", min_value=0, max_value=42, key="k_nout")
+            a1c = st.selectbox("HbA1c result", ["None", "Norm", ">7", ">8"], format_func=lambda v: {"None": "Not measured"}.get(v, v), key="k_a1c")
+            glu = st.selectbox("Serum glucose result", ["None", "Norm", ">200", ">300"], format_func=lambda v: {"None": "Not measured"}.get(v, v), key="k_glu")
+            insulin = st.selectbox("Insulin", ["No", "Steady", "Up", "Down"], key="k_insulin")
+            metformin = st.selectbox("Metformin", ["No", "Steady", "Up", "Down"], key="k_metformin")
+            on_dm_med = st.selectbox("On any diabetes medication", ["Yes", "No"], key="k_on_dm_med")
+            changed = st.selectbox("Medication changed during stay", ["No", "Ch"], format_func=lambda v: "Yes" if v == "Ch" else "No", key="k_changed")
             dgroups = cfg["choices"]["diag_1_group"]
-            d1 = st.selectbox("Primary diagnosis group", dgroups, index=dgroups.index("Circulatory"))
-            d2 = st.selectbox("Secondary diagnosis group", dgroups, index=dgroups.index(cfg["defaults"]["diag_2_group"]))
-            d3 = st.selectbox("Third diagnosis group", dgroups, index=dgroups.index(cfg["defaults"]["diag_3_group"]))
+            d1 = st.selectbox("Primary diagnosis group", dgroups, key="k_d1")
+            d2 = st.selectbox("Secondary diagnosis group", dgroups, key="k_d2")
+            d3 = st.selectbox("Third diagnosis group", dgroups, key="k_d3")
         go = st.form_submit_button("Estimate risk", type="primary")
 
     if go:
@@ -162,6 +190,21 @@ with tab_about:
         with st.expander("Every model variation we tried (experiment log)"):
             st.dataframe(pd.read_csv(f)[["id", "stage", "script", "model", "auroc", "auprc", "accuracy", "sensitivity", "specificity", "takeaway"]].round(3),
                          hide_index=True, width="stretch")
+    img = HERE / "assets/calibration_and_decision_curve.png"
+    if img.exists():
+        st.subheader("Is the percentage trustworthy? Calibration and decision curve")
+        st.image(str(img))
+        st.caption("Left: predicted risk against observed readmission rate on unseen test patients; the blue calibrated estimate follows the diagonal "
+                   "(Brier 0.094, expected calibration error 0.007), while the raw model score (red) must not be read as a probability. "
+                   "Right: net benefit of flagging patients at different risk thresholds compared with flagging everyone or no one.")
+    f = HERE / "assets/subgroup_performance.csv"
+    if f.exists():
+        st.subheader("Does it work equally well for everyone? Subgroup audit")
+        sg = pd.read_csv(f)
+        st.dataframe(sg[["attribute", "group", "n", "positives", "auroc", "auroc_lo", "auroc_hi", "accuracy" if "accuracy" in sg else "acc", "sens", "spec", "note"]]
+                     .rename(columns={"acc": "accuracy", "sens": "sensitivity", "spec": "specificity"}).round(3), hide_index=True, width="stretch")
+        st.caption("At the operating threshold (11.6%). The model catches about 62% of women's readmissions but 52% of men's, and discriminates less well for patients 70 and over. "
+                   "Race groups other than Caucasian and African American have too few readmissions to judge. First audit only; no intersections tested.")
     st.subheader("Limits you should know")
     st.markdown(
         "- **Not clinical software.** Research and teaching only.\n"

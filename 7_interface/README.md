@@ -13,7 +13,8 @@ It opens in your browser. No dataset is needed: the app uses the saved model and
 
 ## What it shows
 - **Risk calculator:** form for the main fields known at discharge, with range checks. Output: calibrated risk %, risk band (low, moderate, high), the observed readmission rate for that band on unseen test patients, and the features that pushed the estimate up or down (SHAP). Patients who died or went to hospice are not scored (they were excluded from training).
-- **About, results and limits:** test AUROC, AUPRC, sensitivity and accuracy (always shown together), the model comparison table, the full experiment log, and the limitations.
+- **Example buttons** fill the form with a lower-risk and a higher-risk made-up patient so a reviewer can try the tool in one click.
+- **About, results and limits:** calibration curve and decision curve, a subgroup audit table (race, sex, age), test AUROC, AUPRC, sensitivity and accuracy (always shown together), the model comparison table, the full experiment log, and the limitations.
 
 ## Files
 | File | What it is |
