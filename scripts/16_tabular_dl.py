@@ -7,7 +7,7 @@ Step 16: Stronger deep-learning baselines for tabular data.
 
 Same patient-level splits as scripts 02-06 (run 01_preprocess.py first). Validation is used for
 early stopping and for choosing the decision threshold; the test set is scored once.
-N_SEEDS seeds per model (epochs shortened for CPU time: RealMLP 64, TabM 50, FT-Transformer 15, with early stopping); the seed-averaged probabilities are the model's prediction.
+N_SEEDS seeds per model (shortened for CPU time: RealMLP 64 epochs; TabM 50 epochs with 8 ensemble members and batch size 1024; FT-Transformer 15 epochs; early stopping); the seed-averaged probabilities are the model's prediction.
 Reference: CatBoost (depth 4, lr 0.1), trained here so we can run a paired patient-level
 bootstrap on the AUROC difference. Sensitivity is always shown with accuracy.
 SMOKE=1: tiny run to check the code only (nothing is saved).
@@ -87,7 +87,7 @@ def pytab_run(cls, seed):
     kw = dict(device="cpu", random_state=seed, verbosity=0, n_threads=os.cpu_count())
     if SMOKE: kw["n_epochs"] = 2
     elif cls.__name__.startswith("RealMLP"): kw["n_epochs"] = 64      # default is 256; reduced for CPU time
-    else: kw["n_epochs"] = 50                                       # reduced for CPU time
+    else: kw.update(n_epochs=50, tabm_k=8, batch_size=1024)         # TabM: 8 ensemble members (default 32) and larger batches, for CPU time
     mdl = cls(**kw)
     mdl.fit(XP["tr"], y["tr"], XP["va"], y["va"], cat_col_names=cats)
     return mdl.predict_proba(XP["va"])[:, 1], mdl.predict_proba(XP["te"])[:, 1]
