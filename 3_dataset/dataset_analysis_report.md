@@ -233,7 +233,7 @@ Earlier numbers (ensemble 0.679) came from uncleaned data and the broken A1C fea
 
 ## 8. Bias and representation
 
-- **Not yet measured:** performance by race, age and sex. This is the main fairness gap.
+- **Audited (Script 18, details in `5_results/evaluation/README.md`):** the model catches about 62% of women's readmissions but only 52% of men's (non-overlapping intervals; AUROC 0.694 vs 0.658). No reliable difference between Caucasian and African American patients (sensitivity 0.571 vs 0.617, AUROC 0.671 vs 0.692). Other race groups have under 35 readmissions each, so nothing can be concluded. Discrimination falls with age (AUROC 0.72 under 50, 0.64 at 70 and over). Calibration is good overall (Brier 0.094, ECE 0.007, slope 0.96).
 - **Group sizes limit testing:** the test split holds ≈10 Asian and ≈30 Hispanic readmissions, so subgroup AUROCs would have very wide CIs.
 - **Labels are similar across groups**, so there is little label-level disparity to learn. The risk is **coverage** (older, White, US patients) and **proxies**: discharge destination, prior visits and payer encode social circumstances and access to care, so a flagged patient may reflect resources, not risk.
 - **Exclusions have an age effect** (D1), and "Unknown race" patients cannot be audited.
@@ -244,8 +244,8 @@ Earlier numbers (ensemble 0.679) came from uncleaned data and the broken A1C fea
 
 1. ~~Adopt specialty + payer in the main pipeline~~ **Done 2026-10-23** (CatBoost 0.677).
 2. **Specialty-only vs payer-only:** if specialty carries the gain, drop payer and remove the socioeconomic-proxy concern.
-3. Subgroup performance by race, age and sex, with CIs and an explicit "too few to conclude" note.
-4. Calibration curve and a validation-chosen threshold (replace 0.5).
+3. ~~Subgroup performance by race, age and sex~~ **Done (Script 18).** Next: investigate the sex gap in sensitivity (for example sex-specific thresholds) and intersectional groups.
+4. ~~Calibration curve~~ **Done (Script 18).** The interface uses a validation-chosen threshold of 11.6%.
 5. Decide whether history features (§5, +0.007 AUROC) enter the headline model or stay a sensitivity result. Caveat: they rely on `encounter_id` being chronological, which we cannot verify.
 6. Patient-level bootstrap CIs for every model in `model_comparison.csv`.
 7. Ablations: engineered features, ICD grouping.
@@ -273,6 +273,8 @@ python scripts/12_embeddings_tuning.py                 # entity embeddings, extr
 python scripts/13_target_definitions.py                # <30d vs any readmission vs <30d-vs-never
 python scripts/14_combined_targets.py                  # use the >30d information to help the 30-day model
 python scripts/15_lace_and_comorbidity.py              # LACE clinical-score benchmark + comorbidity features
+python scripts/17_build_demo_model.py                  # final CatBoost + calibration for the interface
+python scripts/18_calibration_subgroups.py             # calibration, decision curve, subgroup audit
 ```
 
 The raw data and splits are git-ignored on purpose (course rule: do not commit data).

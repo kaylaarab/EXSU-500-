@@ -4,6 +4,8 @@ Newest first. One entry per significant piece of work, added when it is finished
 
 ## 2026-10-25
 
+- **Calibration, decision curves and subgroup audit (Script 18, `5_results/evaluation/`).** Brier 0.094 (raw class-weighted score 0.219), ECE 0.007, slope 0.96: well calibrated after Platt scaling. Model has higher net benefit than flag-everyone or flag-no-one at all thresholds 2-40%, modestly. Audit: sensitivity 0.62 for women vs 0.52 for men (non-overlapping CIs); no reliable race difference between the two large groups; AUROC lower in patients 70+ (0.64) than under 50 (0.72); small race groups cannot be assessed.
+
 - **Demo interface built and tested (`7_interface/`, Script 17).** Streamlit app with the required prototype notice, a risk calculator (calibrated %, risk band, observed rate per band on test patients: 5.6% / 11.5% / 21.8%, SHAP explanation), a results tab, input checks, and refusal to score patients who died or went to hospice. Tested with Streamlit's test harness (default, high-risk and excluded cases, no exceptions). Not deployed: public deployment is the team's decision (steps in `7_interface/README.md`).
 
 - **Tuning and embeddings finished (Script 12).** Tuned one-hot MLP 0.674 per seed (0.678 averaged, accuracy 0.630, sensitivity 0.619); entity embeddings 0.668 (no gain, -0.005); wider CatBoost search 0.676 (no gain). Tuning brings the neural net level with CatBoost; nothing beats it. The 5-hour machine-restart problem is handled by checkpointing.
