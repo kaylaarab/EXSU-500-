@@ -158,6 +158,14 @@ for _, r in lc.iterrows():
         ("baseline" if r.model.startswith("M0") else f"vs M0 {r['diff']:+.4f} (CI {r.diff_lo:+.4f} to {r.diff_hi:+.4f}): no gain"),
         "5_results/ablations/lace_comorbidity.csv")
 
+td_ = R / "ablations/tabular_dl.csv"
+if td_.exists():
+    for _, r in pd.read_csv(td_).iterrows():
+        ref = r.model.startswith("CatBoost")
+        add(S4, "2026-10-25", "16", "Stronger tabular deep learning (3 seeds averaged; shortened training for CPU time)", "99,343 encounters; 14,913 test rows; threshold from validation",
+            r.model, r.auroc_seed_ensemble, None, r.auprc, r.accuracy, r.sensitivity, r.specificity, None,
+            "reference" if ref else f"vs CatBoost {r.diff_vs_catboost:+.4f} (CI {r.diff_lo:+.4f} to {r.diff_hi:+.4f})", str(td_))
+
 path = R / "ablations/smote_leakage_demo.csv"
 if path.exists():
     for _, r in pd.read_csv(path).iterrows():
