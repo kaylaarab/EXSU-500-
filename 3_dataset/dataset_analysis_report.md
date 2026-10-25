@@ -207,6 +207,21 @@ Tuned on validation only (8 random configurations per neural model, plus 8 for C
 - **A wider CatBoost search does not help** (paired difference CI −0.003 to +0.001), so the model is not under-tuned.
 - Net: the extra work moves AUROC by less than 0.005 in any direction, consistent with the information-ceiling finding.
 
+## 6e. Stronger deep-learning models (Script 16)
+
+RealMLP (Holzmueller et al. 2024), TabM and an FT-Transformer, three seeds each (probabilities averaged), validation used for early stopping and for the threshold, test scored once, paired patient-level bootstrap against CatBoost trained in the same script. Training was shortened for CPU time (RealMLP 64 epochs; TabM 50 epochs with 8 ensemble members and batch size 1024; FT-Transformer 15 epochs, 2 blocks, width 64), so these models are lighter than their published defaults and could be slightly understated.
+
+| Model | AUROC (3-seed average; per seed) | AUPRC | Accuracy | Sensitivity | Specificity | AUROC gain vs CatBoost (95% CI) |
+|---|---|---|---|---|---|---|
+| CatBoost (reference) | 0.677 | 0.228 | 0.655 | 0.574 | 0.666 | n/a |
+| RealMLP | 0.669 (0.662, 0.669, 0.648) | 0.220 | 0.683 | 0.532 | 0.703 | **-0.008 (-0.013 to -0.003)** |
+| TabM | 0.674 (0.665, 0.673, 0.672) | **0.235** | 0.683 | 0.533 | 0.702 | -0.003 (-0.009 to +0.004) |
+| FT-Transformer | 0.675 (0.673, 0.672, 0.672) | 0.221 | 0.616 | 0.632 | 0.614 | -0.002 (-0.006 to +0.003) |
+
+(Always-"no" accuracy 0.889. Thresholds chosen on validation, so accuracy and sensitivity trade off differently across models.)
+
+**Reading:** no deep model beats CatBoost. TabM and the FT-Transformer are statistically tied with it; RealMLP is reliably, but only slightly, worse. TabM has the best AUPRC, within the noise. With the tuned MLP (0.678 averaged), the whole range of tuned models is 0.669-0.678: the fair statement is that the choice of model family does not matter on this dataset, which supports the information-ceiling explanation (Grinsztajn et al. 2022 report trees ahead of neural networks at this data size; we find them level, not ahead).
+
 ## 7. Is the information sufficient to predict readmission?
 
 **Partly; enough for population-level ranking, not for individual decisions.**
@@ -249,7 +264,7 @@ Earlier numbers (ensemble 0.679) came from uncleaned data and the broken A1C fea
 5. Decide whether history features (§5, +0.007 AUROC) enter the headline model or stay a sensitivity result. Caveat: they rely on `encounter_id` being chronological, which we cannot verify.
 6. Patient-level bootstrap CIs for every model in `model_comparison.csv`.
 7. Ablations: engineered features, ICD grouping.
-8. Entity embeddings and extra tuning (Script 12, running): expected gain small.
+8. ~~Entity embeddings, extra tuning, stronger tabular deep models~~ **Done (Scripts 12, 16): no gain.**
 9. Learning curve to test the "ceiling is in the data" claim from the 2026 audit.
 10. Midterm report (due **Mon 9 Nov**): ≥15 primary references, 3 IEEE pages, CRediT and Generative-AI statements.
 
@@ -273,6 +288,7 @@ python scripts/12_embeddings_tuning.py                 # entity embeddings, extr
 python scripts/13_target_definitions.py                # <30d vs any readmission vs <30d-vs-never
 python scripts/14_combined_targets.py                  # use the >30d information to help the 30-day model
 python scripts/15_lace_and_comorbidity.py              # LACE clinical-score benchmark + comorbidity features
+python scripts/16_tabular_dl.py                        # RealMLP, TabM, FT-Transformer
 python scripts/17_build_demo_model.py                  # final CatBoost + calibration for the interface
 python scripts/18_calibration_subgroups.py             # calibration, decision curve, subgroup audit
 ```

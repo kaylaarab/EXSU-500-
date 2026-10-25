@@ -82,10 +82,14 @@ Legend: `*` accuracy derived exactly from sensitivity, specificity and the test 
 | E61 | 2026-10-24 | 15 | LACE clinical score and comorbidity features (CatBoost, fixed params; threshold from validation) | 99,343 encounters; 14,913 test rows | M2 + Charlson score and condition flags | 0.677 (0.661-0.694) | 0.224 | 0.616 | 0.634 | 0.614 | vs M0 -0.0001 (CI -0.0040 to +0.0039): no gain |
 | E62 | 2026-10-24 | 15 | LACE clinical score and comorbidity features (CatBoost, fixed params; threshold from validation) | 99,343 encounters; 14,913 test rows | M3 + 3-digit primary diagnosis | 0.677 (0.661-0.694) | 0.227 | 0.666 | 0.561 | 0.679 | vs M0 +0.0004 (CI -0.0029 to +0.0036): no gain |
 | E63 | 2026-10-24 | 15 | LACE clinical score and comorbidity features (CatBoost, fixed params; threshold from validation) | 99,343 encounters; 14,913 test rows | M4 all of M1 + M2 + M3 | 0.677 (0.661-0.694) | 0.226 | 0.618 | 0.635 | 0.616 | vs M0 +0.0002 (CI -0.0039 to +0.0045): no gain |
-| E68 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | MLP one-hot (tuned) | 0.678 | 0.231 | 0.630 | 0.619 | 0.631 | {'hidden': (256, 128), 'drop': 0.5, 'lr': 0.002, 'wd': 1e-05, 'emb_drop': 0.1} |
-| E69 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | MLP entity embeddings (tuned) | 0.672 | 0.225 | 0.633 | 0.601 | 0.637 | {'hidden': (512, 256, 128), 'drop': 0.3, 'lr': 0.0003, 'wd': 0.001, 'emb_drop': 0.3} |
-| E70 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | CatBoost default (depth 4, lr 0.1) | 0.677 | 0.228 | 0.671 | 0.555 | 0.685 | nan |
-| E71 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | CatBoost tuned | 0.676 | 0.229 | 0.661 | 0.566 | 0.673 | (4, 0.05, 20.0, 2) |
+| E64 | 2026-10-25 | 16 | Stronger tabular deep learning (3 seeds averaged; shortened training for CPU time) | 99,343 encounters; 14,913 test rows; threshold from validation | CatBoost (reference) | 0.677 | 0.228 | 0.655 | 0.574 | 0.666 | reference |
+| E65 | 2026-10-25 | 16 | Stronger tabular deep learning (3 seeds averaged; shortened training for CPU time) | 99,343 encounters; 14,913 test rows; threshold from validation | RealMLP | 0.669 | 0.220 | 0.683 | 0.532 | 0.702 | vs CatBoost -0.0078 (CI -0.0126 to -0.0029) |
+| E66 | 2026-10-25 | 16 | Stronger tabular deep learning (3 seeds averaged; shortened training for CPU time) | 99,343 encounters; 14,913 test rows; threshold from validation | TabM | 0.674 | 0.235 | 0.683 | 0.533 | 0.701 | vs CatBoost -0.0031 (CI -0.0094 to +0.0040) |
+| E67 | 2026-10-25 | 16 | Stronger tabular deep learning (3 seeds averaged; shortened training for CPU time) | 99,343 encounters; 14,913 test rows; threshold from validation | FT-Transformer | 0.675 | 0.221 | 0.616 | 0.632 | 0.614 | vs CatBoost -0.0018 (CI -0.0064 to +0.0027) |
+| E72 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | MLP one-hot (tuned) | 0.678 | 0.231 | 0.630 | 0.619 | 0.631 | {'hidden': (256, 128), 'drop': 0.5, 'lr': 0.002, 'wd': 1e-05, 'emb_drop': 0.1} |
+| E73 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | MLP entity embeddings (tuned) | 0.672 | 0.225 | 0.633 | 0.601 | 0.637 | {'hidden': (512, 256, 128), 'drop': 0.3, 'lr': 0.0003, 'wd': 0.001, 'emb_drop': 0.3} |
+| E74 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | CatBoost default (depth 4, lr 0.1) | 0.677 | 0.228 | 0.671 | 0.555 | 0.685 | nan |
+| E75 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | CatBoost tuned | 0.676 | 0.229 | 0.661 | 0.566 | 0.673 | (4, 0.05, 20.0, 2) |
 
 ## 5 Target definitions and combinations
 
@@ -107,16 +111,16 @@ Legend: `*` accuracy derived exactly from sensitivity, specificity and the test 
 
 | ID | Date | Script | What changed | Cohort / target | Model | AUROC | AUPRC | Acc | Sens | Spec | Take-away |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| E64 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | A SMOTE before CV, scored on all held-out rows (real + synthetic) | 0.964 (+/-0.001 (folds)) |  | 0.942 | 0.890 | 0.994 | Reproduces EmbPred30-sized numbers by protocol alone |
-| E65 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | B SMOTE before CV, scored on real held-out rows only | 0.640 (+/-0.004 (folds)) |  | 0.908 | 0.033 | 0.994 |  |
-| E66 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | C SMOTE inside training folds only, real held-out rows (correct) | 0.614 (+/-0.006 (folds)) | 0.147 | 0.908 | 0.027 | 0.995 |  |
-| E67 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | D class weights, no SMOTE, real held-out rows (our method) | 0.654 (+/-0.009 (folds)) | 0.182 | 0.683 | 0.519 | 0.699 |  |
+| E68 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | A SMOTE before CV, scored on all held-out rows (real + synthetic) | 0.964 (+/-0.001 (folds)) |  | 0.942 | 0.890 | 0.994 | Reproduces EmbPred30-sized numbers by protocol alone |
+| E69 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | B SMOTE before CV, scored on real held-out rows only | 0.640 (+/-0.004 (folds)) |  | 0.908 | 0.033 | 0.994 |  |
+| E70 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | C SMOTE inside training folds only, real held-out rows (correct) | 0.614 (+/-0.006 (folds)) | 0.147 | 0.908 | 0.027 | 0.995 |  |
+| E71 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | D class weights, no SMOTE, real held-out rows (our method) | 0.654 (+/-0.009 (folds)) | 0.182 | 0.683 | 0.519 | 0.699 |  |
 
 ## 7 Planned or running
 
 | ID | Date | Script | What changed | Cohort / target | Model | AUROC | AUPRC | Acc | Sens | Spec | Take-away |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| E72 | planned | 15 | RealMLP, TabM, FT-Transformer | 99,343 encounters | pending |  |  | n/r |  |  | awaiting go-ahead |
+| E76 | planned | 15 | RealMLP, TabM, FT-Transformer | 99,343 encounters | pending |  |  | n/r |  |  | awaiting go-ahead |
 
 ## Hyperparameter searches (selection on validation only; test scored once)
 

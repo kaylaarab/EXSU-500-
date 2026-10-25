@@ -4,6 +4,8 @@ Newest first. One entry per significant piece of work, added when it is finished
 
 ## 2026-10-25
 
+- **Stronger deep models finished (Script 16).** RealMLP 0.669 (reliably -0.008 vs CatBoost), TabM 0.674 (-0.003, not reliable; best AUPRC 0.235), FT-Transformer 0.675 (-0.002, not reliable); CatBoost 0.677. No deep model wins; the model family does not matter here. Training was shortened (TabM 8 ensemble members, FT-T 15 epochs). **Operational finding:** the cloud machine is suspended and rebooted when the session is idle, which kills background jobs; long jobs only progress while the session is active, so they are checkpointed and watched in active waits.
+
 - **Reproducibility check passed.** A fresh clone of the GitHub repo, with only the UCI CSV added, rebuilds splits that are byte-identical to ours (same MD5 for train, validation and test). `requirements.txt` resolves. `8_final_deliverables/` added (7-minute presentation script draft, manuscript outline).
 
 - **Required repo items drafted:** `MODEL_CARD.md`, `LICENSE` (MIT, proposed: team to confirm), `6_project_progress/statements.md` (CRediT and Generative-AI drafts; each member must complete their own lines). **Midterm draft text** for every required section in `2_midterm_report/midterm_draft_for_editing.md`, with a table showing which references have actually been read (none yet by a human) and a rubric checklist.
