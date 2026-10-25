@@ -1,0 +1,561 @@
+{
+ "features": [
+  "race",
+  "gender",
+  "age",
+  "admission_type_id",
+  "discharge_disposition_id",
+  "admission_source_id",
+  "time_in_hospital",
+  "payer_code",
+  "medical_specialty",
+  "num_lab_procedures",
+  "num_procedures",
+  "num_medications",
+  "number_outpatient",
+  "number_emergency",
+  "number_inpatient",
+  "number_diagnoses",
+  "max_glu_serum",
+  "A1Cresult",
+  "metformin",
+  "repaglinide",
+  "nateglinide",
+  "chlorpropamide",
+  "glimepiride",
+  "acetohexamide",
+  "glipizide",
+  "glyburide",
+  "tolbutamide",
+  "pioglitazone",
+  "rosiglitazone",
+  "acarbose",
+  "miglitol",
+  "troglitazone",
+  "tolazamide",
+  "examide",
+  "citoglipton",
+  "insulin",
+  "glyburide-metformin",
+  "glipizide-metformin",
+  "glimepiride-pioglitazone",
+  "metformin-rosiglitazone",
+  "metformin-pioglitazone",
+  "change",
+  "diabetesMed",
+  "diag_1_group",
+  "diag_2_group",
+  "diag_3_group",
+  "total_prior_visits",
+  "num_med_changes",
+  "a1c_measured_and_changed"
+ ],
+ "categorical": [
+  "race",
+  "gender",
+  "age",
+  "admission_type_id",
+  "discharge_disposition_id",
+  "admission_source_id",
+  "payer_code",
+  "medical_specialty",
+  "max_glu_serum",
+  "A1Cresult",
+  "metformin",
+  "repaglinide",
+  "nateglinide",
+  "chlorpropamide",
+  "glimepiride",
+  "acetohexamide",
+  "glipizide",
+  "glyburide",
+  "tolbutamide",
+  "pioglitazone",
+  "rosiglitazone",
+  "acarbose",
+  "miglitol",
+  "troglitazone",
+  "tolazamide",
+  "examide",
+  "citoglipton",
+  "insulin",
+  "glyburide-metformin",
+  "glipizide-metformin",
+  "glimepiride-pioglitazone",
+  "metformin-rosiglitazone",
+  "metformin-pioglitazone",
+  "change",
+  "diabetesMed",
+  "diag_1_group",
+  "diag_2_group",
+  "diag_3_group"
+ ],
+ "numeric": [
+  "time_in_hospital",
+  "num_lab_procedures",
+  "num_procedures",
+  "num_medications",
+  "number_outpatient",
+  "number_emergency",
+  "number_inpatient",
+  "number_diagnoses",
+  "total_prior_visits",
+  "num_med_changes",
+  "a1c_measured_and_changed"
+ ],
+ "choices": {
+  "race": [
+   "AfricanAmerican",
+   "Asian",
+   "Caucasian",
+   "Hispanic",
+   "Other",
+   "Unknown"
+  ],
+  "gender": [
+   "Female",
+   "Male",
+   "Unknown/Invalid"
+  ],
+  "age": [
+   "[0-10)",
+   "[10-20)",
+   "[20-30)",
+   "[30-40)",
+   "[40-50)",
+   "[50-60)",
+   "[60-70)",
+   "[70-80)",
+   "[80-90)",
+   "[90-100)"
+  ],
+  "admission_type_id": [
+   "admission_type_1",
+   "admission_type_2",
+   "admission_type_3",
+   "admission_type_4",
+   "admission_type_5",
+   "admission_type_6",
+   "admission_type_7",
+   "admission_type_8"
+  ],
+  "discharge_disposition_id": [
+   "discharge_disposition_1",
+   "discharge_disposition_10",
+   "discharge_disposition_12",
+   "discharge_disposition_15",
+   "discharge_disposition_16",
+   "discharge_disposition_17",
+   "discharge_disposition_18",
+   "discharge_disposition_2",
+   "discharge_disposition_22",
+   "discharge_disposition_23",
+   "discharge_disposition_24",
+   "discharge_disposition_25",
+   "discharge_disposition_27",
+   "discharge_disposition_28",
+   "discharge_disposition_3",
+   "discharge_disposition_4",
+   "discharge_disposition_5",
+   "discharge_disposition_6",
+   "discharge_disposition_7",
+   "discharge_disposition_8",
+   "discharge_disposition_9"
+  ],
+  "admission_source_id": [
+   "admission_source_1",
+   "admission_source_10",
+   "admission_source_11",
+   "admission_source_13",
+   "admission_source_14",
+   "admission_source_17",
+   "admission_source_2",
+   "admission_source_20",
+   "admission_source_22",
+   "admission_source_25",
+   "admission_source_3",
+   "admission_source_4",
+   "admission_source_5",
+   "admission_source_6",
+   "admission_source_7",
+   "admission_source_8",
+   "admission_source_9"
+  ],
+  "payer_code": [
+   "Unknown",
+   "MC",
+   "HM",
+   "SP",
+   "BC",
+   "MD",
+   "CP",
+   "UN",
+   "CM",
+   "OG",
+   "DM",
+   "PO",
+   "CH",
+   "WC",
+   "MP",
+   "OT",
+   "SI",
+   "FR"
+  ],
+  "medical_specialty": [
+   "Unknown",
+   "InternalMedicine",
+   "Emergency/Trauma",
+   "Family/GeneralPractice",
+   "Cardiology",
+   "Surgery-General",
+   "Nephrology",
+   "Orthopedics",
+   "Orthopedics-Reconstructive",
+   "Radiologist",
+   "Pulmonology",
+   "Psychiatry",
+   "Urology",
+   "Surgery-Cardiovascular/Thoracic",
+   "ObstetricsandGynecology",
+   "Gastroenterology",
+   "Surgery-Vascular",
+   "Surgery-Neuro",
+   "PhysicalMedicineandRehabilitation",
+   "Oncology",
+   "Pediatrics",
+   "Hematology/Oncology",
+   "Neurology",
+   "Pediatrics-Endocrinology",
+   "Otolaryngology"
+  ],
+  "max_glu_serum": [
+   ">200",
+   ">300",
+   "None",
+   "Norm"
+  ],
+  "A1Cresult": [
+   ">7",
+   ">8",
+   "None",
+   "Norm"
+  ],
+  "metformin": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "repaglinide": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "nateglinide": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "chlorpropamide": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "glimepiride": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "acetohexamide": [
+   "No",
+   "Steady"
+  ],
+  "glipizide": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "glyburide": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "tolbutamide": [
+   "No",
+   "Steady"
+  ],
+  "pioglitazone": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "rosiglitazone": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "acarbose": [
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "miglitol": [
+   "Down",
+   "No",
+   "Steady"
+  ],
+  "troglitazone": [
+   "No",
+   "Steady"
+  ],
+  "tolazamide": [
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "examide": [
+   "No"
+  ],
+  "citoglipton": [
+   "No"
+  ],
+  "insulin": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "glyburide-metformin": [
+   "Down",
+   "No",
+   "Steady",
+   "Up"
+  ],
+  "glipizide-metformin": [
+   "No",
+   "Steady"
+  ],
+  "glimepiride-pioglitazone": [
+   "No"
+  ],
+  "metformin-rosiglitazone": [
+   "No",
+   "Steady"
+  ],
+  "metformin-pioglitazone": [
+   "No",
+   "Steady"
+  ],
+  "change": [
+   "Ch",
+   "No"
+  ],
+  "diabetesMed": [
+   "No",
+   "Yes"
+  ],
+  "diag_1_group": [
+   "Circulatory",
+   "Diabetes",
+   "Digestive",
+   "Genitourinary",
+   "Injury",
+   "Missing",
+   "Musculoskeletal",
+   "Neoplasms",
+   "Other",
+   "Respiratory"
+  ],
+  "diag_2_group": [
+   "Circulatory",
+   "Diabetes",
+   "Digestive",
+   "Genitourinary",
+   "Injury",
+   "Missing",
+   "Musculoskeletal",
+   "Neoplasms",
+   "Other",
+   "Respiratory"
+  ],
+  "diag_3_group": [
+   "Circulatory",
+   "Diabetes",
+   "Digestive",
+   "Genitourinary",
+   "Injury",
+   "Missing",
+   "Musculoskeletal",
+   "Neoplasms",
+   "Other",
+   "Respiratory"
+  ]
+ },
+ "defaults": {
+  "race": "Caucasian",
+  "gender": "Female",
+  "age": "[70-80)",
+  "admission_type_id": "admission_type_1",
+  "discharge_disposition_id": "discharge_disposition_1",
+  "admission_source_id": "admission_source_7",
+  "payer_code": "Unknown",
+  "medical_specialty": "Unknown",
+  "max_glu_serum": "None",
+  "A1Cresult": "None",
+  "metformin": "No",
+  "repaglinide": "No",
+  "nateglinide": "No",
+  "chlorpropamide": "No",
+  "glimepiride": "No",
+  "acetohexamide": "No",
+  "glipizide": "No",
+  "glyburide": "No",
+  "tolbutamide": "No",
+  "pioglitazone": "No",
+  "rosiglitazone": "No",
+  "acarbose": "No",
+  "miglitol": "No",
+  "troglitazone": "No",
+  "tolazamide": "No",
+  "examide": "No",
+  "citoglipton": "No",
+  "insulin": "No",
+  "glyburide-metformin": "No",
+  "glipizide-metformin": "No",
+  "glimepiride-pioglitazone": "No",
+  "metformin-rosiglitazone": "No",
+  "metformin-pioglitazone": "No",
+  "change": "No",
+  "diabetesMed": "Yes",
+  "diag_1_group": "Circulatory",
+  "diag_2_group": "Circulatory",
+  "diag_3_group": "Circulatory",
+  "time_in_hospital": 4.0,
+  "num_lab_procedures": 44.0,
+  "num_procedures": 1.0,
+  "num_medications": 15.0,
+  "number_outpatient": 0.0,
+  "number_emergency": 0.0,
+  "number_inpatient": 0.0,
+  "number_diagnoses": 8.0,
+  "total_prior_visits": 0.0,
+  "num_med_changes": 0.0,
+  "a1c_measured_and_changed": 0.0
+ },
+ "ranges": {
+  "time_in_hospital": [
+   1.0,
+   14.0
+  ],
+  "num_lab_procedures": [
+   1.0,
+   132.0
+  ],
+  "num_procedures": [
+   0.0,
+   6.0
+  ],
+  "num_medications": [
+   1.0,
+   81.0
+  ],
+  "number_outpatient": [
+   0.0,
+   40.0
+  ],
+  "number_emergency": [
+   0.0,
+   76.0
+  ],
+  "number_inpatient": [
+   0.0,
+   21.0
+  ],
+  "number_diagnoses": [
+   1.0,
+   16.0
+  ],
+  "total_prior_visits": [
+   0.0,
+   80.0
+  ],
+  "num_med_changes": [
+   0.0,
+   4.0
+  ],
+  "a1c_measured_and_changed": [
+   0.0,
+   1.0
+  ]
+ },
+ "calibration": {
+  "coef": 1.0548649137067838,
+  "intercept": -1.990842555418989
+ },
+ "band_cutoffs": {
+  "low": 0.08233899694120117,
+  "high": 0.16072093929417983
+ },
+ "bands": {
+  "low": {
+   "share": 0.4030040903909341,
+   "n": 6010,
+   "observed_rate": 0.056073211314475874
+  },
+  "moderate": {
+   "share": 0.4031382015691008,
+   "n": 6012,
+   "observed_rate": 0.11477045908183632
+  },
+  "high": {
+   "share": 0.19385770803996513,
+   "n": 2891,
+   "observed_rate": 0.2182635766170875
+  }
+ },
+ "metrics": {
+  "auroc": 0.6768484387392335,
+  "auprc": 0.228236208170402,
+  "brier": 0.0939236140062689,
+  "prevalence": 0.11117816670019447,
+  "threshold": 0.11646250608213987,
+  "accuracy": 0.6554013277006638,
+  "sensitivity": 0.5741857659831122,
+  "specificity": 0.6655601659751037,
+  "always_no_accuracy": 0.8888218332998056,
+  "n_test": 14913
+ },
+ "med_columns": [
+  "metformin",
+  "repaglinide",
+  "nateglinide",
+  "chlorpropamide",
+  "glimepiride",
+  "acetohexamide",
+  "glipizide",
+  "glyburide",
+  "tolbutamide",
+  "pioglitazone",
+  "rosiglitazone",
+  "acarbose",
+  "miglitol",
+  "troglitazone",
+  "tolazamide",
+  "examide",
+  "citoglipton",
+  "insulin",
+  "glyburide-metformin",
+  "glipizide-metformin",
+  "glimepiride-pioglitazone",
+  "metformin-rosiglitazone",
+  "metformin-pioglitazone"
+ ]
+}
