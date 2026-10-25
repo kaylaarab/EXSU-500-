@@ -4,6 +4,8 @@ Newest first. One entry per significant piece of work, added when it is finished
 
 ## 2026-10-25
 
+- **Reproducibility check passed.** A fresh clone of the GitHub repo, with only the UCI CSV added, rebuilds splits that are byte-identical to ours (same MD5 for train, validation and test). `requirements.txt` resolves. `8_final_deliverables/` added (7-minute presentation script draft, manuscript outline).
+
 - **Required repo items drafted:** `MODEL_CARD.md`, `LICENSE` (MIT, proposed: team to confirm), `6_project_progress/statements.md` (CRediT and Generative-AI drafts; each member must complete their own lines). **Midterm draft text** for every required section in `2_midterm_report/midterm_draft_for_editing.md`, with a table showing which references have actually been read (none yet by a human) and a rubric checklist.
 - **Interface upgraded:** example-patient buttons (lower-risk 5.1% / higher-risk 27.3%), calibration and decision-curve figure and subgroup audit table in the results tab; still private and undeployed by decision of the team.
 
