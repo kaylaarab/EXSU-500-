@@ -65,7 +65,8 @@ cfg = dict(features=feats, categorical=cats, numeric=nums,
            band_cutoffs=dict(low=float(lo_cut), high=float(hi_cut)), bands=bands, metrics=metrics,
            med_columns=[c for c in feats if c in ("metformin", "repaglinide", "nateglinide", "chlorpropamide", "glimepiride", "acetohexamide", "glipizide", "glyburide", "tolbutamide", "pioglitazone", "rosiglitazone", "acarbose", "miglitol", "troglitazone", "tolazamide", "examide", "citoglipton", "insulin", "glyburide-metformin", "glipizide-metformin", "glimepiride-pioglitazone", "metformin-rosiglitazone", "metformin-pioglitazone")])
 (OUT / "model/config.json").write_text(json.dumps(cfg, indent=1))
-for src in ("5_results/main_models/model_comparison.csv", "5_results/model_variations_log.csv"):
+for src in ("5_results/main_models/model_comparison.csv", "5_results/model_variations_log.csv",
+            "5_results/evaluation/calibration_and_decision_curve.png", "5_results/evaluation/subgroup_performance.csv"):
     if Path(src).exists(): shutil.copy(src, OUT / "assets" / Path(src).name)
 print(json.dumps({"metrics": metrics, "bands": bands, "cutoffs": cfg["band_cutoffs"]}, indent=1))
 print("model size KB:", round((OUT / "model/catboost.cbm").stat().st_size / 1024))
