@@ -1,0 +1,25 @@
+# Draft script for the 7-minute recorded presentation (due Fri 11 Dec 2026)
+
+**Rules from the specification:** maximum 7:00 (nothing after 7:00 is marked); **all team members appear on camera and introduce themselves by name**; structure = problem and why it matters, the data, the models compared, results with their limitations, conclusion; a screen recording with narration is enough; if no interface is built, walk through results and key code. Worth 15% of the final deliverables.
+
+**Status:** DRAFT built from our results as of 2026-10-25. Numbers must be refreshed from `5_results/` before recording. Speaker assignments are placeholders for the team to decide. About 130 spoken words per minute, so the script below is about 880 words.
+
+| Time | Slide | Speaker | Say (draft) | On screen |
+|---|---|---|---|---|
+| 0:00-0:30 | 1. Team | all four, one sentence each | "I'm [name]..., [role]." Then: "We are Team 8, and we built a leak-free evaluation of 30-day readmission prediction for diabetic patients." | team names, course, title |
+| 0:30-1:10 | 2. Problem | [A] | "About 1 in 9 diabetic hospital stays ends in a readmission within 30 days. It is a standard quality measure and costly, so ranking patients at discharge could help target follow-up. The task: from information known at discharge, predict whether a patient comes back within 30 days." | one stat; task statement |
+| 1:10-2:00 | 3. Data | [B] | "We used the public Diabetes 130-US Hospitals data: 101,766 stays from 130 hospitals, 1999 to 2008. We removed 2,423 stays that ended in death or hospice, which cannot be readmitted, leaving 99,343 stays, 11.4% readmitted. Two problems: many patients appear several times, and the data lack labs, social factors and follow-up plans." | missingness bar chart; patient/row split diagram |
+| 2:00-2:45 | 4. Protocol | [C] | "To avoid inflated scores we split by patient, so nobody is in both training and test, tuned only on validation, and scored the test set once. Because only 11% are readmitted, we always report accuracy together with sensitivity: a model that says 'no' to everyone has 89% accuracy and catches nobody." | split diagram; the 89% vs 0% example |
+| 2:45-3:45 | 5. Models and results | [D] | "We compared a baseline, logistic regression, XGBoost, CatBoost, a tuned neural network and an ensemble, with stronger tabular networks. All land between 0.66 and 0.68 AUROC; CatBoost is 0.677, a statistical tie. The standard clinical score, LACE, gets 0.58, so machine learning adds about 0.10. Sensitivity is about 55 to 60%, precision about 1 in 6." | Table I from the midterm; LACE row highlighted |
+| 3:45-4:30 | 6. What did not help | [A] | "We tried synthetic oversampling, extra features such as LACE and comorbidity, three ways to use the later-readmission label, entity embeddings and wider tuning. None moved performance beyond the noise. Keeping payer and specialty and using prior-visit history gave small real gains." | experiment log summary (`model_variations_log.md`) |
+| 4:30-5:15 | 7. A cautionary result | [B] | "One published preprint reports 0.97 AUROC on this data. We reproduced that number with a plain model just by applying oversampling before cross-validation, 0.96. On real patients the same model scores 0.64 and catches 3% of readmissions. High scores here are evaluation artefacts." | EmbPred30 test table |
+| 5:15-6:00 | 8. Trust and fairness | [C] | "After calibration, a 10% prediction means about 10%. But the model catches 62% of women's readmissions versus 52% of men's, and works less well for patients over 70. Small racial groups cannot be assessed." | calibration curve; subgroup table |
+| 6:00-6:40 | 9. Limits and demo | [D] | "This is a research prototype, not a medical device: old data, a ceiling near 0.68, no external validation. [If shown:] Here is our interface: it gives a calibrated risk, a band and a plain-language explanation." | limits list; interface screenshot or demo |
+| 6:40-7:00 | 10. Conclusion | [A] | "Take-aways: honest evaluation matters more than model choice; the dataset's information caps performance; accuracy must be read with sensitivity. Thank you." | three bullets |
+
+## Before recording
+- [ ] Refresh every number from `5_results/` (final model table, LACE, subgroup, SMOTE-before-CV result).
+- [ ] All four members on camera and named in the first 30 seconds.
+- [ ] Time the read-through; cut slides 6 or 9 if over 7:00.
+- [ ] Decide whether to show the interface (it is private and undeployed; a screen recording of the local app is enough).
+- [ ] Upload as a video file or private link on myCourses.
