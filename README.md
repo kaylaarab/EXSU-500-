@@ -144,8 +144,7 @@ Run order: `00` (optional) then `01` to `06`; `07` to `09` are analyses. Run all
 from the repo root after downloading the data per above and installing the pinned
 `requirements.txt`.
 
-*(Still to add: model card, open-source licence, CRediT contribution statement,
-calibration and subgroup analysis, per course requirements.)*
+**Required repository items:** model card ([`MODEL_CARD.md`](MODEL_CARD.md)); licence ([`LICENSE`](LICENSE), MIT, proposed: team to confirm); CRediT and Generative-AI statements (drafts in [`6_project_progress/statements.md`](6_project_progress/statements.md), to be completed by each member); calibration and subgroup analysis ([`5_results/evaluation/`](5_results/evaluation/README.md)).
 
 ## Use of Generative AI
 
