@@ -128,6 +128,7 @@ requirements.txt          pinned packages
                           (benchmarking_report.md, EmbPred30 review, sources table, downloaded papers)
 5_results/                all tables and figures; start with model_variations_log.md (every model variation we ran)
 7_interface/              demo web app (Streamlit): risk calculator + results; course prototype, not for clinical use
+8_final_deliverables/     manuscript outline and 7-minute presentation script (drafts)
 6_project_progress/       PROJECT_STATUS.md (current status + to-dos), progress_log.md, CONTRIBUTING.md
 scripts/                  all code, numbered in run order
 data/                     raw CSV + generated splits (git-ignored; never committed)
