@@ -1,0 +1,149 @@
+[1] American Diabetes Association Professional Practice Committee for Diabetes, “16. Diabetes Care in the Hospital: Standards of Care in Diabetes—2026,” Diabetes Care, vol. 49, suppl. 1, pp. S339–S355, 2026.
+
+https://doi.org/10.2337/dc26-S016 
+
+American Diabetes Association
+
+
+
+
+[2] D. J. Rubin et al., “The Diabetes Transition of Hospital Care (DiaTOHC) Pilot Study: A Randomized Controlled Trial of an Intervention Designed to Reduce Readmission Risk of Adults with Diabetes,” Journal of Clinical Medicine, vol. 11, no. 6, Art. no. 1471, 2022.
+
+https://doi.org/10.3390/jcm11061471 
+
+PubMed
+
+
+
+
+[3] J. Tan et al., “Derivation and Validation of Prediction Models for Prolonged Length of Stay and 30-Day Readmission in Elderly Patients With Type 2 Diabetes Mellitus: A Multicenter Study,” Journal of Diabetes Research, vol. 2025, Art. no. 3148242, 2025.
+
+https://doi.org/10.1155/jdr/3148242 
+
+Wiley Online Library
+
+
+
+
+[4] O. G. Emi-Johnson and K. J. Nkrumah, “Predicting 30-Day Hospital Readmission in Patients With Diabetes Using Machine Learning on Electronic Health Record Data,” Cureus, vol. 17, no. 4, Art. no. e82437, 2025.
+
+https://doi.org/10.7759/cureus.82437 
+
+PMC
+
+
+
+
+[5] X. Hu et al., “Predictors of 30-day readmission in young and middle-aged T2DM patients: a retrospective cohort study,” Endocrine, vol. 91, no. 1, 2026.
+
+https://doi.org/10.1007/s12020-026-04626-3 
+
+PubMed
+
+
+
+
+[6] V. B. Liu, L. Y. Sue, and Y. Wu, “Comparison of machine learning models for predicting 30-day readmission rates for patients with diabetes,” Journal of Medical Artificial Intelligence, vol. 7, Art. no. 23, 2024.
+
+https://doi.org/10.21037/jmai-24-70 
+
+Journal of Medical Artificial Intelligence
+
+
+
+
+[7] C. Guo et al., “Towards an explainable machine learning model to reduce readmission risks for diabetes patients,” Informatics in Medicine Unlocked, vol. 58, Art. no. 101686, 2025.
+
+https://doi.org/10.1016/j.imu.2025.101686 
+
+Western Sydney University
+
+
+
+
+[8] V. Mishra, M. R. Tanniru, and J. Sreedharan, “Prediction of 30-day readmission in diabetes management using Machine learning,” Computers in Biology and Medicine, vol. 195, Art. no. 110616, 2025.
+
+https://doi.org/10.1016/j.compbiomed.2025.110616 
+
+PubMed
+
+
+
+
+[9] S. S. Salim and A. A. Ibrahim, “A Machine Learning Approach for Predicting 30-Day Hospital Readmission in Patients with Diabetes,” Healthcare, vol. 14, no. 9, Art. no. 1185, 2026.
+
+https://doi.org/10.3390/healthcare14091185 
+
+PubMed
+
+
+
+
+[10] A. A. Afridi, M. Usman, D. J. Rubin, and M. R. R. Rana, “A Robust and Explainable Framework for Predicting Hospital Readmission in Patients with Diabetes,” Diabetology, vol. 7, no. 10, Art. no. 197, 2026.
+
+https://doi.org/10.3390/diabetology7100197 
+
+MDPI
+
+
+
+
+[11] Y. Huang, A. Talwar, Y. Lin, and R. R. Aparasu, “Machine learning methods to predict 30-day hospital readmission outcome among US adults with pneumonia: analysis of the national readmission database,” BMC Medical Informatics and Decision Making, vol. 22, Art. no. 288, 2022.
+
+https://doi.org/10.1186/s12911-022-01995-3 
+
+PubMed
+
+
+
+
+[12] K. A. Chen et al., “Development and Validation of Machine Learning Models to Predict Readmission After Colorectal Surgery,” Journal of Gastrointestinal Surgery, vol. 26, no. 11, pp. 2342–2350, 2022.
+
+https://doi.org/10.1007/s11605-022-05443-5 
+
+PubMed
+
+
+
+
+[13] M. Maisonnave, E. Rajabi, M. Taghavi, and P. VanBerkel, “Explainable machine learning to identify risk factors for unplanned hospital readmissions in Nova Scotian hospitals,” Computers in Biology and Medicine, vol. 190, Art. no. 110024, 2025.
+
+https://doi.org/10.1016/j.compbiomed.2025.110024 
+
+PubMed
+
+
+
+
+[14] L. M. Steiner et al., “Development and internal validation of a 30-day readmission risk model for older adults using Swiss electronic health record data: a retrospective cohort study,” BMC Geriatrics, vol. 26, Art. no. 846, 2026.
+
+https://doi.org/10.1186/s12877-026-07468-w 
+
+Springer Nature Link
+
+
+
+
+[15] F.-F. F. Yau et al., “Machine learning-based prediction of coronary care unit readmission: A multihospital validation study,” Digital Health, vol. 10, Art. no. 20552076241277030, 2024.
+
+https://doi.org/10.1177/20552076241277030 
+
+PubMed
+
+[16] G. S. Collins et al., “TRIPOD+AI statement: updated guidance for reporting clinical prediction models that use regression or machine learning methods,” BMJ, vol. 385, Art. no. e078378, 2024.
+Access the articleThis is a recent methodological reporting guideline. It supports terminology concerning discrimination, class imbalance, model evaluation, generalizability and the separation of training and evaluation data. 
+
+The BMJ
+
+
+
+
+[17] T. Saito and M. Rehmsmeier, “The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets,” PLOS ONE, vol. 10, no. 3, Art. no. e0118432, 2015.
+Access the articleThis original methodological study explains precision–recall curves and why they are particularly informative for imbalanced classification problems. 
+
+PLOS One
+
+
+
+
+[18] S. M. Lundberg and S.-I. Lee, “A Unified Approach to Interpreting Model Predictions,” Advances in Neural Information Processing Systems, vol. 30, 2017.
