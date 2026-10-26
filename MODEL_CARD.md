@@ -32,14 +32,14 @@ Teaching and research: to illustrate how a readmission model is built and evalua
 At the operating threshold (11.6% predicted risk) about 1 in 5 or 6 flagged patients is truly readmitted and about 4 in 10 readmissions are missed. The high band (top 20%) was readmitted 21.8% of the time, the low band (bottom 40%) 5.6%. Full comparison of models, ablations and benchmarks: `5_results/model_variations_log.md`, `3_dataset/dataset_analysis_report.md`, `4_benchmarking/benchmarking_report.md`.
 
 ## Fairness and subgroup results (`5_results/evaluation/`)
-- **Sex:** sensitivity 0.62 for women vs 0.52 for men (intervals do not overlap); AUROC 0.694 vs 0.658.
+- **Sex:** sensitivity 0.62 for women vs 0.52 for men (intervals do not overlap); AUROC 0.694 vs 0.658. The model separates men's readmissions less well (it does not use sex directly); sex-specific thresholds would cut the gap to about 4-5 points at almost no accuracy cost but raise ethical questions (`5_results/evaluation/README.md`).
 - **Race:** no reliable difference between Caucasian and African American patients; Hispanic, Asian and Other groups have fewer than 35 readmissions each, so no conclusion is possible.
 - **Age:** AUROC falls from 0.72 (under 50) to 0.64 (70 and over); older patients are flagged more often with lower precision.
 - **Calibration:** good overall (expected calibration error 0.007, slope 0.96), slightly over-confident at the highest risks.
 
 ## Limitations
 1. **Old, narrow data:** 1999-2008, US, one coding system (ICD-9), no modern diabetes drugs; practice and coding have changed.
-2. **Limited information:** the data lack the variables that most drive readmission, so performance is capped near AUROC 0.68; an independent audit on the same cohort found boosted trees within about 0.002 of the ceiling.
+2. **Limited information:** the data lack the variables that most drive readmission, so performance is limited to roughly AUROC 0.68-0.70. A learning curve shows boosted trees still gain about 0.005 AUROC per doubling of training data (an estimated 0.69 with five times as many stays), while simpler models have plateaued; an independent audit on the same cohort found boosted trees within about 0.002 of a measurement ceiling at 0.669.
 3. **Population:** about 76% recorded White, 45% aged 70+; small groups cannot be assessed.
 4. **Label noise:** readmissions elsewhere, and deaths after discharge, appear as "not readmitted"; the ordering of encounters was assumed (no dates).
 5. **No external validation** on another site or period.

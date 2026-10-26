@@ -25,6 +25,6 @@ Required structure (spec section 7.1): title and authors; abstract (max 250 word
 ## Open scientific items before the manuscript
 1. One final model-comparison table with patient-level confidence intervals for every model (several rows currently use encounter-level or single-run intervals).
 2. Decide whether patient-history features join the headline model (relies on unverifiable encounter ordering).
-3. Investigate the sex gap in sensitivity (for example sex-specific thresholds) and run intersectional checks.
-4. Learning curve to support the "information ceiling" claim.
+3. ~~Sex gap~~ investigated (Script 20); remaining: intersectional checks and ethical framing of sex-specific thresholds.
+4. ~~Learning curve~~ done (Script 19): the ceiling is soft, +0.005 per doubling for trees; present it as a limitation, not a proven hard cap.
 5. A clean-clone reproducibility run.

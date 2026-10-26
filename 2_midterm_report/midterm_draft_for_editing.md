@@ -78,7 +78,7 @@ Baseline (majority class); regularised logistic regression; XGBoost and CatBoost
 
 Roles required by the specification (data, modelling, interface, writing lead) are **to be assigned by the team**.
 
-**Risks.** (a) Information ceiling: performance cannot exceed about 0.68 AUROC with these variables, so the contribution is rigour, not accuracy. (b) Data age and one-country origin limit generalisability; no external validation set is available. (c) Small subgroups cannot be assessed reliably. (d) Time: contributions from all members and verified references are needed before the deadlines. (e) Misreading of metrics: mitigated by always reporting sensitivity with accuracy.
+**Risks.** (a) Limited information: performance is held to roughly 0.68-0.70 AUROC by the recorded variables (a learning curve shows only about +0.005 per doubling of data for boosted trees, none for simpler models), so the contribution is rigour, not accuracy. (b) Data age and one-country origin limit generalisability; no external validation set is available. (c) Small subgroups cannot be assessed reliably. (d) Time: contributions from all members and verified references are needed before the deadlines. (e) Misreading of metrics: mitigated by always reporting sensitivity with accuracy.
 
 ---
 

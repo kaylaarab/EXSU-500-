@@ -2,6 +2,12 @@
 
 Newest first. One entry per significant piece of work, added when it is finished. The current summary, to-dos and key dates are in [`PROJECT_STATUS.md`](PROJECT_STATUS.md).
 
+## 2026-10-26
+
+- **Learning curve (Script 19): corrects the 'ceiling' claim.** CatBoost AUROC 0.640 (5% of training data) to 0.677 (100%), still gaining about 0.005 per doubling; logistic regression plateaued at 0.668. Extrapolation: about 0.683 with 2x data, about 0.69 with 5x (indicative only). So the information limit is soft and low (about 0.68-0.70), not a hard wall; model card, midterm draft, presentation script and dataset report reworded.
+- **Sex gap investigated (Script 20).** Cause: weaker separation for men (AUROC 0.658 vs 0.694; slope 0.90), not direct use of sex (SHAP rank 23/49). Sex-specific thresholds cut the sensitivity gap from 10 to 4.5 points at -0.004 accuracy (CI of the residual gap includes 0). Sex-specific models are worse. Ethical review needed before any sex-specific rule.
+- **Interface:** prototype notice moved above the tabs (it was below the content), explanation chart made readable, local config hides the Deploy button, requirements loosened, run instructions added for Windows. Screenshots sent to the user. Magalie (`Mag000297`) made her first commit: a midterm report draft (`2_midterm_report/Midterm report (2).docx`).
+
 ## 2026-10-25
 
 - **Stronger deep models finished (Script 16).** RealMLP 0.669 (reliably -0.008 vs CatBoost), TabM 0.674 (-0.003, not reliable; best AUPRC 0.235), FT-Transformer 0.675 (-0.002, not reliable); CatBoost 0.677. No deep model wins; the model family does not matter here. Training was shortened (TabM 8 ensemble members, FT-T 15 epochs). **Operational finding:** the cloud machine is suspended and rebooted when the session is idle, which kills background jobs; long jobs only progress while the session is active, so they are checkpointed and watched in active waits.
