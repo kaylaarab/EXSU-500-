@@ -4,27 +4,41 @@ A small web app that shows the model's 30-day readmission risk for one hypotheti
 
 **Course prototype for research and educational purposes. Not a medical device. Not for clinical use.** The app shows this notice at the top and bottom of every page, as the specification requires.
 
-## Run it on your computer (about 5 minutes)
-You need Python 3.10 or newer and a copy of this repository. The app uses the saved model in `model/`, so no dataset is needed.
+## Run it on your computer (about 10 minutes the first time)
+You need **Python 3.10 to 3.12** (3.12 is the safest choice for the CatBoost package) and a copy of this repository. The app uses the saved model in `model/`, so no dataset is needed. **Git is not required.**
 
-**Windows (PowerShell), from the repository folder**
-```powershell
-git pull origin main                       # get the latest files
-python -m venv .venv                       # optional but tidy
-.venv\Scripts\Activate.ps1
-pip install -r 7_interface/requirements.txt
-streamlit run 7_interface/app.py
-```
-**Mac or Linux**
+### Windows, without Git (easiest)
+1. **Download the repository as a ZIP:** open <https://github.com/skhaldoun/EXSU-500-/archive/refs/heads/main.zip> in your browser, then right-click the downloaded file, choose *Extract All*, and note where the new folder is (for example `C:\Users\Siham\Desktop\EXSU-500--main`).
+2. **Check that Python is installed.** Open PowerShell and run `python --version`. If it says the command is not recognized, install Python from <https://www.python.org/downloads/>; on the first installer screen **tick "Add python.exe to PATH"**, then open a new PowerShell window.
+3. **Go into the folder** (PowerShell must be inside the project folder, not in `C:\Users\Siham`):
+   ```powershell
+   cd "C:\Users\Siham\Desktop\EXSU-500--main"      # use your own path
+   ```
+4. **Install the packages and start the app:**
+   ```powershell
+   python -m pip install -r 7_interface/requirements.txt
+   python -m streamlit run 7_interface/app.py
+   ```
+5. Your browser opens at <http://localhost:8501>. Stop the app with Ctrl+C in PowerShell. The page is visible only on your own computer.
+
+Things that go wrong, and the fix:
+| Message | Fix |
+|---|---|
+| `python` is not recognized | Install Python and tick "Add python.exe to PATH", then open a new PowerShell window. If `py --version` works, use `py -m pip ...` and `py -m streamlit ...` instead |
+| `git` is not recognized | You do not need Git; use the ZIP route above |
+| `No such file` for `7_interface/...` | PowerShell is in the wrong folder; `cd` into the extracted folder first (it contains `README.md` and the `7_interface` folder) |
+| pip fails building `catboost` or numpy | Your Python is too new or too old; install Python 3.12 and try again |
+| Browser did not open | Open <http://localhost:8501> by hand |
+
+To update later, download the ZIP again (or use Git if you install it).
+
+### Windows or Mac/Linux with Git
 ```bash
 git pull origin main
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r 7_interface/requirements.txt
-streamlit run 7_interface/app.py
+python -m pip install -r 7_interface/requirements.txt
+python -m streamlit run 7_interface/app.py
 ```
-Streamlit prints a local address (normally http://localhost:8501) and opens it in your browser. Stop it with Ctrl+C. The app is only visible on your own computer; nobody else can open it unless you deploy it, which we have decided not to do yet.
-
-If PowerShell blocks the activation script, run `Set-ExecutionPolicy -Scope Process Bypass` first, or skip the virtual environment and run `pip install` directly.
+(Optional: create a virtual environment first with `python -m venv .venv`, then activate it: `.venv\Scripts\Activate.ps1` on Windows PowerShell, `source .venv/bin/activate` on Mac/Linux. If PowerShell blocks the activation script, run `Set-ExecutionPolicy -Scope Process Bypass` first.)
 
 ## What it looks like
 | Higher-risk example | Lower-risk example |
