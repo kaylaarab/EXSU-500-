@@ -20,5 +20,5 @@ This page is for teammates (Larissa, Magalie, Kayla, Siham). The app runs in the
   python -m pip install -r 7_interface/requirements.txt
   python -m streamlit run 7_interface/app.py
   ```
-- Send a screenshot of where it stopped. This route has not yet been tested on GitHub.
+- Send a screenshot of where it stopped. A real Codespace has not yet been started by us (we had no GitHub login that can create one). We did rehearse the same steps on 26 Oct in a clean Python 3.12 copy of the repository: the install command worked, the start command brought the app up, and the example patients gave results in a real browser.
 - For running on your own computer instead, see `README.md` in this folder. Screenshots of the app are in `examples/`.

@@ -54,7 +54,7 @@ GitHub can run the app for you in the cloud and show it in your browser, with no
 Notes
 - **It stays private.** A codespace and its forwarded port are visible only to the person who created it by default. Do not change the port to *Public* while we have decided not to publish the interface.
 - **Free allowance.** GitHub gives personal accounts a monthly free amount of Codespaces use (check the current limit under GitHub *Settings, Billing and plans*); a stopped codespace uses none.
-- **This route has not been tested by us**, because the setup was written from a computer without Codespaces. If it does not start, open the **Terminal** tab in the codespace and run `python -m pip install -r 7_interface/requirements.txt` then `python -m streamlit run 7_interface/app.py`, and tell us what message you see.
+- **A real Codespace has not been tested by us yet.** We rehearsed the same install and start commands in a clean Python 3.12 copy of the repository (the same Python as the Codespaces image) and the app ran correctly in a browser. If it does not start, open the **Terminal** tab in the codespace and run `python -m pip install -r 7_interface/requirements.txt` then `python -m streamlit run 7_interface/app.py`, and tell us what message you see.
 
 ## Other ways to see it
 - **Screenshots only:** the `examples/` folder shows the main screens, no running needed.
