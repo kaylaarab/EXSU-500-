@@ -43,7 +43,7 @@ python -m streamlit run 7_interface/app.py
 ## Run it without installing anything: GitHub Codespaces
 GitHub can run the app for you in the cloud and show it in your browser, with nothing installed on your computer. The repository contains the setup file (`.devcontainer/devcontainer.json`), so it starts and installs by itself.
 
-1. Sign in to GitHub and open the repository page (<https://github.com/skhaldoun/EXSU-500->).
+1. Sign in to GitHub and open the repository page: Siham's copy <https://github.com/skhaldoun/EXSU-500-> or Kayla's copy <https://github.com/kaylaarab/EXSU-500-> (both hold the same files; each person's codespace uses their own free hours).
 2. Click the green **Code** button, open the **Codespaces** tab, then **Create codespace on main**.
 3. Wait 2-4 minutes the first time (it installs the packages). A window that looks like an editor opens in your browser.
 4. When the app starts, a browser tab opens automatically, or open the **Ports** tab at the bottom, find port **8501**, and click the globe icon next to its address.
