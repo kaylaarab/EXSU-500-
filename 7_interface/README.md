@@ -40,6 +40,25 @@ python -m streamlit run 7_interface/app.py
 ```
 (Optional: create a virtual environment first with `python -m venv .venv`, then activate it: `.venv\Scripts\Activate.ps1` on Windows PowerShell, `source .venv/bin/activate` on Mac/Linux. If PowerShell blocks the activation script, run `Set-ExecutionPolicy -Scope Process Bypass` first.)
 
+## Run it without installing anything: GitHub Codespaces
+GitHub can run the app for you in the cloud and show it in your browser, with nothing installed on your computer. The repository contains the setup file (`.devcontainer/devcontainer.json`), so it starts and installs by itself.
+
+1. Sign in to GitHub and open the repository page (<https://github.com/skhaldoun/EXSU-500->).
+2. Click the green **Code** button, open the **Codespaces** tab, then **Create codespace on main**.
+3. Wait 2-4 minutes the first time (it installs the packages). A window that looks like an editor opens in your browser.
+4. When the app starts, a browser tab opens automatically, or open the **Ports** tab at the bottom, find port **8501**, and click the globe icon next to its address.
+5. **Stop the codespace when you are done** (Codespaces menu on the repository page, or the bottom-left corner of the editor, then *Stop Current Codespace*), so it does not use up your free hours.
+
+Notes
+- **It stays private.** A codespace and its forwarded port are visible only to the person who created it by default. Do not change the port to *Public* while we have decided not to publish the interface.
+- **Free allowance.** GitHub gives personal accounts a monthly free amount of Codespaces use (check the current limit under GitHub *Settings, Billing and plans*); a stopped codespace uses none.
+- **This route has not been tested by us**, because the setup was written from a computer without Codespaces. If it does not start, open the **Terminal** tab in the codespace and run `python -m pip install -r 7_interface/requirements.txt` then `python -m streamlit run 7_interface/app.py`, and tell us what message you see.
+
+## Other ways to see it
+- **Screenshots only:** the `examples/` folder shows the main screens, no running needed.
+- **GitHub itself cannot run it.** GitHub Pages serves only static web pages; this app needs Python and the model running on a server.
+- **Public hosting services** (Streamlit Community Cloud, Hugging Face Spaces) would make it reachable by anyone, so we are not using them until the team decides to publish.
+
 ## What it looks like
 | Higher-risk example | Lower-risk example |
 |---|---|
