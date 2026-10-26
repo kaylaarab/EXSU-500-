@@ -9,6 +9,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import altair as alt
 import streamlit as st
 from catboost import CatBoostClassifier, Pool
 
@@ -39,6 +40,16 @@ DISCH = {1: "Home", 2: "Another short-term hospital", 3: "Skilled nursing facili
 EXCLUDED_DISCHARGE = {"Died or hospice care": "Patients who died or went to hospice were excluded from training, because they cannot be readmitted. The model gives no score for them."}
 ADM_SRC = {1: "Physician referral", 2: "Clinic referral", 3: "HMO referral", 4: "Transfer from a hospital", 5: "Transfer from a skilled nursing facility",
            6: "Transfer from another health facility", 7: "Emergency room", 9: "Not available", 17: "Not recorded", 20: "Not mapped"}
+
+
+NICE = {"number_inpatient": "Inpatient visits last year", "number_emergency": "Emergency visits last year", "number_outpatient": "Outpatient visits last year",
+        "total_prior_visits": "Total visits last year", "discharge_disposition_id": "Discharged to", "admission_type_id": "Admission type",
+        "admission_source_id": "Admission source", "time_in_hospital": "Days in hospital", "number_diagnoses": "Number of diagnoses",
+        "num_medications": "Medications given", "num_lab_procedures": "Lab procedures", "num_procedures": "Other procedures", "age": "Age band",
+        "gender": "Sex", "race": "Race", "payer_code": "Payer", "medical_specialty": "Admitting specialty", "A1Cresult": "HbA1c result",
+        "max_glu_serum": "Glucose result", "insulin": "Insulin", "metformin": "Metformin", "change": "Medication changed", "diabetesMed": "On diabetes drug",
+        "diag_1_group": "Primary diagnosis", "diag_2_group": "Secondary diagnosis", "diag_3_group": "Third diagnosis",
+        "num_med_changes": "Number of drug changes", "a1c_measured_and_changed": "HbA1c measured and drugs changed"}
 
 
 def code_options(col, prefix, labels):
@@ -73,8 +84,8 @@ def load_preset(name):
         st.session_state[k] = v
 
 
+st.warning(DISCLAIMER)                                  # shown above the tabs, so it is visible on every page
 tab_calc, tab_about = st.tabs(["Risk calculator", "About, results and limits"])
-st.warning(DISCLAIMER)
 
 with tab_calc:
     st.title("30-day readmission risk (prototype)")
@@ -159,10 +170,14 @@ with tab_calc:
                     st.subheader("What pushed the estimate up or down")
                     sv = model.get_feature_importance(pool, type="ShapValues")[0][:-1]
                     contrib = pd.DataFrame({"feature": cfg["features"], "effect": sv, "value": [str(X.iloc[0][f]) for f in cfg["features"]]})
-                    top = contrib.reindex(contrib.effect.abs().sort_values(ascending=False).index).head(8).iloc[::-1]
-                    top["label"] = top.feature + " = " + top.value
-                    st.bar_chart(top.set_index("label")["effect"], horizontal=True)
-                    st.caption("Positive bars raise the risk estimate, negative bars lower it (SHAP values, in log-odds). These show what the model uses, not what causes readmission.")
+                    top = contrib.reindex(contrib.effect.abs().sort_values(ascending=False).index).head(8).reset_index(drop=True)
+                    top["label"] = top.feature.map(lambda f: NICE.get(f, f)) + ": " + top.value.str.replace("_", " ").str.slice(0, 28)
+                    chart = alt.Chart(top).mark_bar().encode(
+                        x=alt.X("effect:Q", title="Effect on risk (log-odds)"),
+                        y=alt.Y("label:N", sort=None, title=None, axis=alt.Axis(labelLimit=420)),
+                        color=alt.condition(alt.datum.effect > 0, alt.value("#d62728"), alt.value("#1f77b4")), tooltip=["label", "effect"])
+                    st.altair_chart(chart, width="stretch")
+                    st.caption("Red bars raise the risk estimate, blue bars lower it (SHAP values, in log-odds). These show what the model uses, not what causes readmission.")
         except Exception as e:                                          # never crash on odd input
             st.error(f"Could not compute a score for these inputs ({type(e).__name__}). Please check the values and try again.")
 
@@ -200,7 +215,7 @@ with tab_about:
     f = HERE / "assets/subgroup_performance.csv"
     if f.exists():
         st.subheader("Does it work equally well for everyone? Subgroup audit")
-        sg = pd.read_csv(f)
+        sg = pd.read_csv(f).fillna({"note": ""})
         st.dataframe(sg[["attribute", "group", "n", "positives", "auroc", "auroc_lo", "auroc_hi", "accuracy" if "accuracy" in sg else "acc", "sens", "spec", "note"]]
                      .rename(columns={"acc": "accuracy", "sens": "sensitivity", "spec": "specificity"}).round(3), hide_index=True, width="stretch")
         st.caption("At the operating threshold (11.6%). The model catches about 62% of women's readmissions but 52% of men's, and discriminates less well for patients 70 and over. "
@@ -212,7 +227,7 @@ with tab_about:
         "- **Moderate accuracy:** about 1 in 6 patients flagged at the operating point is truly readmitted, and about 4 in 10 readmissions are missed. "
         "The data lacks lab values at discharge, social factors, follow-up plans and clinical notes.\n"
         "- **Population skew:** about three quarters of patients are recorded as White and 45% are over 70, so estimates for small groups are unreliable. "
-        "Performance by race, age and sex has not yet been audited.\n"
+        "A first audit by race, sex and age is shown in this tab; it found a sensitivity gap by sex.\n"
         "- **Not scored:** patients who died or went to hospice.\n"
         "- **Unlisted drugs are assumed 'No'**, and fields you leave unchanged use the most common training value.")
     st.caption("Source code, experiments and documentation: see the project repository.")
