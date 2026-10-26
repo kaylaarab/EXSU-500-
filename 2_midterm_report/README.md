@@ -3,6 +3,7 @@
 | File | What it is |
 |---|---|
 | [`midterm_report.docx`](midterm_report.docx) | Kayla's working draft in the IEEE Word template. Still contains template boilerplate and placeholder text that must be removed |
+| [`Midterm report (2).docx`](Midterm%20report%20%282%29.docx) | Magalie's uploaded draft of the introduction and clinical significance (25 Oct), with inline links that must become numbered references |
 | [`midterm_draft_for_editing.md`](midterm_draft_for_editing.md) | Draft text for every required section, built from our computed results and verified sources, with a reference table showing what has actually been read |
 
 ## Requirements (specification section 6)

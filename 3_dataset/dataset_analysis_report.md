@@ -3,7 +3,7 @@
 **Project:** Predicting 30-day readmission in diabetic inpatients (EXSU 500, Team 8)
 **Dataset:** Diabetes 130-US Hospitals, 1999–2008 (UCI #296, CC BY 4.0)
 **Purpose of this file:** one place where the team can see *what the data is, what is wrong with it, what we decided and why, and what each decision costs*. Use it as the source for the Data, Methods and Limitations sections of the report.
-**Last updated:** 2026-10-23 (after keeping payer/specialty in the main pipeline and the death/hospice ablation). All numbers come from scripts in `scripts/` and tables in `5_results/`; nothing here is hand-typed from memory.
+**Last updated:** 2026-10-26 (after tuning/embeddings, stronger deep models, calibration and subgroup audit, learning curve and sex-gap analysis). All numbers come from scripts in `scripts/` and tables in `5_results/`; nothing here is hand-typed from memory.
 
 ---
 

@@ -1,6 +1,6 @@
 # Benchmarking report: what others did on this dataset, and how we compare
 
-**Last updated:** 2026-10-23. Part of the team repo; start with the summary, use the tables as the source for the Related Work section.
+**Last updated:** 2026-10-26. Part of the team repo; start with the summary, use the tables as the source for the Related Work section.
 **Companion files in this folder:** [`embpred30_review.md`](embpred30_review.md) (analysis of the 0.974 AUROC claim) · [`sources.csv`](sources.csv) (same table, spreadsheet form) · [`abstracts/abstracts.md`](abstracts/abstracts.md) · [`papers/`](papers/) (downloaded open-access copies) · [`team_literature_log.md`](team_literature_log.md) (Kayla's and Magalie's notes).
 
 ## 1. Summary
@@ -122,7 +122,7 @@ Every source we looked at, whether or not it was used. "How we checked" says how
 
 Ordered by value for the report. Items marked **(running)** or **(done)** are tracked in [`../6_project_progress/PROJECT_STATUS.md`](../6_project_progress/PROJECT_STATUS.md).
 
-1. **Reproduce the leakage mechanism behind the 0.974 claim (running).** Script 11 compares SMOTE-before-CV with SMOTE-in-fold and class weights on a first-encounter cohort like EmbPred30's. A large gap would explain the outlier and make a strong limitations paragraph.
+1. **Reproduce the leakage mechanism behind the 0.974 claim (done, Script 11).** Script 11 compares SMOTE-before-CV with SMOTE-in-fold and class weights on a first-encounter cohort like EmbPred30's. A large gap would explain the outlier and make a strong limitations paragraph.
 2. **Learning curve / ceiling check (done, Script 19).** The 2026 audit argues the ceiling is set by the variables. We tested it: boosted trees still gain about +0.005 AUROC per doubling (our curve already exceeds the audit's 0.669), simple models are flat, so the ceiling is soft. Original plan: train on 10%-100% of the data and see whether AUROC saturates near 0.68. If it does, more data or bigger models will not help.
 3. **Strack's original finding.** Replicate the HbA1c result (measured and changed versus readmission) with an explainable logistic model on the first-encounter cohort, as an interpretability section and a link to the paper's clinical argument.
 4. **Payer versus specialty.** Strack kept specialty and dropped payer. Test each alone; if specialty carries the gain, drop payer and avoid the socioeconomic-proxy concern at no cost.
@@ -130,7 +130,7 @@ Ordered by value for the report. Items marked **(running)** or **(done)** are tr
 6. **Leak-free entity-embedding network.** EmbPred30's idea (learned embeddings for categorical columns) is sound; test it under a correct patient-level protocol to see whether it beats one-hot encoding.
 7. **Subgroup performance (race, age, sex) with the Fairlearn toolkit.** Not done by any source above; a distinct contribution.
 8. **Check what the near-constant drug columns add** (the CSoI report and a GitHub project dropped zero-variance columns such as `examide` and `citoglipton`).
-9. **Stronger deep-learning baselines (checked 2026-10-23, not yet run).** Candidates: RealMLP (Holzmüller et al., NeurIPS 2024, [arXiv 2407.04491](https://arxiv.org/abs/2407.04491), installable via `pytabkit`), TabM and FT-Transformer (Gorishniy et al.; TabM and FT-Transformer figures not verified by our searches), TabPFN-2.5 ([arXiv 2511.08667](https://arxiv.org/pdf/2511.08667v2); needs pretrained weights and has dataset-size limits). Background: tree models beat neural nets on medium-sized tabular data in [Grinsztajn et al. 2022](https://ar5iv.labs.arxiv.org/html/2207.08815), and [McElfresh et al.](https://arxiv.org/pdf/2305.02997v2) argue the gap depends on the dataset. Expect at most a small gain here because the 2026 audit puts the ceiling in the data.
+9. **Stronger deep-learning baselines (done, Script 16).** RealMLP 0.669 (reliably below CatBoost by 0.008), TabM 0.674 and FT-Transformer 0.675 (both within noise of CatBoost's 0.677; TabM has the best AUPRC, 0.235); none beats CatBoost, consistent with [Grinsztajn et al. 2022](https://ar5iv.labs.arxiv.org/html/2207.08815). TabPFN-2.5 was not tried (needs pretrained weights and has dataset-size limits). Details: `../5_results/ablations/tabular_dl.csv` and `../5_results/model_variations_log.md`. Candidate papers: RealMLP (Holzmueller et al., NeurIPS 2024, [arXiv 2407.04491](https://arxiv.org/abs/2407.04491)); TabM and FT-Transformer (Gorishniy et al.; figures not verified by our searches).
 10. **Read the sources we could only see in search results** (rows 17-21) before citing them; each reference must be read by a team member.
 
 ## 7. Notes on rigour

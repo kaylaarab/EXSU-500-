@@ -4,6 +4,10 @@ Newest first. One entry per significant piece of work, added when it is finished
 
 ## 2026-10-26
 
+- **Repository audit (all folders, both repos).** Removed two stray empty-ish files at the repo root (`11`, `12`), refreshed README, PROJECT_STATUS and the folder READMEs for the work done since 23 Oct (scripts 12-20, interface, model card, statements), marked finished benchmarking items as done, and listed Magalie's and Kayla's midterm files.
+- **Interface examples:** `7_interface/examples/low_and_high_risk_examples.md` writes out one low-risk (5.1%, LOW) and one high-risk (27.3%, HIGH) example with inputs, outputs and main drivers.
+- **Interface team access:** Added Codespaces setup (`.devcontainer/`) and `7_interface/TEAM_ACCESS.md` so teammates can run the private demo in the browser with nothing installed. Not yet tested on GitHub. Interface remains private and undeployed.
+
 - **Learning curve (Script 19): corrects the 'ceiling' claim.** CatBoost AUROC 0.640 (5% of training data) to 0.677 (100%), still gaining about 0.005 per doubling; logistic regression plateaued at 0.668. Extrapolation: about 0.683 with 2x data, about 0.69 with 5x (indicative only). So the information limit is soft and low (about 0.68-0.70), not a hard wall; model card, midterm draft, presentation script and dataset report reworded.
 - **Sex gap investigated (Script 20).** Cause: weaker separation for men (AUROC 0.658 vs 0.694; slope 0.90), not direct use of sex (SHAP rank 23/49). Sex-specific thresholds cut the sensitivity gap from 10 to 4.5 points at -0.004 accuracy (CI of the residual gap includes 0). Sex-specific models are worse. Ethical review needed before any sex-specific rule.
 - **Interface:** prototype notice moved above the tabs (it was below the content), explanation chart made readable, local config hides the Deploy button, requirements loosened, run instructions added for Windows. Screenshots sent to the user. Magalie (`Mag000297`) made her first commit: a midterm report draft (`2_midterm_report/Midterm report (2).docx`).
@@ -22,7 +26,7 @@ Newest first. One entry per significant piece of work, added when it is finished
 - **Demo interface built and tested (`7_interface/`, Script 17).** Streamlit app with the required prototype notice, a risk calculator (calibrated %, risk band, observed rate per band on test patients: 5.6% / 11.5% / 21.8%, SHAP explanation), a results tab, input checks, and refusal to score patients who died or went to hospice. Tested with Streamlit's test harness (default, high-risk and excluded cases, no exceptions). Not deployed: public deployment is the team's decision (steps in `7_interface/README.md`).
 
 - **Tuning and embeddings finished (Script 12).** Tuned one-hot MLP 0.674 per seed (0.678 averaged, accuracy 0.630, sensitivity 0.619); entity embeddings 0.668 (no gain, -0.005); wider CatBoost search 0.676 (no gain). Tuning brings the neural net level with CatBoost; nothing beats it. The 5-hour machine-restart problem is handled by checkpointing.
-- **Script 16 (RealMLP, TabM, FT-Transformer) running;** demo interface under construction (`7_interface/`).
+- **Script 16 (RealMLP, TabM, FT-Transformer) started;** finished the same day, see the entry above. Demo interface built (`7_interface/`).
 
 ## 2026-10-24
 
@@ -59,6 +63,3 @@ Newest first. One entry per significant piece of work, added when it is finished
 - Baseline, logistic regression and XGBoost pipeline with patient-level split and bootstrap CI (Siham).
 - SHAP interpretability, MLP, ICD-9 grouping, CatBoost, ensemble (Siham).
 - First midterm report draft (Kayla, Oct 17-18); course PDFs added (Oct 20).
-
-## 2026-10-26: interface team access
-- Added Codespaces setup (`.devcontainer/`) and `7_interface/TEAM_ACCESS.md` so teammates can run the private demo in the browser with nothing installed. Not yet tested on GitHub. Interface remains private and undeployed.

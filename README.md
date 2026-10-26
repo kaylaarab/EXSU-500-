@@ -49,7 +49,7 @@ sensitivity/specificity) simple and defensible. The resulting positive rate is
   positive after binarization).
 - **Known missingness:** `weight` is 96.9% missing (excluded as a feature);
   `medical_specialty` 49.1% missing and `payer_code` 39.6% missing (kept as
-  an explicit "Unknown" category in the sensitivity analysis; dropped in the main pipeline); `race`, `diag_1/2/3`
+  an explicit "Unknown" category and kept in the main pipeline since 23 Oct); `race`, `diag_1/2/3`
   under 2.5% missing.
 - `IDS_mapping.csv` (included with the download) decodes the numeric
   `admission_type_id`, `discharge_disposition_id`, and `admission_source_id`
@@ -112,7 +112,13 @@ This produces `data/diabetic_data.csv` (~19 MB) and `data/IDS_mapping.csv`.
 `medical_specialty` and `payer_code` are kept (they add about +0.008 AUROC, paired 95% CI
 +0.005 to +0.011). Restricting to each patient's first
 encounter gives about 0.652, and patient-history features add about +0.007 (paired 95% CI +0.003 to +0.011).
-These are first complete results on the cleaned data, not final manuscript numbers.
+
+**Further experiments (all in [`5_results/model_variations_log.md`](5_results/model_variations_log.md), 76 variations; none beats CatBoost reliably):**
+tuned MLP 0.674, entity embeddings 0.668, RealMLP 0.669, TabM 0.674, FT-Transformer 0.675 (AUROC); different target definitions and combined targets;
+LACE clinical score alone 0.575 and as an added feature (no gain); SMOTE worse than class weights; adding history features +0.007.
+A learning curve shows boosted trees still gain about +0.005 AUROC per doubling of data (0.640 at 5% to 0.677 at 100%), so the ceiling is soft, not a wall.
+The final model (CatBoost with Platt calibration) is well calibrated (Brier 0.094, expected calibration error 0.007); at its validation-chosen threshold sensitivity is 0.574, specificity 0.666 and accuracy 0.655 on the test set, against 0.889 accuracy and 0 sensitivity for always answering "no". Sensitivity is lower for men (0.52) than women (0.62) and AUROC falls with age (0.72 under 50, 0.64 at 70+); see [`5_results/evaluation/`](5_results/evaluation/README.md).
+These are the current numbers; the manuscript will use the final reruns.
 
 ## Repository structure
 
@@ -122,14 +128,15 @@ Numbered folders, one per topic. Open the folder you need; each has its own READ
 README.md                 this file (project description for grading)
 requirements.txt          pinned packages
 1_course_materials/       course specification, dataset list, group assignments (PDFs)
-2_midterm_report/         midterm_report.docx (due 9 Nov)
+2_midterm_report/         midterm drafts (Word) and draft text for editing (due 9 Nov)
 3_dataset/                dataset_analysis_report.md: data quality, decisions, trade-offs, bias
 4_benchmarking/           what other work on this dataset reports, and how we compare
                           (benchmarking_report.md, EmbPred30 review, sources table, downloaded papers)
 5_results/                all tables and figures; start with model_variations_log.md (every model variation we ran)
-7_interface/              demo web app (Streamlit): risk calculator + results; course prototype, not for clinical use
+7_interface/              demo web app (Streamlit): risk calculator + results, examples, run steps (local or GitHub Codespaces); private, not deployed, not for clinical use
 8_final_deliverables/     manuscript outline and 7-minute presentation script (drafts)
-6_project_progress/       PROJECT_STATUS.md (current status + to-dos), progress_log.md, CONTRIBUTING.md
+6_project_progress/       PROJECT_STATUS.md (current status + to-dos), progress_log.md, statements.md, CONTRIBUTING.md
+.devcontainer/           one-click GitHub Codespaces setup for the interface
 scripts/                  all code, numbered in run order
 data/                     raw CSV + generated splits (git-ignored; never committed)
 ```
@@ -139,9 +146,9 @@ patient-level split) · `02_train_evaluate` (baseline, LogReg, XGBoost) · `03_i
 (SHAP) · `04_deep_learning` (MLP) · `05_catboost` · `06_ensemble` · `07_sensitivity`
 (specialty/payer, first-encounter, patient-level CIs) · `08_trajectory_features` (patient history) ·
 `09_smote_ablation` · `10_hospice_death_ablation` · `11_smote_leakage_demo` ·
-`12_embeddings_tuning`.
+`12_embeddings_tuning` · `13_target_definitions` · `14_combined_targets` · `15_lace_and_comorbidity` · `16_tabular_dl` (RealMLP, TabM, FT-Transformer) · `17_build_demo_model` (final model for the interface) · `18_calibration_subgroups` · `19_learning_curve` · `20_sex_gap`.
 
-Run order: `00` (optional) then `01` to `06`; `07` to `09` are analyses. Run all
+Run order: `00` (optional) then `01` to `06`; `07` to `20` are analyses and the interface model (full list in `3_dataset/dataset_analysis_report.md` section 10). Run all
 from the repo root after downloading the data per above and installing the pinned
 `requirements.txt`.
 
@@ -149,5 +156,4 @@ from the repo root after downloading the data per above and installing the pinne
 
 ## Use of Generative AI
 
-*(statement to be added per course requirements — document any AI assistance
-used for code, debugging, or writing)*
+Claude (Anthropic) was used throughout as a coding and analysis assistant, run from Siham Khaldoun's account: pipeline code, ablations, the interface, literature searches and drafts of the documentation. All results come from scripts in this repository, and every cited source is to be read by a team member before it is used. The draft statement, with each member's own part still to be completed, is in [`6_project_progress/statements.md`](6_project_progress/statements.md).
