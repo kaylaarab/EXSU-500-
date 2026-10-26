@@ -58,3 +58,63 @@ At the operating threshold. Positives = readmitted stays in that group. "Too few
 
 ## Files
 `calibration_and_decision_curve.png` · `calibration_bins.csv` · `calibration_summary.csv` · `decision_curve.csv` · `subgroup_performance.csv`
+
+
+---
+
+# Learning curve: does more data help? (`scripts/19_learning_curve.py`)
+
+![Learning curve](learning_curve.png)
+
+CatBoost (fixed settings) trained on growing random subsets of training **patients** (5 subsets per size up to 40%, 3 at 60% and 80%, 1 at 100%), always scored on the same untouched test set. Logistic regression shown for contrast.
+
+| Training stays | CatBoost test AUROC (sd over subsets) | Logistic regression test AUROC |
+|---|---|---|
+| 3,452 (5%) | 0.640 (0.007) | 0.617 |
+| 6,997 (10%) | 0.649 (0.003) | 0.635 |
+| 13,953 (20%) | 0.657 (0.004) | 0.647 |
+| 27,912 (40%) | 0.667 (0.006) | 0.661 |
+| 41,806 (60%) | 0.672 (0.002) | 0.665 |
+| 55,579 (80%) | 0.672 (0.001) | 0.667 |
+| 69,519 (100%) | **0.677** | 0.668 |
+
+**What it shows (and corrects an earlier claim)**
+1. **Simple models are saturated.** Logistic regression gains only 0.001 from 80% to 100% of the data: more data of the same kind does not help a linear model.
+2. **Boosted trees are not completely saturated.** CatBoost still gains about 0.004-0.005 AUROC per doubling at the end of the curve. A saturating fit predicts roughly **0.683 with twice as many stays and about 0.69 with five times as many** (350,000 stays); the fit cannot estimate a true upper limit (it ran into its bound), so treat any extrapolation as indicative only.
+3. **The train-test gap is small and constant** (in-sample AUROC about 0.70-0.71 vs 0.677 test), so the models are not overfitting; the limit is what the variables can express.
+4. **Consistent with, but softer than, the 2026 audit.** An independent audit found boosted trees within about 0.002 of a measurement ceiling at 0.669 on this cohort; our curve already exceeds that (0.677) and is still creeping up. The fair summary: the recorded variables limit performance to roughly 0.68-0.70 even with several times more data, so the ceiling is soft and low, not a hard wall.
+
+---
+
+# Sex gap in sensitivity (`scripts/20_sex_gap.py`)
+
+![Sex gap](sex_gap_sensitivity.png)
+
+At the single operating threshold the model catches 62% of women's readmissions but 52% of men's (gap 10 points, 95% CI 5 to 16). Findings (all on the test set; thresholds chosen on validation; patient-level bootstrap):
+
+**1. Why it happens: separation, not direct use of sex.**
+| | Women | Men |
+|---|---|---|
+| AUROC | 0.694 | 0.658 |
+| Mean predicted risk of patients who were readmitted | 0.174 | 0.155 |
+| Mean predicted risk of patients who were not | 0.113 | 0.108 |
+| Calibration slope / intercept | 1.02 / -0.07 | 0.90 / -0.20 |
+
+The model separates men's readmissions from non-readmissions less well, and is somewhat over-confident for men. Sex itself ranks only 23rd of 49 features by SHAP importance (mean |SHAP| 0.016), so the model is not leaning on sex directly.
+
+**2. Case mix differs** (`sex_gap_case_mix.csv`). Readmitted women have more prior inpatient visits (1.35 vs 1.10) and emergency visits (0.47 vs 0.29) and are less often discharged home (43% vs 55%) than readmitted men. The strongest predictors in our model (prior utilisation, discharge destination) therefore describe women's readmissions better than men's; men's readmissions look more like men who were not readmitted.
+
+**3. Is it a threshold artefact? Partly.**
+| Operating rule | Sensitivity, women | Sensitivity, men | Gap (95% CI) | Overall accuracy | Overall sensitivity | Share flagged |
+|---|---|---|---|---|---|---|
+| One global threshold (11.6%) | 0.622 | 0.519 | **0.103 (0.046 to 0.160)** | 0.655 | 0.574 | 36.1% |
+| Equal flag rate for each sex | 0.606 | 0.549 | 0.058 (-0.003 to 0.114) | 0.653 | 0.580 | 36.4% |
+| Sex-specific thresholds, chosen on validation to equalise sensitivity | 0.604 | 0.559 | 0.045 (-0.015 to 0.100) | 0.651 | 0.583 | 36.8% |
+
+Sex-specific cut-offs (women 12.0%, men 11.1%) cut the gap by more than half at almost no cost: accuracy falls 0.004 and 0.7 percentage points more patients are flagged. The remaining 4-5 point gap is not statistically distinguishable from zero, but the intervals are wide and overlap the original, so we cannot say it is fully closed.
+
+**4. Separate models for each sex do not help.** Models trained on women only or men only are no better than the pooled model, and clearly worse for men (AUROC 0.636 vs 0.658, difference -0.022, CI -0.029 to -0.014), because each has less training data.
+
+**Recommendation for the report:** state the gap and its cause plainly; present sex-specific thresholds as one possible mitigation with its trade-offs (small accuracy cost, but differential treatment by a protected attribute raises ethical and legal questions that need clinical and ethical review before any use); do not build separate models; and note that the gap reflects what the recorded variables can explain about men's readmissions, which we cannot fix with this dataset. This is one dataset and one split; intersections (for example sex by age) were not tested.
+
+Files: `learning_curve*.csv`/`.png`, `sex_gap_*.csv`/`.png`.

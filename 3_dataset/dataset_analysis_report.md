@@ -205,7 +205,7 @@ Tuned on validation only (8 random configurations per neural model, plus 8 for C
 - Tuning lifts the neural network from 0.660 to about 0.675, which brings it level with CatBoost. Averaging seeds adds about 0.004.
 - **Entity embeddings do not help**: 0.005 lower than one-hot (paired CI −0.011 to +0.001).
 - **A wider CatBoost search does not help** (paired difference CI −0.003 to +0.001), so the model is not under-tuned.
-- Net: the extra work moves AUROC by less than 0.005 in any direction, consistent with the information-ceiling finding.
+- Net: the extra work moves AUROC by less than 0.005 in any direction, consistent with a soft information ceiling (see 6f).
 
 ## 6e. Stronger deep-learning models (Script 16)
 
@@ -221,6 +221,12 @@ RealMLP (Holzmueller et al. 2024), TabM and an FT-Transformer, three seeds each 
 (Always-"no" accuracy 0.889. Thresholds chosen on validation, so accuracy and sensitivity trade off differently across models.)
 
 **Reading:** no deep model beats CatBoost. TabM and the FT-Transformer are statistically tied with it; RealMLP is reliably, but only slightly, worse. TabM has the best AUPRC, within the noise. With the tuned MLP (0.678 averaged), the whole range of tuned models is 0.669-0.678: the fair statement is that the choice of model family does not matter on this dataset, which supports the information-ceiling explanation (Grinsztajn et al. 2022 report trees ahead of neural networks at this data size; we find them level, not ahead).
+
+## 6f. Learning curve: is the model data-limited? (Script 19)
+Boosted trees improve slowly with more training patients (0.640 at 5% of the data, 0.667 at 40%, 0.677 at 100%), roughly +0.004-0.005 AUROC per doubling at the end; logistic regression has already plateaued (0.667 to 0.668 from 80% to 100%). A rough fit predicts about 0.683 with twice the data and 0.69 with five times, but the upper limit cannot be estimated. **So the "information ceiling" is soft and low (about 0.68-0.70), not a hard wall.** Details and figure: `5_results/evaluation/README.md`.
+
+## 6g. Sex gap in sensitivity (Script 20)
+Women 0.62 vs men 0.52 at the single threshold (gap 10 points, CI 5-16). Cause: the model separates men's readmissions less well (AUROC 0.658 vs 0.694; calibration slope 0.90 vs 1.02), not direct use of sex (SHAP rank 23 of 49); readmitted men have fewer prior inpatient/emergency visits and are more often discharged home. Sex-specific thresholds chosen on validation reduce the gap to 4.5 points (CI -1.5 to 10) at an accuracy cost of 0.004; separate models per sex are worse. Details: `5_results/evaluation/README.md`.
 
 ## 7. Is the information sufficient to predict readmission?
 
@@ -259,13 +265,13 @@ Earlier numbers (ensemble 0.679) came from uncleaned data and the broken A1C fea
 
 1. ~~Adopt specialty + payer in the main pipeline~~ **Done 2026-10-23** (CatBoost 0.677).
 2. **Specialty-only vs payer-only:** if specialty carries the gain, drop payer and remove the socioeconomic-proxy concern.
-3. ~~Subgroup performance by race, age and sex~~ **Done (Script 18).** Next: investigate the sex gap in sensitivity (for example sex-specific thresholds) and intersectional groups.
+3. ~~Subgroup performance~~ **Done (Script 18)**; ~~sex gap investigation~~ **Done (Script 20)**. Remaining: intersectional groups (sex by age, race by sex) and an ethical review of any sex-specific threshold.
 4. ~~Calibration curve~~ **Done (Script 18).** The interface uses a validation-chosen threshold of 11.6%.
 5. Decide whether history features (§5, +0.007 AUROC) enter the headline model or stay a sensitivity result. Caveat: they rely on `encounter_id` being chronological, which we cannot verify.
 6. Patient-level bootstrap CIs for every model in `model_comparison.csv`.
 7. Ablations: engineered features, ICD grouping.
 8. ~~Entity embeddings, extra tuning, stronger tabular deep models~~ **Done (Scripts 12, 16): no gain.**
-9. Learning curve to test the "ceiling is in the data" claim from the 2026 audit.
+9. ~~Learning curve~~ **Done (Script 19)**: ceiling is soft, not hard (see 6f).
 10. Midterm report (due **Mon 9 Nov**): ≥15 primary references, 3 IEEE pages, CRediT and Generative-AI statements.
 
 ## 10. Reproduce
@@ -291,6 +297,8 @@ python scripts/15_lace_and_comorbidity.py              # LACE clinical-score ben
 python scripts/16_tabular_dl.py                        # RealMLP, TabM, FT-Transformer
 python scripts/17_build_demo_model.py                  # final CatBoost + calibration for the interface
 python scripts/18_calibration_subgroups.py             # calibration, decision curve, subgroup audit
+python scripts/19_learning_curve.py                    # does more data help?
+python scripts/20_sex_gap.py                           # why men's sensitivity is lower
 ```
 
 The raw data and splits are git-ignored on purpose (course rule: do not commit data).
