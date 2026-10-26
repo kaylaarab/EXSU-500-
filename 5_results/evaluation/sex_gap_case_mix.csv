@@ -1,0 +1,11 @@
+,Women (all),Men (all),Women readmitted,Men readmitted
+n,16154.0,13670.0,1863.0,1535.0
+age (mean),66.31,64.87,67.08,65.73
+days in hospital,4.46,4.29,4.88,4.62
+prior inpatient visits,0.68,0.59,1.35,1.1
+prior emergency visits,0.24,0.17,0.47,0.29
+medications,16.09,15.77,17.09,16.77
+diagnoses,7.43,7.4,7.72,7.69
+discharged home %,57.44,64.02,43.05,54.53
+circulatory primary dx %,26.91,33.01,28.13,34.14
+on insulin %,52.75,52.93,57.49,58.63

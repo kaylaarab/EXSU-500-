@@ -1,0 +1,6 @@
+# Used when the interface is run from the repository root: streamlit run 7_interface/app.py
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false

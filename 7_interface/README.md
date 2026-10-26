@@ -4,12 +4,27 @@ A small web app that shows the model's 30-day readmission risk for one hypotheti
 
 **Course prototype for research and educational purposes. Not a medical device. Not for clinical use.** The app shows this notice at the top and bottom of every page, as the specification requires.
 
-## Run it on your computer
-```bash
+## Run it on your computer (about 5 minutes)
+You need Python 3.10 or newer and a copy of this repository. The app uses the saved model in `model/`, so no dataset is needed.
+
+**Windows (PowerShell), from the repository folder**
+```powershell
+git pull origin main                       # get the latest files
+python -m venv .venv                       # optional but tidy
+.venv\Scripts\Activate.ps1
 pip install -r 7_interface/requirements.txt
 streamlit run 7_interface/app.py
 ```
-It opens in your browser. No dataset is needed: the app uses the saved model and a small config file.
+**Mac or Linux**
+```bash
+git pull origin main
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r 7_interface/requirements.txt
+streamlit run 7_interface/app.py
+```
+Streamlit prints a local address (normally http://localhost:8501) and opens it in your browser. Stop it with Ctrl+C. The app is only visible on your own computer; nobody else can open it unless you deploy it, which we have decided not to do yet.
+
+If PowerShell blocks the activation script, run `Set-ExecutionPolicy -Scope Process Bypass` first, or skip the virtual environment and run `pip install` directly.
 
 ## What it shows
 - **Risk calculator:** form for the main fields known at discharge, with range checks. Output: calibrated risk %, risk band (low, moderate, high), the observed readmission rate for that band on unseen test patients, and the features that pushed the estimate up or down (SHAP). Patients who died or went to hospice are not scored (they were excluded from training).

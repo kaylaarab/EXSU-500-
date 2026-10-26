@@ -1,0 +1,4 @@
+scenario,sens_W,spec_W,flag_W,acc_W,prec_W,sens_M,spec_M,flag_M,acc_M,prec_M,sens_all,acc_all,flag_all,gap,gap_lo,gap_hi,cut_women,cut_men
+S0 one global threshold,0.622,0.6517,0.3784,0.6485,0.1809,0.5189,0.6819,0.3406,0.6636,0.1714,0.5742,0.6554,0.3611,0.1032,0.0458,0.1602,0.1165,0.1165
+S1 equal flag rate (each sex flags the same share),0.6063,0.667,0.363,0.6604,0.1838,0.5488,0.657,0.3661,0.6449,0.1687,0.5796,0.6533,0.3644,0.0575,-0.0032,0.114,0.1194,0.112
+S2 equal sensitivity (sex-specific thresholds),0.604,0.668,0.3619,0.661,0.1837,0.5592,0.649,0.3745,0.6389,0.168,0.5832,0.6508,0.3677,0.0449,-0.0154,0.0998,0.1197,0.1107
