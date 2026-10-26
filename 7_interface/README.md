@@ -41,6 +41,8 @@ python -m streamlit run 7_interface/app.py
 (Optional: create a virtual environment first with `python -m venv .venv`, then activate it: `.venv\Scripts\Activate.ps1` on Windows PowerShell, `source .venv/bin/activate` on Mac/Linux. If PowerShell blocks the activation script, run `Set-ExecutionPolicy -Scope Process Bypass` first.)
 
 ## Run it without installing anything: GitHub Codespaces
+Short version for teammates: see [`TEAM_ACCESS.md`](TEAM_ACCESS.md).
+
 GitHub can run the app for you in the cloud and show it in your browser, with nothing installed on your computer. The repository contains the setup file (`.devcontainer/devcontainer.json`), so it starts and installs by itself.
 
 1. Sign in to GitHub and open the repository page: Siham's copy <https://github.com/skhaldoun/EXSU-500-> or Kayla's copy <https://github.com/kaylaarab/EXSU-500-> (both hold the same files; each person's codespace uses their own free hours).

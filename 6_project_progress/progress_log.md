@@ -59,3 +59,6 @@ Newest first. One entry per significant piece of work, added when it is finished
 - Baseline, logistic regression and XGBoost pipeline with patient-level split and bootstrap CI (Siham).
 - SHAP interpretability, MLP, ICD-9 grouping, CatBoost, ensemble (Siham).
 - First midterm report draft (Kayla, Oct 17-18); course PDFs added (Oct 20).
+
+## 2026-10-26: interface team access
+- Added Codespaces setup (`.devcontainer/`) and `7_interface/TEAM_ACCESS.md` so teammates can run the private demo in the browser with nothing installed. Not yet tested on GitHub. Interface remains private and undeployed.
