@@ -10,6 +10,8 @@ Screenshots of the demo interface running locally (see `../README.md` for how to
 | [`04_died_or_hospice_not_scored.png`](04_died_or_hospice_not_scored.png) | Choosing "Died or hospice care" as the discharge destination: the app refuses to score, explaining that such patients were excluded from training because they cannot be readmitted |
 | [`05_about_results_and_limits.png`](05_about_results_and_limits.png) | The second tab: test AUROC, AUPRC, sensitivity and accuracy side by side, the model comparison, the calibration and decision curves, the subgroup audit (including the sex gap) and the limits |
 
+**Worked low-risk and high-risk examples, with the inputs, outputs and main reasons written out: [`low_and_high_risk_examples.md`](low_and_high_risk_examples.md).**
+
 How to read the output: the percentage is a calibrated estimate (after correction, a 10% prediction corresponds to about 10% of such patients being readmitted). The model ranks patients only moderately well (AUROC about 0.68), so the number is a rough indication of relative risk, not a diagnosis. The red and blue bars show which inputs raised or lowered the estimate for that patient (SHAP values), which describes what the model uses, not what causes readmission.
 
 These images were produced with `streamlit run 7_interface/app.py` and a headless browser on 2026-10-26, and show the current version of the app. If the app changes, regenerate them.

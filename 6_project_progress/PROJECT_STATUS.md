@@ -2,7 +2,7 @@
 
 For the team, not for submission. Plain language, so everyone can follow the
 state of the project without reading code.
-**Last updated:** 2026-10-23 (see `progress_log.md` for the dated history). Details and reasoning behind every decision:
+**Last updated:** 2026-10-26 (see `progress_log.md` for the dated history). Details and reasoning behind every decision:
 [`3_dataset/dataset_analysis_report.md`](../3_dataset/dataset_analysis_report.md). Literature and
 numbers to compare against: [`4_benchmarking/benchmarking_report.md`](../4_benchmarking/benchmarking_report.md).
 
@@ -42,25 +42,16 @@ really readmitted, and about 45% of real readmissions are missed. Good enough
 to rank risk and write a solid report; not good enough for clinical use. The
 report must say so.
 
-## What we did since the last update
-- **Found and fixed three real problems** in our own first-pass pipeline:
-  1. A bug made the "A1C measured and changed" feature wrong (the text "None"
-     was read as missing).
-  2. Patients who died or went to hospice (2.4% of stays) can't be readmitted
-     but were included; removing them lowers scores slightly (the honest number).
-  3. Admission/discharge codes were treated as numbers; now categories.
-- **Re-ran every model** on the cleaned data. First-pass scores (e.g. 0.679)
-  were inflated; the table above replaces them.
-- **Profiled the real dataset** (`scripts/00_profile.py`): what's missing, repeat
-  patients, subgroups. Tables in `3_dataset/profile_tables/`.
-- **Sensitivity checks** (Scripts 07-09):
-  - Keeping `medical_specialty` and `payer_code` helps: **+0.008 AUROC** (reliable).
-  - First-visit patients only: 0.652 (harder, no history).
-  - Patient-history features (stay number, previous outcome): about +0.007 AUROC (reliable, CI +0.003 to +0.011).
-  - SMOTE (synthetic oversampling) is **clearly worse** than class weights.
-- **Wrote the decision log** (what we did, why, cost) in `dataset_analysis_report.md`.
-- **Pinned package versions** in `requirements.txt`; **removed the raw data and
-  split CSVs from the repo** (course rule) and git-ignored them.
+## What we have done (details and dates in `progress_log.md`)
+- **Fixed real problems** in our first pass (a "None" parsing bug, death/hospice patients, ID codes treated as numbers) and re-ran everything; first-pass scores were slightly inflated.
+- **Profiled the dataset** and wrote the decision log (`3_dataset/`); kept specialty and payer (+0.008 AUROC).
+- **Tested many ideas, none beat CatBoost reliably:** SMOTE (worse), other target definitions and combined targets, patient-history features (+0.007), LACE and comorbidity scores, tuning and entity embeddings, stronger deep models (RealMLP, TabM, FT-Transformer). All 76 variations are in `5_results/model_variations_log.md`.
+- **Showed why a published 0.974 AUROC is not credible:** SMOTE before cross-validation reproduces that scale (0.964) with an ordinary model while the same model scores 0.64 on real patients (`4_benchmarking/embpred30_review.md`).
+- **Audited the final model:** well calibrated (Brier 0.094); sensitivity lower for men (0.52 vs 0.62) because the model separates their readmissions less well; AUROC falls with age; learning curve says the ceiling is soft (+0.005 per doubling of data). See `5_results/evaluation/`.
+- **Built the demo interface** (`7_interface/`): risk calculator with SHAP explanation, results tab, screenshots, low/high-risk examples, run steps for a local computer and for GitHub Codespaces (nothing to install). Private, not deployed.
+- **Wrote the required repo items as drafts:** `MODEL_CARD.md`, `LICENSE` (MIT, proposed), `statements.md` (CRediT and Generative-AI), midterm draft text, presentation script and manuscript outline (`8_final_deliverables/`).
+- **Checked reproducibility:** a fresh clone with only the UCI CSV added rebuilds byte-identical splits.
+- **Pinned package versions** in `requirements.txt` (the interface has its own light `7_interface/requirements.txt`); the raw data and splits are git-ignored and never committed.
 
 ## Settled decisions (use these in the report)
 - Predict **per stay**, split by **patient** (no patient in two sets).
@@ -72,49 +63,40 @@ report must say so.
 
 ## Still to do
 
-**Code / analysis (Siham, with Claude):**
-- [x] Specialty + payer now in the main pipeline (done 23 Oct; CatBoost 0.677).
-- [ ] Subgroup performance (race, age, sex) with confidence intervals.
-- [ ] Calibration curve; pick a threshold on validation instead of 0.5.
-- [ ] Decide whether history features join the headline model.
-- [ ] Model card, open-source license, CRediT contribution statement,
-      Generative-AI use statement (all required in the repo).
+**Code / analysis (Siham, with Claude):** the main analysis is done. Optional: intersectional subgroup checks (sex by age), ethical review before any sex-specific threshold, patient-level confidence intervals for every model in `model_comparison.csv`, decide whether history features join the headline model (they assume `encounter_id` is chronological).
 
-**Midterm report (everyone; biggest risk, due 9 Nov):**
-- [ ] **15+ references**, mostly primary papers from the last 5 years. Each must
-      be read by at least one team member (the instructors ask about specific
-      citations). Currently only about 3 are logged; Kayla's and Magalie's
-      sections in `4_benchmarking/team_literature_log.md` are still empty.
-- [ ] The current draft (`2_midterm_report/midterm_report.docx`) still contains IEEE template
-      boilerplate and placeholder text (e.g. "Hygftbhjgftgbh"); remove it, keep
-      to **3 pages including references**, and replace inline URLs with numbered references.
-- [ ] Add: dataset description with numbers (use `dataset_analysis_report.md`),
-      evaluation plan (splits, metrics), candidate models, work plan with the
-      four roles (data, modelling, interface, writing lead) and risks.
-- [ ] Required statements: CRediT contributions and Generative-AI use.
+**Midterm report (everyone; biggest risk, due Mon 9 Nov):**
+- [ ] **15+ references, each read by at least one team member.** Draft text and a reference table exist (`2_midterm_report/midterm_draft_for_editing.md`), but no reference has been read by a human yet. Pools: Larissa's folder (`4_benchmarking/LARISSA/`), `pubmed_candidates.md`, Kayla's `references kayla`. Kayla's and Magalie's sections in `team_literature_log.md` are still empty.
+- [ ] Build the 3-page IEEE document: Kayla's `midterm_report.docx` still has template boilerplate and placeholder text; Magalie's `Midterm report (2).docx` has the introduction. Replace inline URLs with numbered references.
+- [ ] Declare the four roles (data, modelling, interface, writing lead) in the work plan.
+- [ ] Each member completes their own part of the CRediT and Generative-AI statements (`statements.md`).
 
 **Team / repo hygiene:**
+- [ ] Confirm the MIT licence (proposed).
 - [ ] Confirm `@AHooshiar` and the TAs have read access to the repo.
-- [ ] Everyone commits under their own account; commit history is graded and
-      compared with the contribution statement. Only Siham and Kayla appear so far.
-- [ ] Decide on the optional interface (bonus +2%).
+- [ ] Everyone commits under their own account (commit history is graded against the contribution statement). So far commits come from Siham, Kayla and one from Magalie; Larissa has none yet.
+- [ ] Interface: stays private until the whole project is finished; the team decides then whether to publish it (bonus +2%). Teammates can try it now through Codespaces (`7_interface/TEAM_ACCESS.md`); that route is not yet tested on GitHub.
 
 ## Where to find things
 ```
 README.md                                   formal project description (for grading)
 1_course_materials/                         specification, dataset list, group assignments
-2_midterm_report/midterm_report.docx        midterm draft (due 9 Nov)
+2_midterm_report/                           midterm drafts and draft text for editing (due 9 Nov)
 3_dataset/dataset_analysis_report.md        dataset, decisions, trade-offs, bias, results
 4_benchmarking/benchmarking_report.md       what others report + our comparison + 21-source table
 4_benchmarking/embpred30_review.md          why the 0.974 AUROC claim is not credible
-4_benchmarking/team_literature_log.md       Kayla's and Magalie's literature notes (empty so far)
+4_benchmarking/LARISSA/                     Larissa's 22-paper reading folder; team_literature_log.md is still empty
 5_results/model_variations_log.md          EVERY model variation we ran, in one table
 5_results/main_models/                      headline model_comparison.csv, SHAP
 5_results/ablations/                        sensitivity, SMOTE, targets, history, ... result tables
 6_project_progress/PROJECT_STATUS.md        this file
 6_project_progress/progress_log.md          dated log of finished work
 6_project_progress/CONTRIBUTING.md          how to use git here
-scripts/00-12_*.py                          profile, preprocess, models, SHAP, ablations
+5_results/evaluation/                        calibration, decision curve, subgroup audit, learning curve, sex gap
+7_interface/                                demo app, examples, run steps, TEAM_ACCESS.md (Codespaces)
+8_final_deliverables/                       presentation script and manuscript outline (drafts)
+MODEL_CARD.md, LICENSE                      required repo items (licence proposed)
+scripts/00-20_*.py                          profile, preprocess, models, SHAP, ablations, calibration, interface model
 ```
 Run order is in `3_dataset/dataset_analysis_report.md` section 10. The dataset itself is
 not in the repo; download it from UCI (instructions in README).
