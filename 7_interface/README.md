@@ -26,6 +26,13 @@ Streamlit prints a local address (normally http://localhost:8501) and opens it i
 
 If PowerShell blocks the activation script, run `Set-ExecutionPolicy -Scope Process Bypass` first, or skip the virtual environment and run `pip install` directly.
 
+## What it looks like
+| Higher-risk example | Lower-risk example |
+|---|---|
+| ![higher-risk example](examples/03_higher_risk_example.png) | ![lower-risk example](examples/02_lower_risk_example.png) |
+
+More screenshots (start screen, the "not scored" case, the results tab) with captions: [`examples/`](examples/README.md).
+
 ## What it shows
 - **Risk calculator:** form for the main fields known at discharge, with range checks. Output: calibrated risk %, risk band (low, moderate, high), the observed readmission rate for that band on unseen test patients, and the features that pushed the estimate up or down (SHAP). Patients who died or went to hospice are not scored (they were excluded from training).
 - **Example buttons** fill the form with a lower-risk and a higher-risk made-up patient so a reviewer can try the tool in one click.
@@ -38,6 +45,7 @@ If PowerShell blocks the activation script, run `Set-ExecutionPolicy -Scope Proc
 | `model/catboost.cbm` | the trained model (about 1 MB) |
 | `model/config.json` | feature list, allowed values, calibration, risk bands, test metrics |
 | `assets/` | copies of the results tables the app displays |
+| `examples/` | screenshots of the interface with captions |
 | `requirements.txt` | packages the app needs |
 
 Rebuild the model and config with `python scripts/17_build_demo_model.py` (needs the data and `scripts/01_preprocess.py` run first).
