@@ -2,6 +2,10 @@
 
 Newest first. One entry per significant piece of work, added when it is finished. The current summary, to-dos and key dates are in [`PROJECT_STATUS.md`](PROJECT_STATUS.md).
 
+## 2026-10-30
+
+- **Patient-level confidence intervals for all headline models (Script 21, `5_results/main_models/`).** Resampling patients (1,000 times): AUROC LogReg 0.668 (0.652-0.683), XGBoost 0.673 (0.657-0.689), CatBoost 0.676 (0.660-0.692), ensemble 0.676 (0.660-0.692), MLP 0.668 (0.652-0.686); sensitivity 0.547 / 0.561 / 0.555 / 0.560 / 0.617 beside accuracy 0.670 / 0.673 / 0.672 / 0.674 / 0.616. Versus CatBoost: XGBoost -0.003 and ensemble 0.000 (tied), LogReg -0.008 and MLP -0.008 (reliably lower). **Bug found in Script 04:** the MLP's 'best epoch' weights are saved with a shallow copy, so the last epoch is used; the main-table MLP (0.660) is understated by about 0.008. Not yet corrected in `model_comparison.csv`.
+
 ## 2026-10-26
 
 - **Repository audit (all folders, both repos).** Removed two stray empty-ish files at the repo root (`11`, `12`), refreshed README, PROJECT_STATUS and the folder READMEs for the work done since 23 Oct (scripts 12-20, interface, model card, statements), marked finished benchmarking items as done, and listed Magalie's and Kayla's midterm files.
