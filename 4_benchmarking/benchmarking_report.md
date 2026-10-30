@@ -5,7 +5,7 @@
 
 ## 1. Summary
 
-1. **Credible results on this dataset sit between about 0.60 and 0.68 AUROC.** Ours (0.660-0.677) are inside that band. The one outlier is EmbPred30 at 0.974.
+1. **Credible results on this dataset sit between about 0.60 and 0.68 AUROC.** Ours (0.668-0.677) are inside that band. The one outlier is EmbPred30 at 0.974.
 2. **Our cohort matches the careful studies.** Death and hospice discharges removed gives 99,343 encounters from 69,990 patients with 11.4% positive; the 2026 ceiling audit uses the identical cohort and reports 0.6692 AUROC with gradient boosting, essentially our result.
 3. **The 0.974 claim is not trustworthy.** We checked the paper: it keeps only the first encounter per patient and removes death/hospice, so repeated-patient leakage is not the cause. Its own preprocessing list applies SMOTE (to 1:1) before the 6-fold cross-validation and never says SMOTE was confined to the training folds. Details and our own test of the mechanism: [`embpred30_review.md`](embpred30_review.md).
 4. **Studies that apply SMOTE correctly (training data only) do not get high scores.** Gupta and Choudhary (2026) report a best ROC-AUC of 0.6079; our SMOTE-NC ablation also scored below class weighting (0.56-0.65). Two independent tests point the same way.
@@ -21,7 +21,7 @@
 | Baseline (always "no readmission") | 0.500 | 0.111 | 0.889 | 0.000 | 1.000 |
 | Logistic regression | 0.668 | 0.214 | 0.670 | 0.547 | 0.685 |
 | XGBoost (tuned on validation) | 0.672 | 0.226 | 0.682 | 0.539 | 0.700 |
-| MLP (deep learning) | 0.660 | 0.219 | 0.602 | 0.630 | 0.598 |
+| MLP (deep learning) | 0.668 | 0.222 | 0.616 | 0.617 | 0.616 |
 | CatBoost (engineered features) | **0.677** | 0.228 | 0.671 | 0.555 | 0.685 |
 | Ensemble (CatBoost + XGBoost + LogReg) | 0.676 | 0.228 | 0.674 | 0.560 | 0.688 |
 
@@ -34,7 +34,7 @@ Sensitivity here means the share of truly readmitted patients the model catches.
 | Study and model | AUROC | Accuracy | Sensitivity (readmitted) | Always-no accuracy | Reading |
 |---|---|---|---|---|---|
 | **Ours: CatBoost** | 0.677 | 0.671 | **0.555** | 0.889 | Catches over half of readmissions; accuracy below baseline is the price |
-| **Ours: MLP** | 0.660 | 0.602 | **0.630** | 0.889 | Most sensitive of ours |
+| **Ours: MLP** | 0.668 | 0.616 | **0.617** | 0.889 | Most sensitive of ours |
 | Cureus 2025: XGBoost | 0.667 | 0.89 | 0.017 | 0.888 | Accuracy equals baseline; catches 2% |
 | Cureus 2025: logistic regression | 0.642 | 0.89 | 0.016 | 0.888 | Same |
 | Cureus 2025: random forest | 0.630 | 0.89 | 0.002 | 0.888 | Catches almost nobody |
@@ -72,7 +72,7 @@ What this shows:
 
 ### Emi-Johnson and Nkrumah (2025): the closest published benchmark
 - UCI data, hospice/expired excluded, stratified 80/20 split, class weights, no SMOTE. AUROC XGBoost 0.667, LogReg 0.642, RF 0.630, DNN 0.579.
-- Our logistic regression (0.668) and XGBoost (0.672) are within 0.03 of theirs; our MLP (0.660) is far above their DNN (0.579). Differences plausibly come from patient-level splitting, kept specialty/payer and categorical handling.
+- Our logistic regression (0.668) and XGBoost (0.672) are within 0.03 of theirs; our MLP (0.668) is far above their DNN (0.579). Differences plausibly come from patient-level splitting, kept specialty/payer and categorical handling.
 - **Cite carefully (Siham's earlier finding, verified against the PDF):** their Table 1 does not reconcile with Tables 2 and 3. Table 1 gives XGBoost recall 0.84; Table 2 gives recall for the readmitted class as 0.017 (38 of about 2,280 caught). Their accuracy of 0.89 equals the always-no baseline. Cite the AUROC values only and state this when discussing their accuracy or recall.
 - **We also noticed:** the paper says adults aged 18 and over, but the public file includes age bands 0-10 and 10-20, and no age filter is described.
 

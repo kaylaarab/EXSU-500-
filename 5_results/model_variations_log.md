@@ -47,9 +47,9 @@ Legend: `*` accuracy derived exactly from sensitivity, specificity and the test 
 | E20 | 2026-10-23 | 02-06 | Keep payer_code and medical_specialty ('Unknown' for missing) | 99,343 encounters; payer/specialty kept as categories | Baseline (majority-class) | 0.500 | 0.111 | 0.889 | 0.000 | 1.000 |  |
 | E21 | 2026-10-23 | 02-06 | Keep payer_code and medical_specialty ('Unknown' for missing) | 99,343 encounters; payer/specialty kept as categories | Logistic Regression | 0.668 | 0.214 | 0.670 | 0.547 | 0.685 |  |
 | E22 | 2026-10-23 | 02-06 | Keep payer_code and medical_specialty ('Unknown' for missing) | 99,343 encounters; payer/specialty kept as categories | XGBoost (tuned on val) | 0.672 | 0.226 | 0.682 | 0.539 | 0.700 |  |
-| E23 | 2026-10-23 | 02-06 | Keep payer_code and medical_specialty ('Unknown' for missing) | 99,343 encounters; payer/specialty kept as categories | MLP (deep learning) | 0.660 | 0.219 | 0.602 | 0.630 | 0.598 |  |
-| E24 | 2026-10-23 | 02-06 | Keep payer_code and medical_specialty ('Unknown' for missing) | 99,343 encounters; payer/specialty kept as categories | CatBoost (engineered features) | 0.677 | 0.228 | 0.671 | 0.555 | 0.685 | Current best: CatBoost |
-| E25 | 2026-10-23 | 02-06 | Keep payer_code and medical_specialty ('Unknown' for missing) | 99,343 encounters; payer/specialty kept as categories | Ensemble (CatBoost+XGBoost+LogReg blend) | 0.676 | 0.228 | 0.674 | 0.560 | 0.688 | Current best: CatBoost |
+| E23 | 2026-10-23 | 02-06 | Keep payer_code and medical_specialty ('Unknown' for missing) | 99,343 encounters; payer/specialty kept as categories | CatBoost (engineered features) | 0.677 | 0.228 | 0.671 | 0.555 | 0.685 | Current best: CatBoost |
+| E24 | 2026-10-23 | 02-06 | Keep payer_code and medical_specialty ('Unknown' for missing) | 99,343 encounters; payer/specialty kept as categories | Ensemble (CatBoost+XGBoost+LogReg blend) | 0.676 | 0.228 | 0.674 | 0.560 | 0.688 | Current best: CatBoost |
+| E25 | 2026-10-23 | 02-06 | Keep payer_code and medical_specialty ('Unknown' for missing) | 99,343 encounters; payer/specialty kept as categories | MLP (deep learning) | 0.668 | 0.222 | 0.616 | 0.617 | 0.616 |  |
 
 ## 4 Ablations and sensitivity
 
@@ -90,6 +90,11 @@ Legend: `*` accuracy derived exactly from sensitivity, specificity and the test 
 | E73 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | MLP entity embeddings (tuned) | 0.672 | 0.225 | 0.633 | 0.601 | 0.637 | {'hidden': (512, 256, 128), 'drop': 0.3, 'lr': 0.0003, 'wd': 0.001, 'emb_drop': 0.3} |
 | E74 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | CatBoost default (depth 4, lr 0.1) | 0.677 | 0.228 | 0.671 | 0.555 | 0.685 | nan |
 | E75 | 2026-10-24 | 12 | Entity embeddings / extra tuning | 99,343 encounters; fixed test | CatBoost tuned | 0.676 | 0.229 | 0.661 | 0.566 | 0.673 | (4, 0.05, 20.0, 2) |
+| E76 | 2026-10-30 | 21 | Patient-level confidence intervals; each model refit once with fixed settings (MLP checkpoint bug fixed) | 99,343 encounters; 14,913 test rows from 10,499 patients | Logistic Regression | 0.668 (0.652-0.683 (patient-level)) | 0.214 | 0.670 | 0.547 | 0.685 | Same conclusion as the main table |
+| E77 | 2026-10-30 | 21 | Patient-level confidence intervals; each model refit once with fixed settings (MLP checkpoint bug fixed) | 99,343 encounters; 14,913 test rows from 10,499 patients | XGBoost (tuned on val) | 0.673 (0.657-0.689 (patient-level)) | 0.224 | 0.673 | 0.561 | 0.687 | Same conclusion as the main table |
+| E78 | 2026-10-30 | 21 | Patient-level confidence intervals; each model refit once with fixed settings (MLP checkpoint bug fixed) | 99,343 encounters; 14,913 test rows from 10,499 patients | CatBoost (engineered features) | 0.676 (0.660-0.692 (patient-level)) | 0.227 | 0.672 | 0.555 | 0.686 | Same conclusion as the main table |
+| E79 | 2026-10-30 | 21 | Patient-level confidence intervals; each model refit once with fixed settings (MLP checkpoint bug fixed) | 99,343 encounters; 14,913 test rows from 10,499 patients | Ensemble (CatBoost+XGBoost+LogReg blend) | 0.676 (0.660-0.692 (patient-level)) | 0.228 | 0.674 | 0.560 | 0.688 | Same conclusion as the main table |
+| E80 | 2026-10-30 | 21 | Patient-level confidence intervals; each model refit once with fixed settings (MLP checkpoint bug fixed) | 99,343 encounters; 14,913 test rows from 10,499 patients | MLP (deep learning) | 0.668 (0.652-0.686 (patient-level)) | 0.222 | 0.616 | 0.617 | 0.616 | Same conclusion as the main table |
 
 ## 5 Target definitions and combinations
 
@@ -115,12 +120,6 @@ Legend: `*` accuracy derived exactly from sensitivity, specificity and the test 
 | E69 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | B SMOTE before CV, scored on real held-out rows only | 0.640 (+/-0.004 (folds)) |  | 0.908 | 0.033 | 0.994 |  |
 | E70 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | C SMOTE inside training folds only, real held-out rows (correct) | 0.614 (+/-0.006 (folds)) | 0.147 | 0.908 | 0.027 | 0.995 |  |
 | E71 | 2026-10-24 | 11 | SMOTE placement relative to 6-fold CV | first encounter only; HistGradientBoosting | D class weights, no SMOTE, real held-out rows (our method) | 0.654 (+/-0.009 (folds)) | 0.182 | 0.683 | 0.519 | 0.699 |  |
-
-## 7 Planned or running
-
-| ID | Date | Script | What changed | Cohort / target | Model | AUROC | AUPRC | Acc | Sens | Spec | Take-away |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| E76 | planned | 15 | RealMLP, TabM, FT-Transformer | 99,343 encounters | pending |  |  | n/r |  |  | awaiting go-ahead |
 
 ## Hyperparameter searches (selection on validation only; test scored once)
 

@@ -189,7 +189,14 @@ if path.exists():
             r.auprc_seed_ensemble, r.get("accuracy"), r.get("sensitivity"), r.get("specificity"), None, str(r.get("best_config", "")), str(path))
 else:
     add(S7, "queued", "12", "Entity-embedding MLP vs tuned one-hot MLP; CatBoost wider search", "99,343 encounters", "pending", note="interrupted by a machine restart; rerunning")
-add(S7, "planned", "15", "RealMLP, TabM, FT-Transformer", "99,343 encounters", "pending", note="awaiting go-ahead")
+path = R / "main_models/model_comparison_patient_ci.csv"
+if path.exists():
+    for _, r in pd.read_csv(path).iterrows():
+        if r.model.startswith("Baseline"):
+            continue
+        add(S4, "2026-10-30", "21", "Patient-level confidence intervals; each model refit once with fixed settings (MLP checkpoint bug fixed)",
+            "99,343 encounters; 14,913 test rows from 10,499 patients", r.model, r.auroc, f"{r.auroc_lo:.3f}-{r.auroc_hi:.3f} (patient-level)",
+            r.auprc, r.accuracy, r.sensitivity, r.specificity, "measured", "Same conclusion as the main table", str(path))
 
 df = pd.DataFrame(rows)
 df.insert(0, "id", [f"E{i + 1:02d}" for i in range(len(df))])

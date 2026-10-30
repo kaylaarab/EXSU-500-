@@ -193,7 +193,7 @@ Tuned on validation only (8 random configurations per neural model, plus 8 for C
 
 | Model | AUROC (per seed mean ± sd) | AUROC (3-seed average) | AUPRC | Accuracy | Sensitivity | Specificity |
 |---|---|---|---|---|---|---|
-| MLP, one-hot, first version (Script 04) | 0.660 | n/a | 0.219 | 0.602 | 0.630 | 0.598 |
+| MLP, one-hot, first version (Script 04, corrected 30 Oct) | 0.668 | n/a | 0.222 | 0.616 | 0.617 | 0.616 |
 | **MLP, one-hot, tuned** | 0.674 ± 0.003 | **0.678** | 0.231 | 0.630 | 0.619 | 0.631 |
 | MLP, entity embeddings, tuned | 0.668 ± 0.005 | 0.672 | 0.225 | 0.633 | 0.601 | 0.637 |
 | CatBoost, default (depth 4, lr 0.1) | n/a | 0.677 | 0.228 | 0.671 | 0.555 | 0.685 |
@@ -202,7 +202,7 @@ Tuned on validation only (8 random configurations per neural model, plus 8 for C
 (Accuracy, sensitivity and specificity at a threshold chosen on validation.)
 
 **Reading**
-- Tuning lifts the neural network from 0.660 to about 0.675, which brings it level with CatBoost. Averaging seeds adds about 0.004.
+- Tuning lifts the neural network from 0.668 (the first version, after the 30 Oct checkpoint fix; it was 0.660 before) to about 0.675, which brings it level with CatBoost. Averaging seeds adds about 0.004.
 - **Entity embeddings do not help**: 0.005 lower than one-hot (paired CI −0.011 to +0.001).
 - **A wider CatBoost search does not help** (paired difference CI −0.003 to +0.001), so the model is not under-tuned.
 - Net: the extra work moves AUROC by less than 0.005 in any direction, consistent with a soft information ceiling (see 6f).
@@ -239,7 +239,7 @@ Main results on the held-out test set (cleaned cohort, class-weighted, threshold
 | Baseline (always "no") | 0.500 | 0.111 | 0.889 | 0.000 | 1.000 |
 | Logistic regression | 0.668 | 0.214 | 0.670 | 0.547 | 0.685 |
 | XGBoost | 0.672 | 0.226 | 0.682 | 0.539 | 0.700 |
-| MLP | 0.660 | 0.219 | 0.602 | 0.630 | 0.598 |
+| MLP | 0.668 | 0.222 | 0.616 | 0.617 | 0.616 |
 | CatBoost | **0.677** | 0.228 | 0.671 | 0.555 | 0.685 |
 | Ensemble (XGBoost + CatBoost + LogReg blend) | 0.676 | 0.228 | 0.674 | 0.560 | 0.688 |
 
@@ -268,7 +268,7 @@ Earlier numbers (ensemble 0.679) came from uncleaned data and the broken A1C fea
 3. ~~Subgroup performance~~ **Done (Script 18)**; ~~sex gap investigation~~ **Done (Script 20)**. Remaining: intersectional groups (sex by age, race by sex) and an ethical review of any sex-specific threshold.
 4. ~~Calibration curve~~ **Done (Script 18).** The interface uses a validation-chosen threshold of 11.6%.
 5. Decide whether history features (§5, +0.007 AUROC) enter the headline model or stay a sensitivity result. Caveat: they rely on `encounter_id` being chronological, which we cannot verify.
-6. ~~Patient-level bootstrap CIs for every model~~ **Done (Script 21, `5_results/main_models/README.md`)**: same conclusion; found that Script 04 keeps last-epoch rather than best-epoch MLP weights (MLP 0.668 not 0.660).
+6. ~~Patient-level bootstrap CIs for every model~~ **Done (Script 21, `5_results/main_models/README.md`)**: same conclusion; found and fixed a checkpoint bug in Script 04 (MLP now 0.668, was 0.660).
 7. Ablations: engineered features, ICD grouping.
 8. ~~Entity embeddings, extra tuning, stronger tabular deep models~~ **Done (Scripts 12, 16): no gain.**
 9. ~~Learning curve~~ **Done (Script 19)**: ceiling is soft, not hard (see 6f).
