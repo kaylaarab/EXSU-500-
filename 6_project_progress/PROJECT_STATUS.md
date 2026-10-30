@@ -27,7 +27,7 @@ Hospitals, 99,343 usable hospital stays, 11.4% readmitted.)
 | Baseline | 0.500 | Always says "not readmitted" |
 | Logistic regression | 0.668 | Simple classic model |
 | XGBoost | 0.672 | Boosted decision trees |
-| MLP (deep learning) | 0.660 | Small neural network |
+| MLP (deep learning) | 0.668 | Small neural network |
 | CatBoost | **0.677** | Boosted trees, handles categories natively |
 | Ensemble | 0.676 | Blend of XGBoost + CatBoost |
 
@@ -45,7 +45,7 @@ report must say so.
 ## What we have done (details and dates in `progress_log.md`)
 - **Fixed real problems** in our first pass (a "None" parsing bug, death/hospice patients, ID codes treated as numbers) and re-ran everything; first-pass scores were slightly inflated.
 - **Profiled the dataset** and wrote the decision log (`3_dataset/`); kept specialty and payer (+0.008 AUROC).
-- **Tested many ideas, none beat CatBoost reliably:** SMOTE (worse), other target definitions and combined targets, patient-history features (+0.007), LACE and comorbidity scores, tuning and entity embeddings, stronger deep models (RealMLP, TabM, FT-Transformer). All 76 variations are in `5_results/model_variations_log.md`.
+- **Tested many ideas, none beat CatBoost reliably:** SMOTE (worse), other target definitions and combined targets, patient-history features (+0.007), LACE and comorbidity scores, tuning and entity embeddings, stronger deep models (RealMLP, TabM, FT-Transformer). All 80 variations are in `5_results/model_variations_log.md`.
 - **Showed why a published 0.974 AUROC is not credible:** SMOTE before cross-validation reproduces that scale (0.964) with an ordinary model while the same model scores 0.64 on real patients (`4_benchmarking/embpred30_review.md`).
 - **Audited the final model:** well calibrated (Brier 0.094); sensitivity lower for men (0.52 vs 0.62) because the model separates their readmissions less well; AUROC falls with age; learning curve says the ceiling is soft (+0.005 per doubling of data). See `5_results/evaluation/`.
 - **Built the demo interface** (`7_interface/`): risk calculator with SHAP explanation, results tab, screenshots, low/high-risk examples, run steps for a local computer and for GitHub Codespaces (nothing to install). Private, not deployed.

@@ -102,7 +102,7 @@ for epoch in range(max_epochs):
     val_auprc = average_precision_score(y_val, val_prob)
 
     if val_auprc > best_val_auprc:
-        best_val_auprc, best_state, patience_counter = val_auprc, model.state_dict().copy(), 0
+        best_val_auprc, best_state, patience_counter = val_auprc, {k: v.clone() for k, v in model.state_dict().items()}, 0
     else:
         patience_counter += 1
 

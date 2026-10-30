@@ -104,7 +104,7 @@ This produces `data/diabetic_data.csv` (~19 MB) and `data/IDS_mapping.csv`.
 | Baseline (majority-class) | 0.500 | 0.111 | 0.889 | 0.000 | 1.000 |
 | Logistic Regression | 0.668 | 0.214 | 0.670 | 0.547 | 0.685 |
 | XGBoost | 0.672 | 0.226 | 0.682 | 0.539 | 0.700 |
-| MLP | 0.660 | 0.219 | 0.602 | 0.630 | 0.598 |
+| MLP | 0.668 | 0.222 | 0.616 | 0.617 | 0.616 |
 | CatBoost | 0.677 | 0.228 | 0.671 | 0.555 | 0.685 |
 | Ensemble | 0.676 | 0.228 | 0.674 | 0.560 | 0.688 |
 
@@ -113,7 +113,7 @@ This produces `data/diabetic_data.csv` (~19 MB) and `data/IDS_mapping.csv`.
 +0.005 to +0.011). Restricting to each patient's first
 encounter gives about 0.652, and patient-history features add about +0.007 (paired 95% CI +0.003 to +0.011).
 
-**Further experiments (all in [`5_results/model_variations_log.md`](5_results/model_variations_log.md), 76 variations; none beats CatBoost reliably):**
+**Further experiments (all in [`5_results/model_variations_log.md`](5_results/model_variations_log.md), 80 variations; none beats CatBoost reliably):**
 tuned MLP 0.674, entity embeddings 0.668, RealMLP 0.669, TabM 0.674, FT-Transformer 0.675 (AUROC); different target definitions and combined targets;
 LACE clinical score alone 0.575 and as an added feature (no gain); SMOTE worse than class weights; adding history features +0.007.
 A learning curve shows boosted trees still gain about +0.005 AUROC per doubling of data (0.640 at 5% to 0.677 at 100%), so the ceiling is soft, not a wall.
