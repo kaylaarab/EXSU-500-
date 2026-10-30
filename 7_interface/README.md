@@ -84,16 +84,27 @@ More screenshots (start screen, the "not scored" case, the results tab) with cap
 | `examples/` | screenshots of the interface with captions |
 | `requirements.txt` | packages the app needs, pinned to the exact versions tested |
 
-## Known bug (not yet fixed)
+## Known bug (fix attempted, not confirmed live)
 On a very fast interaction right after a fresh page load, the Race selectbox
-has been observed to send its first option instead of the intended default
-(logged 2026-10-26; reproduced by a clean-environment rehearsal, not by the
-committed tests, which run synchronously and can't trigger this timing
-race). Submitted values are always internally consistent — whatever the box
-displays is what gets sent — so the practical impact is low, but it is not
-resolved. `test_race_selectbox_default_matches_config` in `test_app.py`
-pins the intended default so a future change that breaks it (as opposed to
-this specific timing race) will be caught.
+was observed to send its first option instead of the intended default
+(logged 2026-10-26), changing the output risk score in those runs (27.1%
+instead of 27.3% for the documented high-risk example). Likely cause: a
+freshly connected browser can render a widget's default HTML state before
+the backend's first response (carrying the correct `session_state` values)
+arrives, so an interaction inside that window can submit a stale default.
+
+**Mitigation added 2026-10-30:** the app now forces one silent rerun before
+building any widget, on a session's very first script run (see `_booted` in
+`app.py`), so the first content the browser ever receives already has every
+widget's correct value baked into its initial spec. This closes the
+specific race window described above, but it has **not been confirmed in a
+real browser** — it was only verified not to break anything (health check,
+`test_app.py`, a local run with no errors). The committed tests run
+synchronously and cannot trigger timing races either way. **Before relying
+on this, someone should repeat the original test:** open the app in an
+actual browser and click an example button as fast as possible right after
+the page loads, several times, and confirm the Race box and the score stay
+consistent.
 
 Rebuild the model and config with `python scripts/17_build_demo_model.py` (needs the data and `scripts/01_preprocess.py` run first).
 

@@ -78,6 +78,19 @@ INIT = dict(k_age="[70-80)", k_gender="Female", k_race=cfg["defaults"]["race"], 
 for _k, _v in INIT.items():
     st.session_state.setdefault(_k, _v)
 
+# Force one silent rerun before any widget is built, on a session's very
+# first script run. Without this, a freshly connected browser can render a
+# widget's default state before the backend's first response (carrying the
+# correct session_state values set just above) has arrived, so an
+# interaction that happens in that window can submit a stale default
+# instead of the intended one (logged 2026-10-26: the Race box showed the
+# wrong value right after a fresh page load). Rerunning here means the
+# first content the browser ever receives already has every widget's
+# correct value baked into its initial spec, closing that window.
+if not st.session_state.get("_booted"):
+    st.session_state["_booted"] = True
+    st.rerun()
+
 
 def load_preset(name):
     for k, v in PRESETS[name].items():
