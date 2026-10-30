@@ -50,6 +50,7 @@ report must say so.
 - **Audited the final model:** well calibrated (Brier 0.094); sensitivity lower for men (0.52 vs 0.62) because the model separates their readmissions less well; AUROC falls with age; learning curve says the ceiling is soft (+0.005 per doubling of data). See `5_results/evaluation/`.
 - **Built the demo interface** (`7_interface/`): risk calculator with SHAP explanation, results tab, screenshots, low/high-risk examples, run steps for a local computer and for GitHub Codespaces (nothing to install). Private, not deployed.
 - **Wrote the required repo items as drafts:** `MODEL_CARD.md`, `LICENSE` (MIT, proposed), `statements.md` (CRediT and Generative-AI), midterm draft text, presentation script and manuscript outline (`8_final_deliverables/`).
+- **Patient-level confidence intervals for every headline model (Script 21):** CatBoost, XGBoost and the ensemble are tied; logistic regression and the MLP are reliably but only slightly lower. See `5_results/main_models/README.md`.
 - **Checked reproducibility:** a fresh clone with only the UCI CSV added rebuilds byte-identical splits.
 - **Pinned package versions** in `requirements.txt` (the interface has its own light `7_interface/requirements.txt`); the raw data and splits are git-ignored and never committed.
 
@@ -63,7 +64,7 @@ report must say so.
 
 ## Still to do
 
-**Code / analysis (Siham, with Claude):** the main analysis is done. Optional: intersectional subgroup checks (sex by age), ethical review before any sex-specific threshold, patient-level confidence intervals for every model in `model_comparison.csv`, decide whether history features join the headline model (they assume `encounter_id` is chronological).
+**Code / analysis (Siham, with Claude):** the main analysis is done. Optional: intersectional subgroup checks (sex by age), ethical review before any sex-specific threshold, decide whether history features join the headline model (they assume `encounter_id` is chronological).
 
 **Midterm report (everyone; biggest risk, due Mon 9 Nov):**
 - [ ] **15+ references, each read by at least one team member.** Draft text and a reference table exist (`2_midterm_report/midterm_draft_for_editing.md`), but no reference has been read by a human yet. Pools: Larissa's folder (`4_benchmarking/LARISSA/`), `pubmed_candidates.md`, Kayla's `references kayla`. Kayla's and Magalie's sections in `team_literature_log.md` are still empty.

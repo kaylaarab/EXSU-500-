@@ -146,7 +146,7 @@ patient-level split) · `02_train_evaluate` (baseline, LogReg, XGBoost) · `03_i
 (SHAP) · `04_deep_learning` (MLP) · `05_catboost` · `06_ensemble` · `07_sensitivity`
 (specialty/payer, first-encounter, patient-level CIs) · `08_trajectory_features` (patient history) ·
 `09_smote_ablation` · `10_hospice_death_ablation` · `11_smote_leakage_demo` ·
-`12_embeddings_tuning` · `13_target_definitions` · `14_combined_targets` · `15_lace_and_comorbidity` · `16_tabular_dl` (RealMLP, TabM, FT-Transformer) · `17_build_demo_model` (final model for the interface) · `18_calibration_subgroups` · `19_learning_curve` · `20_sex_gap`.
+`12_embeddings_tuning` · `13_target_definitions` · `14_combined_targets` · `15_lace_and_comorbidity` · `16_tabular_dl` (RealMLP, TabM, FT-Transformer) · `17_build_demo_model` (final model for the interface) · `18_calibration_subgroups` · `19_learning_curve` · `20_sex_gap` · `21_patient_level_cis` (patient-level confidence intervals for every headline model, `5_results/main_models/README.md`).
 
 Run order: `00` (optional) then `01` to `06`; `07` to `20` are analyses and the interface model (full list in `3_dataset/dataset_analysis_report.md` section 10). Run all
 from the repo root after downloading the data per above and installing the pinned

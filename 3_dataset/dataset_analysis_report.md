@@ -268,7 +268,7 @@ Earlier numbers (ensemble 0.679) came from uncleaned data and the broken A1C fea
 3. ~~Subgroup performance~~ **Done (Script 18)**; ~~sex gap investigation~~ **Done (Script 20)**. Remaining: intersectional groups (sex by age, race by sex) and an ethical review of any sex-specific threshold.
 4. ~~Calibration curve~~ **Done (Script 18).** The interface uses a validation-chosen threshold of 11.6%.
 5. Decide whether history features (§5, +0.007 AUROC) enter the headline model or stay a sensitivity result. Caveat: they rely on `encounter_id` being chronological, which we cannot verify.
-6. Patient-level bootstrap CIs for every model in `model_comparison.csv`.
+6. ~~Patient-level bootstrap CIs for every model~~ **Done (Script 21, `5_results/main_models/README.md`)**: same conclusion; found that Script 04 keeps last-epoch rather than best-epoch MLP weights (MLP 0.668 not 0.660).
 7. Ablations: engineered features, ICD grouping.
 8. ~~Entity embeddings, extra tuning, stronger tabular deep models~~ **Done (Scripts 12, 16): no gain.**
 9. ~~Learning curve~~ **Done (Script 19)**: ceiling is soft, not hard (see 6f).
@@ -299,6 +299,7 @@ python scripts/17_build_demo_model.py                  # final CatBoost + calibr
 python scripts/18_calibration_subgroups.py             # calibration, decision curve, subgroup audit
 python scripts/19_learning_curve.py                    # does more data help?
 python scripts/20_sex_gap.py                           # why men's sensitivity is lower
+python scripts/21_patient_level_cis.py                 # patient-level CIs and paired differences for the headline models
 ```
 
 The raw data and splits are git-ignored on purpose (course rule: do not commit data).
