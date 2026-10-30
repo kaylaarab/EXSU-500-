@@ -2,7 +2,7 @@
 
 For the team, not for submission. Plain language, so everyone can follow the
 state of the project without reading code.
-**Last updated:** 2026-10-26 (see `progress_log.md` for the dated history). Details and reasoning behind every decision:
+**Last updated:** 2026-10-30 (see `progress_log.md` for the dated history). Details and reasoning behind every decision:
 [`3_dataset/dataset_analysis_report.md`](../3_dataset/dataset_analysis_report.md). Literature and
 numbers to compare against: [`4_benchmarking/benchmarking_report.md`](../4_benchmarking/benchmarking_report.md).
 
@@ -47,7 +47,8 @@ report must say so.
 - **Profiled the dataset** and wrote the decision log (`3_dataset/`); kept specialty and payer (+0.008 AUROC).
 - **Tested many ideas, none beat CatBoost reliably:** SMOTE (worse), other target definitions and combined targets, patient-history features (+0.007), LACE and comorbidity scores, tuning and entity embeddings, stronger deep models (RealMLP, TabM, FT-Transformer). All 80 variations are in `5_results/model_variations_log.md`.
 - **Showed why a published 0.974 AUROC is not credible:** SMOTE before cross-validation reproduces that scale (0.964) with an ordinary model while the same model scores 0.64 on real patients (`4_benchmarking/embpred30_review.md`).
-- **Audited the final model:** well calibrated (Brier 0.094); sensitivity lower for men (0.52 vs 0.62) because the model separates their readmissions less well; AUROC falls with age; learning curve says the ceiling is soft (+0.005 per doubling of data). See `5_results/evaluation/`.
+- **Audited the final model:** well calibrated (Brier 0.094); sensitivity lower for men than women because the model separates their readmissions less well; AUROC falls with age; learning curve says the ceiling is soft (+0.005 per doubling of data). See `5_results/evaluation/`. **Note:** three different analyses of the sex gap now exist in the repo (Script 20, the interface's own audit tab, and `scripts/07_sensitivity_by_sex.py`), using different thresholds and giving different gap sizes (4.5-10+ points). Not yet reconciled — see `progress_log.md` (2026-10-30).
+- **Built the midterm report end-to-end:** `2_midterm_report/Midterm_Report_Claude_Draft.docx` covers all six required sections and 17 references, trimmed to exactly what the rubric scores (no results section — that's saved for the final manuscript in `2_midterm_report/material_for_final_report.md`). Data lead and modelling lead recorded as Siham Khaldoun; interface lead and writing lead still open.
 - **Built the demo interface** (`7_interface/`): risk calculator with SHAP explanation, results tab, screenshots, low/high-risk examples, run steps for a local computer and for GitHub Codespaces (nothing to install). Private, not deployed.
 - **Wrote the required repo items as drafts:** `MODEL_CARD.md`, `LICENSE` (MIT, proposed), `statements.md` (CRediT and Generative-AI), midterm draft text, presentation script and manuscript outline (`8_final_deliverables/`).
 - **Patient-level confidence intervals for every headline model (Script 21):** CatBoost, XGBoost and the ensemble are tied; logistic regression and the MLP are reliably but only slightly lower. See `5_results/main_models/README.md`.
@@ -66,11 +67,11 @@ report must say so.
 
 **Code / analysis (Siham, with Claude):** the main analysis is done. Optional: intersectional subgroup checks (sex by age), ethical review before any sex-specific threshold, decide whether history features join the headline model (they assume `encounter_id` is chronological).
 
-**Midterm report (everyone; biggest risk, due Mon 9 Nov):**
-- [ ] **15+ references, each read by at least one team member.** Draft text and a reference table exist (`2_midterm_report/midterm_draft_for_editing.md`), but no reference has been read by a human yet. Pools: Larissa's folder (`4_benchmarking/LARISSA/`), `pubmed_candidates.md`, Kayla's `references kayla`. Kayla's and Magalie's sections in `team_literature_log.md` are still empty.
-- [ ] Build the 3-page IEEE document: Kayla's `midterm_report.docx` still has template boilerplate and placeholder text; Magalie's `Midterm report (2).docx` has the introduction. Replace inline URLs with numbered references.
-- [ ] Declare the four roles (data, modelling, interface, writing lead) in the work plan.
-- [ ] Each member completes their own part of the CRediT and Generative-AI statements (`statements.md`).
+**Midterm report (everyone; biggest risk, due Mon 9 Nov):** a complete draft now exists — `2_midterm_report/Midterm_Report_Claude_Draft.docx`, IEEE two-column, all six required sections, 17 references. Still needed from the team:
+- [ ] **15+ references, each read by at least one team member.** Still the biggest gap — no reference has been confirmed read by a human yet. Pools: Larissa's folder (`4_benchmarking/LARISSA/`), `pubmed_candidates.md`, Kayla's `references kayla`. Kayla's and Magalie's sections in `team_literature_log.md` are still empty. Once confirmed, remove the yellow reference flags in the draft.
+- [ ] Open `Midterm_Report_Claude_Draft.docx` in Word and check the layout renders correctly (page count, table fit).
+- [x] Data lead and modelling lead declared (Siham Khaldoun). Interface lead and writing lead still need the team to decide.
+- [ ] Each member completes their own part of the CRediT and Generative-AI statements (draft in `statements.md` and `2_midterm_report/material_for_final_report.md`).
 
 **Team / repo hygiene:**
 - [ ] Confirm the MIT licence (proposed).
