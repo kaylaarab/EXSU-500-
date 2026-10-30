@@ -557,5 +557,9 @@
   "glimepiride-pioglitazone",
   "metformin-rosiglitazone",
   "metformin-pioglitazone"
- ]
+ ],
+ "model_version": {
+  "trained": "2026-10-25",
+  "note": "see git log -- 7_interface/model/ for the exact commit"
+ }
 }

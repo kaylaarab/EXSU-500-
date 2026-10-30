@@ -77,11 +77,23 @@ More screenshots (start screen, the "not scored" case, the results tab) with cap
 | File | What it is |
 |---|---|
 | `app.py` | the Streamlit app |
+| `test_app.py` | committed regression tests (Streamlit's `AppTest` harness) — run with `python -m pytest 7_interface/test_app.py -v` |
 | `model/catboost.cbm` | the trained model (about 1 MB) |
-| `model/config.json` | feature list, allowed values, calibration, risk bands, test metrics |
+| `model/config.json` | feature list, allowed values, calibration, risk bands, test metrics, model training date |
 | `assets/` | copies of the results tables the app displays |
 | `examples/` | screenshots of the interface with captions |
-| `requirements.txt` | packages the app needs |
+| `requirements.txt` | packages the app needs, pinned to the exact versions tested |
+
+## Known bug (not yet fixed)
+On a very fast interaction right after a fresh page load, the Race selectbox
+has been observed to send its first option instead of the intended default
+(logged 2026-10-26; reproduced by a clean-environment rehearsal, not by the
+committed tests, which run synchronously and can't trigger this timing
+race). Submitted values are always internally consistent — whatever the box
+displays is what gets sent — so the practical impact is low, but it is not
+resolved. `test_race_selectbox_default_matches_config` in `test_app.py`
+pins the intended default so a future change that breaks it (as opposed to
+this specific timing race) will be caught.
 
 Rebuild the model and config with `python scripts/17_build_demo_model.py` (needs the data and `scripts/01_preprocess.py` run first).
 

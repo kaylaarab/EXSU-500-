@@ -189,6 +189,9 @@ with tab_about:
         "**Data:** UCI *Diabetes 130-US Hospitals* (1999-2008, 101,766 stays, CC BY 4.0). We used 99,343 stays after excluding "
         "patients who died or went to hospice. Splits are by patient, so no patient appears in both training and test sets.\n\n"
         "**Model:** CatBoost gradient boosting with a calibration step so the percentage is meaningful; risk bands come from validation data.")
+    mv = cfg.get("model_version")
+    if mv:
+        st.caption(f"Model trained {mv.get('trained', 'date unknown')}. {mv.get('note', '')}")
     a, b, c, d = st.columns(4)
     a.metric("AUROC (test)", f"{M['auroc']:.3f}")
     b.metric("AUPRC (test)", f"{M['auprc']:.3f}", help=f"A model that guesses at random scores {M['prevalence']:.3f}")
